@@ -1,0 +1,258 @@
+ARM GAS  /tmp/ccDXdJYY.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"lv_port_disp.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Core/Src/lv_port_disp.c"
+  19              		.section	.text.my_lcd_send_cmd,"ax",%progbits
+  20              		.align	1
+  21              		.global	my_lcd_send_cmd
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	my_lcd_send_cmd:
+  27              	.LVL0:
+  28              	.LFB190:
+   1:Core/Src/lv_port_disp.c **** #include "../Inc/lv_port_disp.h"
+   2:Core/Src/lv_port_disp.c **** #include "../Inc/ILI9341.h"
+   3:Core/Src/lv_port_disp.c **** #include <stddef.h>
+   4:Core/Src/lv_port_disp.c **** 
+   5:Core/Src/lv_port_disp.c **** /* Send short command to the LCD. This function shall wait until the transaction
+   6:Core/Src/lv_port_disp.c ****  * finishes. */
+   7:Core/Src/lv_port_disp.c **** void my_lcd_send_cmd(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size,
+   8:Core/Src/lv_port_disp.c ****                      const uint8_t *param, size_t param_size) {
+  29              		.loc 1 8 63 view -0
+  30              		.cfi_startproc
+  31              		@ args = 4, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 8 63 is_stmt 0 view .LVU1
+  34 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 24
+  37              		.cfi_offset 4, -24
+  38              		.cfi_offset 5, -20
+  39              		.cfi_offset 6, -16
+  40              		.cfi_offset 7, -12
+  41              		.cfi_offset 8, -8
+  42              		.cfi_offset 14, -4
+  43 0004 0F46     		mov	r7, r1
+  44 0006 1546     		mov	r5, r2
+  45 0008 1E46     		mov	r6, r3
+  46 000a DDF81880 		ldr	r8, [sp, #24]
+   9:Core/Src/lv_port_disp.c ****   (void)disp;
+  47              		.loc 1 9 3 is_stmt 1 view .LVU2
+  10:Core/Src/lv_port_disp.c **** 
+  11:Core/Src/lv_port_disp.c ****   for (size_t i = 0; i < cmd_size; ++i)
+ARM GAS  /tmp/ccDXdJYY.s 			page 2
+
+
+  48              		.loc 1 11 3 view .LVU3
+  49              	.LBB2:
+  50              		.loc 1 11 8 view .LVU4
+  51              	.LVL1:
+  52              		.loc 1 11 15 is_stmt 0 view .LVU5
+  53 000e 0024     		movs	r4, #0
+  54              		.loc 1 11 3 view .LVU6
+  55 0010 03E0     		b	.L2
+  56              	.LVL2:
+  57              	.L3:
+  12:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+  58              		.loc 1 12 5 is_stmt 1 view .LVU7
+  59 0012 385D     		ldrb	r0, [r7, r4]	@ zero_extendqisi2
+  60 0014 FFF7FEFF 		bl	writeCommand
+  61              	.LVL3:
+  11:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+  62              		.loc 1 11 36 discriminator 3 view .LVU8
+  63 0018 0134     		adds	r4, r4, #1
+  64              	.LVL4:
+  65              	.L2:
+  11:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+  66              		.loc 1 11 24 discriminator 1 view .LVU9
+  67 001a AC42     		cmp	r4, r5
+  68 001c F9D3     		bcc	.L3
+  69              	.LBE2:
+  70              	.LBB3:
+  13:Core/Src/lv_port_disp.c **** 
+  14:Core/Src/lv_port_disp.c ****   for (size_t i = 0; i < param_size; ++i)
+  71              		.loc 1 14 15 is_stmt 0 view .LVU10
+  72 001e 0024     		movs	r4, #0
+  73              	.LVL5:
+  74              		.loc 1 14 15 view .LVU11
+  75 0020 03E0     		b	.L4
+  76              	.LVL6:
+  77              	.L5:
+  15:Core/Src/lv_port_disp.c ****     writeData(param[i]);
+  78              		.loc 1 15 5 is_stmt 1 view .LVU12
+  79 0022 305D     		ldrb	r0, [r6, r4]	@ zero_extendqisi2
+  80 0024 FFF7FEFF 		bl	writeData
+  81              	.LVL7:
+  14:Core/Src/lv_port_disp.c ****     writeData(param[i]);
+  82              		.loc 1 14 38 discriminator 3 view .LVU13
+  83 0028 0134     		adds	r4, r4, #1
+  84              	.LVL8:
+  85              	.L4:
+  14:Core/Src/lv_port_disp.c ****     writeData(param[i]);
+  86              		.loc 1 14 24 discriminator 1 view .LVU14
+  87 002a 4445     		cmp	r4, r8
+  88 002c F9D3     		bcc	.L5
+  89              	.LBE3:
+  16:Core/Src/lv_port_disp.c **** }
+  90              		.loc 1 16 1 is_stmt 0 view .LVU15
+  91 002e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  92              		.loc 1 16 1 view .LVU16
+  93              		.cfi_endproc
+  94              	.LFE190:
+  96              		.section	.text.my_lcd_send_color,"ax",%progbits
+ARM GAS  /tmp/ccDXdJYY.s 			page 3
+
+
+  97              		.align	1
+  98              		.global	my_lcd_send_color
+  99              		.syntax unified
+ 100              		.thumb
+ 101              		.thumb_func
+ 103              	my_lcd_send_color:
+ 104              	.LVL9:
+ 105              	.LFB191:
+  17:Core/Src/lv_port_disp.c **** 
+  18:Core/Src/lv_port_disp.c **** /* Send large array of pixel data to the LCD. If necessary, this function has to
+  19:Core/Src/lv_port_disp.c ****  * do the byte-swapping. This function can do the transfer in the background. */
+  20:Core/Src/lv_port_disp.c **** void my_lcd_send_color(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size,
+  21:Core/Src/lv_port_disp.c ****                        uint8_t *param, size_t param_size) {
+ 106              		.loc 1 21 59 is_stmt 1 view -0
+ 107              		.cfi_startproc
+ 108              		@ args = 4, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110              		.loc 1 21 59 is_stmt 0 view .LVU18
+ 111 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 112              	.LCFI1:
+ 113              		.cfi_def_cfa_offset 32
+ 114              		.cfi_offset 3, -32
+ 115              		.cfi_offset 4, -28
+ 116              		.cfi_offset 5, -24
+ 117              		.cfi_offset 6, -20
+ 118              		.cfi_offset 7, -16
+ 119              		.cfi_offset 8, -12
+ 120              		.cfi_offset 9, -8
+ 121              		.cfi_offset 14, -4
+ 122 0004 0746     		mov	r7, r0
+ 123 0006 8846     		mov	r8, r1
+ 124 0008 1646     		mov	r6, r2
+ 125 000a 1D46     		mov	r5, r3
+ 126 000c DDF82090 		ldr	r9, [sp, #32]
+  22:Core/Src/lv_port_disp.c **** 
+  23:Core/Src/lv_port_disp.c ****   for (size_t i = 0; i < cmd_size; ++i)
+ 127              		.loc 1 23 3 is_stmt 1 view .LVU19
+ 128              	.LBB4:
+ 129              		.loc 1 23 8 view .LVU20
+ 130              	.LVL10:
+ 131              		.loc 1 23 15 is_stmt 0 view .LVU21
+ 132 0010 0024     		movs	r4, #0
+ 133              		.loc 1 23 3 view .LVU22
+ 134 0012 04E0     		b	.L8
+ 135              	.LVL11:
+ 136              	.L9:
+  24:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+ 137              		.loc 1 24 5 is_stmt 1 view .LVU23
+ 138 0014 18F80400 		ldrb	r0, [r8, r4]	@ zero_extendqisi2
+ 139 0018 FFF7FEFF 		bl	writeCommand
+ 140              	.LVL12:
+  23:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+ 141              		.loc 1 23 36 discriminator 3 view .LVU24
+ 142 001c 0134     		adds	r4, r4, #1
+ 143              	.LVL13:
+ 144              	.L8:
+  23:Core/Src/lv_port_disp.c ****     writeCommand(cmd[i]);
+ARM GAS  /tmp/ccDXdJYY.s 			page 4
+
+
+ 145              		.loc 1 23 24 discriminator 1 view .LVU25
+ 146 001e B442     		cmp	r4, r6
+ 147 0020 F8D3     		bcc	.L9
+ 148              	.LBE4:
+ 149              	.LBB5:
+  25:Core/Src/lv_port_disp.c **** 
+  26:Core/Src/lv_port_disp.c ****   for (size_t i = 0; i < param_size; i += 2) {
+ 150              		.loc 1 26 15 is_stmt 0 view .LVU26
+ 151 0022 0024     		movs	r4, #0
+ 152              	.LVL14:
+ 153              		.loc 1 26 15 view .LVU27
+ 154 0024 07E0     		b	.L10
+ 155              	.LVL15:
+ 156              	.L11:
+  27:Core/Src/lv_port_disp.c ****     writeData(param[i + 1]);
+ 157              		.loc 1 27 5 is_stmt 1 view .LVU28
+ 158              		.loc 1 27 20 is_stmt 0 view .LVU29
+ 159 0026 631C     		adds	r3, r4, #1
+ 160              		.loc 1 27 5 view .LVU30
+ 161 0028 E85C     		ldrb	r0, [r5, r3]	@ zero_extendqisi2
+ 162 002a FFF7FEFF 		bl	writeData
+ 163              	.LVL16:
+  28:Core/Src/lv_port_disp.c ****     writeData(param[i]);
+ 164              		.loc 1 28 5 is_stmt 1 view .LVU31
+ 165 002e 285D     		ldrb	r0, [r5, r4]	@ zero_extendqisi2
+ 166 0030 FFF7FEFF 		bl	writeData
+ 167              	.LVL17:
+  26:Core/Src/lv_port_disp.c ****     writeData(param[i + 1]);
+ 168              		.loc 1 26 40 discriminator 3 view .LVU32
+ 169 0034 0234     		adds	r4, r4, #2
+ 170              	.LVL18:
+ 171              	.L10:
+  26:Core/Src/lv_port_disp.c ****     writeData(param[i + 1]);
+ 172              		.loc 1 26 24 discriminator 1 view .LVU33
+ 173 0036 4C45     		cmp	r4, r9
+ 174 0038 F5D3     		bcc	.L11
+ 175              	.LBE5:
+  29:Core/Src/lv_port_disp.c ****   }
+  30:Core/Src/lv_port_disp.c **** 
+  31:Core/Src/lv_port_disp.c ****   lv_display_flush_ready(disp);
+ 176              		.loc 1 31 3 view .LVU34
+ 177 003a 3846     		mov	r0, r7
+ 178 003c FFF7FEFF 		bl	lv_display_flush_ready
+ 179              	.LVL19:
+  32:Core/Src/lv_port_disp.c **** }
+ 180              		.loc 1 32 1 is_stmt 0 view .LVU35
+ 181 0040 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 182              		.loc 1 32 1 view .LVU36
+ 183              		.cfi_endproc
+ 184              	.LFE191:
+ 186              		.text
+ 187              	.Letext0:
+ 188              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 189              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 190              		.file 4 "/usr/lib/gcc/arm-none-eabi/14.2.0/include/stddef.h"
+ 191              		.file 5 "Drivers/lvgl/src/../src/misc/lv_types.h"
+ 192              		.file 6 "Drivers/lvgl/src/../src/core/../display/lv_display.h"
+ARM GAS  /tmp/ccDXdJYY.s 			page 5
+
+
+ 193              		.file 7 "Core/Src/../Inc/ILI9341.h"
+ARM GAS  /tmp/ccDXdJYY.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lv_port_disp.c
+     /tmp/ccDXdJYY.s:20     .text.my_lcd_send_cmd:00000000 $t
+     /tmp/ccDXdJYY.s:26     .text.my_lcd_send_cmd:00000000 my_lcd_send_cmd
+     /tmp/ccDXdJYY.s:97     .text.my_lcd_send_color:00000000 $t
+     /tmp/ccDXdJYY.s:103    .text.my_lcd_send_color:00000000 my_lcd_send_color
+
+UNDEFINED SYMBOLS
+writeCommand
+writeData
+lv_display_flush_ready

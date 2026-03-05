@@ -1,0 +1,178 @@
+ARM GAS  /tmp/cccms7Fs.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ILI9341.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Core/Src/ILI9341.c"
+  19              		.section	.text.writeCommand,"ax",%progbits
+  20              		.align	1
+  21              		.global	writeCommand
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	writeCommand:
+  27              	.LVL0:
+  28              	.LFB340:
+   1:Core/Src/ILI9341.c **** #include "../Inc/ILI9341.h"
+   2:Core/Src/ILI9341.c **** #include "main.h"
+   3:Core/Src/ILI9341.c **** #include <stdint.h>
+   4:Core/Src/ILI9341.c **** 
+   5:Core/Src/ILI9341.c **** inline void writeCommand(uint8_t cmd) {
+  29              		.loc 1 5 39 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+   6:Core/Src/ILI9341.c ****   CDX_GPIO_Port->BSRR = (CDX_Pin << 16);      // set CDX low
+  34              		.loc 1 6 3 view .LVU1
+  35              		.loc 1 6 23 is_stmt 0 view .LVU2
+  36 0000 0A4B     		ldr	r3, .L2
+  37 0002 4FF40002 		mov	r2, #8388608
+  38 0006 9A61     		str	r2, [r3, #24]
+   7:Core/Src/ILI9341.c ****   CSX_GPIO_Port->BSRR = (CSX_Pin << 16);      // set CSX low
+  39              		.loc 1 7 3 is_stmt 1 view .LVU3
+  40              		.loc 1 7 23 is_stmt 0 view .LVU4
+  41 0008 4FF08072 		mov	r2, #16777216
+  42 000c 9A61     		str	r2, [r3, #24]
+   8:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+  43              		.loc 1 8 3 is_stmt 1 view .LVU5
+   9:Core/Src/ILI9341.c ****                        ((uint32_t)cmd << 8);  // set new data
+  44              		.loc 1 9 39 is_stmt 0 view .LVU6
+  45 000e 0002     		lsls	r0, r0, #8
+  46              	.LVL1:
+   8:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+  47              		.loc 1 8 45 view .LVU7
+  48 0010 40F07F40 		orr	r0, r0, #-16777216
+ARM GAS  /tmp/cccms7Fs.s 			page 2
+
+
+   8:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+  49              		.loc 1 8 22 view .LVU8
+  50 0014 064A     		ldr	r2, .L2+4
+  51 0016 9061     		str	r0, [r2, #24]
+  10:Core/Src/ILI9341.c ****   WRX_GPIO_Port->BSRR = (WRX_Pin << 16);      // set WRX low
+  52              		.loc 1 10 3 is_stmt 1 view .LVU9
+  53              		.loc 1 10 23 is_stmt 0 view .LVU10
+  54 0018 4FF00072 		mov	r2, #33554432
+  55 001c 9A61     		str	r2, [r3, #24]
+  11:Core/Src/ILI9341.c ****   WRX_GPIO_Port->BSRR = (WRX_Pin);            // set WRX high
+  56              		.loc 1 11 3 is_stmt 1 view .LVU11
+  57              		.loc 1 11 23 is_stmt 0 view .LVU12
+  58 001e 4FF40072 		mov	r2, #512
+  59 0022 9A61     		str	r2, [r3, #24]
+  12:Core/Src/ILI9341.c ****   CSX_GPIO_Port->BSRR = (CSX_Pin);            // set CSX high
+  60              		.loc 1 12 3 is_stmt 1 view .LVU13
+  61              		.loc 1 12 23 is_stmt 0 view .LVU14
+  62 0024 4FF48072 		mov	r2, #256
+  63 0028 9A61     		str	r2, [r3, #24]
+  13:Core/Src/ILI9341.c **** }
+  64              		.loc 1 13 1 view .LVU15
+  65 002a 7047     		bx	lr
+  66              	.L3:
+  67              		.align	2
+  68              	.L2:
+  69 002c 00080258 		.word	1476528128
+  70 0030 000C0258 		.word	1476529152
+  71              		.cfi_endproc
+  72              	.LFE340:
+  74              		.section	.text.writeData,"ax",%progbits
+  75              		.align	1
+  76              		.global	writeData
+  77              		.syntax unified
+  78              		.thumb
+  79              		.thumb_func
+  81              	writeData:
+  82              	.LVL2:
+  83              	.LFB341:
+  14:Core/Src/ILI9341.c **** 
+  15:Core/Src/ILI9341.c **** inline void writeData(uint8_t data) {
+  84              		.loc 1 15 37 is_stmt 1 view -0
+  85              		.cfi_startproc
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88              		@ link register save eliminated.
+  16:Core/Src/ILI9341.c ****   CDX_GPIO_Port->BSRR = (CDX_Pin);            // set CDX high
+  89              		.loc 1 16 3 view .LVU17
+  90              		.loc 1 16 23 is_stmt 0 view .LVU18
+  91 0000 0A4B     		ldr	r3, .L5
+  92 0002 8022     		movs	r2, #128
+  93 0004 9A61     		str	r2, [r3, #24]
+  17:Core/Src/ILI9341.c ****   CSX_GPIO_Port->BSRR = (CSX_Pin << 16);      // set CSX low
+  94              		.loc 1 17 3 is_stmt 1 view .LVU19
+  95              		.loc 1 17 23 is_stmt 0 view .LVU20
+  96 0006 4FF08072 		mov	r2, #16777216
+  97 000a 9A61     		str	r2, [r3, #24]
+  18:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+ARM GAS  /tmp/cccms7Fs.s 			page 3
+
+
+  98              		.loc 1 18 3 is_stmt 1 view .LVU21
+  19:Core/Src/ILI9341.c ****                        ((uint32_t)data << 8); // set new data
+  99              		.loc 1 19 40 is_stmt 0 view .LVU22
+ 100 000c 0002     		lsls	r0, r0, #8
+ 101              	.LVL3:
+  18:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+ 102              		.loc 1 18 45 view .LVU23
+ 103 000e 40F07F40 		orr	r0, r0, #-16777216
+  18:Core/Src/ILI9341.c ****   D0_GPIO_Port->BSRR = ((0xFFu << 8) << 16) | // clear PE8–PE15
+ 104              		.loc 1 18 22 view .LVU24
+ 105 0012 074A     		ldr	r2, .L5+4
+ 106 0014 9061     		str	r0, [r2, #24]
+  20:Core/Src/ILI9341.c ****   WRX_GPIO_Port->BSRR = (WRX_Pin << 16);      // set WRX low
+ 107              		.loc 1 20 3 is_stmt 1 view .LVU25
+ 108              		.loc 1 20 23 is_stmt 0 view .LVU26
+ 109 0016 4FF00072 		mov	r2, #33554432
+ 110 001a 9A61     		str	r2, [r3, #24]
+  21:Core/Src/ILI9341.c ****   WRX_GPIO_Port->BSRR = (WRX_Pin);            // set WRX high
+ 111              		.loc 1 21 3 is_stmt 1 view .LVU27
+ 112              		.loc 1 21 23 is_stmt 0 view .LVU28
+ 113 001c 4FF40072 		mov	r2, #512
+ 114 0020 9A61     		str	r2, [r3, #24]
+  22:Core/Src/ILI9341.c ****   CSX_GPIO_Port->BSRR = (CSX_Pin);            // set CSX high
+ 115              		.loc 1 22 3 is_stmt 1 view .LVU29
+ 116              		.loc 1 22 23 is_stmt 0 view .LVU30
+ 117 0022 4FF48072 		mov	r2, #256
+ 118 0026 9A61     		str	r2, [r3, #24]
+  23:Core/Src/ILI9341.c **** }
+ 119              		.loc 1 23 1 view .LVU31
+ 120 0028 7047     		bx	lr
+ 121              	.L6:
+ 122 002a 00BF     		.align	2
+ 123              	.L5:
+ 124 002c 00080258 		.word	1476528128
+ 125 0030 000C0258 		.word	1476529152
+ 126              		.cfi_endproc
+ 127              	.LFE341:
+ 129              		.text
+ 130              	.Letext0:
+ 131              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 132              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 133              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h"
+ARM GAS  /tmp/cccms7Fs.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ILI9341.c
+     /tmp/cccms7Fs.s:20     .text.writeCommand:00000000 $t
+     /tmp/cccms7Fs.s:26     .text.writeCommand:00000000 writeCommand
+     /tmp/cccms7Fs.s:69     .text.writeCommand:0000002c $d
+     /tmp/cccms7Fs.s:75     .text.writeData:00000000 $t
+     /tmp/cccms7Fs.s:81     .text.writeData:00000000 writeData
+     /tmp/cccms7Fs.s:124    .text.writeData:0000002c $d
+
+NO UNDEFINED SYMBOLS
