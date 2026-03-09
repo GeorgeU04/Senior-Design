@@ -1,0 +1,410 @@
+ARM GAS  /tmp/ccjgu6yO.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"GUI.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Core/Src/GUI.c"
+  19              		.section	.text.initScreen,"ax",%progbits
+  20              		.align	1
+  21              		.global	initScreen
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	initScreen:
+  27              	.LFB530:
+   1:Core/Src/GUI.c **** #include "GUI.h"
+   2:Core/Src/GUI.c **** #include "lv_port_disp.h"
+   3:Core/Src/GUI.c **** #include "main.h"
+   4:Core/Src/GUI.c **** #include "src/core/lv_obj_pos.h"
+   5:Core/Src/GUI.c **** #include "src/core/lv_obj_style.h"
+   6:Core/Src/GUI.c **** #include "src/core/lv_obj_style_gen.h"
+   7:Core/Src/GUI.c **** #include "src/display/lv_display.h"
+   8:Core/Src/GUI.c **** #include "src/font/lv_font.h"
+   9:Core/Src/GUI.c **** #include "src/font/lv_symbol_def.h"
+  10:Core/Src/GUI.c **** #include "src/misc/lv_area.h"
+  11:Core/Src/GUI.c **** #include "src/widgets/bar/lv_bar.h"
+  12:Core/Src/GUI.c **** #include "src/widgets/button/lv_button.h"
+  13:Core/Src/GUI.c **** #include "src/widgets/label/lv_label.h"
+  14:Core/Src/GUI.c **** #include <stdint.h>
+  15:Core/Src/GUI.c **** #include <stdio.h>
+  16:Core/Src/GUI.c **** #include <string.h>
+  17:Core/Src/GUI.c **** 
+  18:Core/Src/GUI.c **** void initScreen() {
+  28              		.loc 1 18 19 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 70B5     		push	{r4, r5, r6, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 16
+  35              		.cfi_offset 4, -16
+  36              		.cfi_offset 5, -12
+  37              		.cfi_offset 6, -8
+  38              		.cfi_offset 14, -4
+  39 0002 82B0     		sub	sp, sp, #8
+  40              	.LCFI1:
+ARM GAS  /tmp/ccjgu6yO.s 			page 2
+
+
+  41              		.cfi_def_cfa_offset 24
+  19:Core/Src/GUI.c ****   RSX_GPIO_Port->BSRR = RSX_Pin << 16;
+  42              		.loc 1 19 3 view .LVU1
+  43              		.loc 1 19 23 is_stmt 0 view .LVU2
+  44 0004 1B4C     		ldr	r4, .L5
+  45 0006 4FF48003 		mov	r3, #4194304
+  46 000a A361     		str	r3, [r4, #24]
+  20:Core/Src/GUI.c ****   HAL_Delay(20);
+  47              		.loc 1 20 3 is_stmt 1 view .LVU3
+  48 000c 1420     		movs	r0, #20
+  49 000e FFF7FEFF 		bl	HAL_Delay
+  50              	.LVL0:
+  21:Core/Src/GUI.c ****   RSX_GPIO_Port->BSRR = RSX_Pin;
+  51              		.loc 1 21 3 view .LVU4
+  52              		.loc 1 21 23 is_stmt 0 view .LVU5
+  53 0012 4023     		movs	r3, #64
+  54 0014 A361     		str	r3, [r4, #24]
+  22:Core/Src/GUI.c ****   HAL_Delay(150);
+  55              		.loc 1 22 3 is_stmt 1 view .LVU6
+  56 0016 9620     		movs	r0, #150
+  57 0018 FFF7FEFF 		bl	HAL_Delay
+  58              	.LVL1:
+  23:Core/Src/GUI.c ****   lv_init();
+  59              		.loc 1 23 3 view .LVU7
+  60 001c FFF7FEFF 		bl	lv_init
+  61              	.LVL2:
+  24:Core/Src/GUI.c ****   lv_tick_set_cb(HAL_GetTick);
+  62              		.loc 1 24 3 view .LVU8
+  63 0020 1548     		ldr	r0, .L5+4
+  64 0022 FFF7FEFF 		bl	lv_tick_set_cb
+  65              	.LVL3:
+  25:Core/Src/GUI.c ****   lv_display_t *screen = lv_ili9341_create(320, 240, LV_LCD_FLAG_NONE,
+  66              		.loc 1 25 3 view .LVU9
+  67              		.loc 1 25 26 is_stmt 0 view .LVU10
+  68 0026 154B     		ldr	r3, .L5+8
+  69 0028 0093     		str	r3, [sp]
+  70 002a 154B     		ldr	r3, .L5+12
+  71 002c 0022     		movs	r2, #0
+  72 002e F021     		movs	r1, #240
+  73 0030 4FF4A070 		mov	r0, #320
+  74 0034 FFF7FEFF 		bl	lv_ili9341_create
+  75              	.LVL4:
+  76 0038 0446     		mov	r4, r0
+  77              	.LVL5:
+  26:Core/Src/GUI.c ****                                            my_lcd_send_cmd, my_lcd_send_color);
+  27:Core/Src/GUI.c ****   uint8_t *buf1 = NULL;
+  78              		.loc 1 27 3 is_stmt 1 view .LVU11
+  28:Core/Src/GUI.c ****   uint8_t *buf2 = NULL;
+  79              		.loc 1 28 3 view .LVU12
+  29:Core/Src/GUI.c ****   uint32_t buf_size =
+  80              		.loc 1 29 3 view .LVU13
+  30:Core/Src/GUI.c ****       HOR_RES * BUFFER_LINES *
+  31:Core/Src/GUI.c ****       lv_color_format_get_size(lv_display_get_color_format(screen));
+  81              		.loc 1 31 7 is_stmt 0 view .LVU14
+  82 003a FFF7FEFF 		bl	lv_display_get_color_format
+  83              	.LVL6:
+  84              		.loc 1 31 7 discriminator 1 view .LVU15
+ARM GAS  /tmp/ccjgu6yO.s 			page 3
+
+
+  85 003e FFF7FEFF 		bl	lv_color_format_get_size
+  86              	.LVL7:
+  30:Core/Src/GUI.c ****       HOR_RES * BUFFER_LINES *
+  87              		.loc 1 30 30 view .LVU16
+  88 0042 4FF49643 		mov	r3, #19200
+  89 0046 03FB00F5 		mul	r5, r3, r0
+  90              	.LVL8:
+  32:Core/Src/GUI.c **** 
+  33:Core/Src/GUI.c ****   buf1 = lv_malloc(buf_size);
+  91              		.loc 1 33 3 is_stmt 1 view .LVU17
+  92              		.loc 1 33 10 is_stmt 0 view .LVU18
+  93 004a 2846     		mov	r0, r5
+  94 004c FFF7FEFF 		bl	lv_malloc
+  95              	.LVL9:
+  34:Core/Src/GUI.c ****   if (buf1 == NULL) {
+  96              		.loc 1 34 3 is_stmt 1 view .LVU19
+  97              		.loc 1 34 6 is_stmt 0 view .LVU20
+  98 0050 0646     		mov	r6, r0
+  99 0052 60B1     		cbz	r0, .L4
+ 100              	.LVL10:
+ 101              	.L2:
+  35:Core/Src/GUI.c ****     LV_LOG_ERROR("display draw buffer malloc failed");
+  36:Core/Src/GUI.c ****     Error_Handler();
+  37:Core/Src/GUI.c ****   }
+  38:Core/Src/GUI.c **** 
+  39:Core/Src/GUI.c ****   lv_display_set_buffers(screen, buf1, buf2, buf_size,
+ 102              		.loc 1 39 3 is_stmt 1 view .LVU21
+ 103 0054 0022     		movs	r2, #0
+ 104 0056 0092     		str	r2, [sp]
+ 105 0058 2B46     		mov	r3, r5
+ 106 005a 3146     		mov	r1, r6
+ 107 005c 2046     		mov	r0, r4
+ 108 005e FFF7FEFF 		bl	lv_display_set_buffers
+ 109              	.LVL11:
+  40:Core/Src/GUI.c ****                          LV_DISPLAY_RENDER_MODE_PARTIAL);
+  41:Core/Src/GUI.c ****   lv_display_set_rotation(screen, LV_DISPLAY_ROTATION_90);
+ 110              		.loc 1 41 3 view .LVU22
+ 111 0062 0121     		movs	r1, #1
+ 112 0064 2046     		mov	r0, r4
+ 113 0066 FFF7FEFF 		bl	lv_display_set_rotation
+ 114              	.LVL12:
+  42:Core/Src/GUI.c **** }
+ 115              		.loc 1 42 1 is_stmt 0 view .LVU23
+ 116 006a 02B0     		add	sp, sp, #8
+ 117              	.LCFI2:
+ 118              		.cfi_remember_state
+ 119              		.cfi_def_cfa_offset 16
+ 120              		@ sp needed
+ 121 006c 70BD     		pop	{r4, r5, r6, pc}
+ 122              	.LVL13:
+ 123              	.L4:
+ 124              	.LCFI3:
+ 125              		.cfi_restore_state
+  35:Core/Src/GUI.c ****     LV_LOG_ERROR("display draw buffer malloc failed");
+ 126              		.loc 1 35 5 is_stmt 1 view .LVU24
+  35:Core/Src/GUI.c ****     LV_LOG_ERROR("display draw buffer malloc failed");
+ 127              		.loc 1 35 5 view .LVU25
+ARM GAS  /tmp/ccjgu6yO.s 			page 4
+
+
+  35:Core/Src/GUI.c ****     LV_LOG_ERROR("display draw buffer malloc failed");
+ 128              		.loc 1 35 5 view .LVU26
+  36:Core/Src/GUI.c ****   }
+ 129              		.loc 1 36 5 view .LVU27
+ 130 006e FFF7FEFF 		bl	Error_Handler
+ 131              	.LVL14:
+  36:Core/Src/GUI.c ****   }
+ 132              		.loc 1 36 5 is_stmt 0 view .LVU28
+ 133 0072 EFE7     		b	.L2
+ 134              	.L6:
+ 135              		.align	2
+ 136              	.L5:
+ 137 0074 00080258 		.word	1476528128
+ 138 0078 00000000 		.word	HAL_GetTick
+ 139 007c 00000000 		.word	my_lcd_send_color
+ 140 0080 00000000 		.word	my_lcd_send_cmd
+ 141              		.cfi_endproc
+ 142              	.LFE530:
+ 144              		.section	.rodata.drawHomeScreen.str1.4,"aMS",%progbits,1
+ 145              		.align	2
+ 146              	.LC0:
+ 147 0000 4D61696E 		.ascii	"Main Screen\000"
+ 147      20536372 
+ 147      65656E00 
+ 148              		.section	.text.drawHomeScreen,"ax",%progbits
+ 149              		.align	1
+ 150              		.global	drawHomeScreen
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 155              	drawHomeScreen:
+ 156              	.LFB531:
+  43:Core/Src/GUI.c **** 
+  44:Core/Src/GUI.c **** void drawHomeScreen() {
+ 157              		.loc 1 44 23 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 64
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 70B5     		push	{r4, r5, r6, lr}
+ 162              	.LCFI4:
+ 163              		.cfi_def_cfa_offset 16
+ 164              		.cfi_offset 4, -16
+ 165              		.cfi_offset 5, -12
+ 166              		.cfi_offset 6, -8
+ 167              		.cfi_offset 14, -4
+ 168 0002 90B0     		sub	sp, sp, #64
+ 169              	.LCFI5:
+ 170              		.cfi_def_cfa_offset 80
+  45:Core/Src/GUI.c ****   char buffer[50] = {0};
+ 171              		.loc 1 45 3 view .LVU30
+ 172              		.loc 1 45 8 is_stmt 0 view .LVU31
+ 173 0004 01AD     		add	r5, sp, #4
+ 174 0006 3226     		movs	r6, #50
+ 175 0008 3246     		mov	r2, r6
+ 176 000a 0021     		movs	r1, #0
+ 177 000c 2846     		mov	r0, r5
+ 178 000e FFF7FEFF 		bl	memset
+ARM GAS  /tmp/ccjgu6yO.s 			page 5
+
+
+ 179              	.LVL15:
+  46:Core/Src/GUI.c ****   lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57),
+ 180              		.loc 1 46 3 is_stmt 1 view .LVU32
+ 181 0012 FFF7FEFF 		bl	lv_screen_active
+ 182              	.LVL16:
+ 183 0016 0446     		mov	r4, r0
+ 184              		.loc 1 46 3 is_stmt 0 discriminator 1 view .LVU33
+ 185 0018 43F65720 		movw	r0, #14935
+ 186 001c FFF7FEFF 		bl	lv_color_hex
+ 187              	.LVL17:
+ 188 0020 8DF83800 		strb	r0, [sp, #56]
+ 189 0024 C0F30723 		ubfx	r3, r0, #8, #8
+ 190 0028 8DF83930 		strb	r3, [sp, #57]
+ 191 002c C0F30743 		ubfx	r3, r0, #16, #8
+ 192 0030 8DF83A30 		strb	r3, [sp, #58]
+ 193              		.loc 1 46 3 discriminator 2 view .LVU34
+ 194 0034 0022     		movs	r2, #0
+ 195 0036 0E99     		ldr	r1, [sp, #56]
+ 196 0038 2046     		mov	r0, r4
+ 197 003a FFF7FEFF 		bl	lv_obj_set_style_bg_color
+ 198              	.LVL18:
+  47:Core/Src/GUI.c ****                             LV_PART_MAIN);
+  48:Core/Src/GUI.c ****   strncpy(buffer, "Main Screen", sizeof(buffer));
+ 199              		.loc 1 48 3 is_stmt 1 view .LVU35
+ 200 003e 3246     		mov	r2, r6
+ 201 0040 1749     		ldr	r1, .L9
+ 202 0042 2846     		mov	r0, r5
+ 203 0044 FFF7FEFF 		bl	strncpy
+ 204              	.LVL19:
+  49:Core/Src/GUI.c ****   lv_obj_t *artistNameText = lv_label_create(lv_screen_active());
+ 205              		.loc 1 49 3 view .LVU36
+ 206              		.loc 1 49 30 is_stmt 0 view .LVU37
+ 207 0048 FFF7FEFF 		bl	lv_screen_active
+ 208              	.LVL20:
+ 209              		.loc 1 49 30 discriminator 1 view .LVU38
+ 210 004c FFF7FEFF 		bl	lv_label_create
+ 211              	.LVL21:
+ 212 0050 0446     		mov	r4, r0
+ 213              	.LVL22:
+  50:Core/Src/GUI.c ****   lv_obj_set_style_text_font(artistNameText, &lv_font_montserrat_16, 0);
+ 214              		.loc 1 50 3 is_stmt 1 view .LVU39
+ 215 0052 0022     		movs	r2, #0
+ 216 0054 1349     		ldr	r1, .L9+4
+ 217 0056 FFF7FEFF 		bl	lv_obj_set_style_text_font
+ 218              	.LVL23:
+  51:Core/Src/GUI.c ****   lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff),
+ 219              		.loc 1 51 3 view .LVU40
+ 220 005a FFF7FEFF 		bl	lv_screen_active
+ 221              	.LVL24:
+ 222 005e 0646     		mov	r6, r0
+ 223              		.loc 1 51 3 is_stmt 0 discriminator 1 view .LVU41
+ 224 0060 6FF07F40 		mvn	r0, #-16777216
+ 225 0064 FFF7FEFF 		bl	lv_color_hex
+ 226              	.LVL25:
+ 227 0068 8DF83C00 		strb	r0, [sp, #60]
+ 228 006c C0F30722 		ubfx	r2, r0, #8, #8
+ 229 0070 8DF83D20 		strb	r2, [sp, #61]
+ARM GAS  /tmp/ccjgu6yO.s 			page 6
+
+
+ 230 0074 C0F30743 		ubfx	r3, r0, #16, #8
+ 231 0078 8DF83E30 		strb	r3, [sp, #62]
+ 232              		.loc 1 51 3 discriminator 2 view .LVU42
+ 233 007c 0022     		movs	r2, #0
+ 234 007e 0F99     		ldr	r1, [sp, #60]
+ 235 0080 3046     		mov	r0, r6
+ 236 0082 FFF7FEFF 		bl	lv_obj_set_style_text_color
+ 237              	.LVL26:
+  52:Core/Src/GUI.c ****                               LV_PART_MAIN);
+  53:Core/Src/GUI.c ****   lv_label_set_text(artistNameText, buffer);
+ 238              		.loc 1 53 3 is_stmt 1 view .LVU43
+ 239 0086 2946     		mov	r1, r5
+ 240 0088 2046     		mov	r0, r4
+ 241 008a FFF7FEFF 		bl	lv_label_set_text
+ 242              	.LVL27:
+  54:Core/Src/GUI.c ****   lv_obj_align(artistNameText, LV_ALIGN_CENTER, 0, 0);
+ 243              		.loc 1 54 3 view .LVU44
+ 244 008e 0023     		movs	r3, #0
+ 245 0090 1A46     		mov	r2, r3
+ 246 0092 0921     		movs	r1, #9
+ 247 0094 2046     		mov	r0, r4
+ 248 0096 FFF7FEFF 		bl	lv_obj_align
+ 249              	.LVL28:
+  55:Core/Src/GUI.c **** }
+ 250              		.loc 1 55 1 is_stmt 0 view .LVU45
+ 251 009a 10B0     		add	sp, sp, #64
+ 252              	.LCFI6:
+ 253              		.cfi_def_cfa_offset 16
+ 254              		@ sp needed
+ 255 009c 70BD     		pop	{r4, r5, r6, pc}
+ 256              	.LVL29:
+ 257              	.L10:
+ 258              		.loc 1 55 1 view .LVU46
+ 259 009e 00BF     		.align	2
+ 260              	.L9:
+ 261 00a0 00000000 		.word	.LC0
+ 262 00a4 00000000 		.word	lv_font_montserrat_16
+ 263              		.cfi_endproc
+ 264              	.LFE531:
+ 266              		.text
+ 267              	.Letext0:
+ 268              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 269              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 270              		.file 4 "/usr/lib/gcc/arm-none-eabi/14.2.0/include/stddef.h"
+ 271              		.file 5 "Drivers/lvgl/src/../src/misc/lv_types.h"
+ 272              		.file 6 "Drivers/lvgl/src/../src/core/../misc/../font/lv_font.h"
+ 273              		.file 7 "Drivers/lvgl/src/../src/misc/../draw/lv_draw_buf.h"
+ 274              		.file 8 "Drivers/lvgl/src/../src/misc/../tick/lv_tick.h"
+ 275              		.file 9 "Drivers/lvgl/src/../src/misc/../draw/../misc/lv_area.h"
+ 276              		.file 10 "Drivers/lvgl/src/../src/misc/../draw/../misc/lv_color.h"
+ 277              		.file 11 "Drivers/lvgl/src/../src/misc/../draw/lv_image_dsc.h"
+ 278              		.file 12 "Drivers/lvgl/src/../src/core/../display/lv_display.h"
+ 279              		.file 13 "Drivers/lvgl/src/../src/core/lv_obj_style.h"
+ 280              		.file 14 "Drivers/lvgl/src/../src/drivers/display/lcd/lv_lcd_generic_mipi.h"
+ 281              		.file 15 "Drivers/lvgl/src/../src/drivers/display/ili9341/lv_ili9341.h"
+ 282              		.file 16 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h"
+ 283              		.file 17 "Drivers/lvgl/src/../src/core/lv_obj_pos.h"
+ARM GAS  /tmp/ccjgu6yO.s 			page 7
+
+
+ 284              		.file 18 "Drivers/lvgl/src/../src/widgets/bar/../label/lv_label.h"
+ 285              		.file 19 "Drivers/lvgl/src/../src/core/lv_obj_style_gen.h"
+ 286              		.file 20 "/usr/arm-none-eabi/include/string.h"
+ 287              		.file 21 "Drivers/lvgl/src/../src/stdlib/lv_mem.h"
+ 288              		.file 22 "Core/Inc/lv_port_disp.h"
+ 289              		.file 23 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ 290              		.file 24 "Core/Inc/main.h"
+ 291              		.file 25 "Drivers/lvgl/src/../src/lv_init.h"
+ 292              		.file 26 "<built-in>"
+ARM GAS  /tmp/ccjgu6yO.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 GUI.c
+     /tmp/ccjgu6yO.s:20     .text.initScreen:00000000 $t
+     /tmp/ccjgu6yO.s:26     .text.initScreen:00000000 initScreen
+     /tmp/ccjgu6yO.s:137    .text.initScreen:00000074 $d
+     /tmp/ccjgu6yO.s:145    .rodata.drawHomeScreen.str1.4:00000000 $d
+     /tmp/ccjgu6yO.s:149    .text.drawHomeScreen:00000000 $t
+     /tmp/ccjgu6yO.s:155    .text.drawHomeScreen:00000000 drawHomeScreen
+     /tmp/ccjgu6yO.s:261    .text.drawHomeScreen:000000a0 $d
+
+UNDEFINED SYMBOLS
+HAL_Delay
+lv_init
+lv_tick_set_cb
+lv_ili9341_create
+lv_display_get_color_format
+lv_color_format_get_size
+lv_malloc
+lv_display_set_buffers
+lv_display_set_rotation
+Error_Handler
+HAL_GetTick
+my_lcd_send_color
+my_lcd_send_cmd
+memset
+lv_screen_active
+lv_color_hex
+lv_obj_set_style_bg_color
+strncpy
+lv_label_create
+lv_obj_set_style_text_font
+lv_obj_set_style_text_color
+lv_label_set_text
+lv_obj_align
+lv_font_montserrat_16
