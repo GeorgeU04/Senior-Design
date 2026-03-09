@@ -68,6 +68,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define WPDS18B20_Pin GPIO_PIN_1
+#define WPDS18B20_GPIO_Port GPIOF
+#define EDS18B20_Pin GPIO_PIN_2
+#define EDS18B20_GPIO_Port GPIOF
 #define RSX_Pin GPIO_PIN_6
 #define RSX_GPIO_Port GPIOC
 #define CDX_Pin GPIO_PIN_7

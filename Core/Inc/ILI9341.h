@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-#define COLS 240
-#define ROWS 320
-
 void writeCommand(uint8_t cmd);
 void writeData(uint8_t data);
 
