@@ -4,14 +4,7 @@
 #define BUFFER_LINES 60
 
 void initScreen(void);
-
-void showHome(void);
-void showSettings(void);
-void showPlantSelect(void);
-
-void createHomeScreen(void);
-void createPlantScreen(void);
-void creatSettingsScreen(void);
+void uiInitScreens(void);
 
 void setTemperature(float c);
 void setWaterLevel(float percent);

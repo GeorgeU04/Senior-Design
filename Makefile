@@ -64,7 +64,8 @@ Core/Src/ILI9341.c \
 Core/Src/lv_port_disp.c \
 Core/Src/DS18B20.c \
 Core/Src/GUI.c \
-Core/Src/touchscreen.c
+Core/Src/plantProfiles.c \
+Core/Src/touchscreen.c  
 
 ASM_SOURCES =  \
 startup_stm32h753xx.s

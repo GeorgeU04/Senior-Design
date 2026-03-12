@@ -143,18 +143,13 @@ int main(void) {
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   initScreen();
-  st = initTouchScreen();
-  if (st != HAL_OK) {
-    printf("ERR: %d\r\n", st);
-    Error_Handler();
-  }
-  showHome();
+  uiInitScreens();
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    readTouchScreen(&touchScreen);
-
+    // readTouchScreen(&touchScreen);
+    // printf("X: %d Y: %d \r\n", touchScreen.xPos, touchScreen.yPos);
     lv_timer_handler();
     HAL_Delay(2);
     /* USER CODE END 3 */

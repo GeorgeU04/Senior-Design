@@ -45,7 +45,18 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/lvgl/src/misc/../tick/../misc/lv_types.h \
  Drivers/lvgl/src/misc/../tick/../misc/../lv_conf_internal.h \
  Drivers/lvgl/src/misc/lv_types.h Drivers/lvgl/src/misc/lv_ll.h \
- Core/Inc/touchscreen.h \
+ Core/Inc/touchscreen.h Drivers/lvgl/src/indev/lv_indev.h \
+ Drivers/lvgl/src/indev/../core/lv_group.h \
+ Drivers/lvgl/src/indev/../core/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../core/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../core/../misc/lv_ll.h \
+ Drivers/lvgl/src/indev/../misc/lv_area.h \
+ Drivers/lvgl/src/indev/../misc/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../misc/lv_math.h \
+ Drivers/lvgl/src/indev/../misc/lv_timer.h \
+ Drivers/lvgl/src/indev/../misc/lv_event.h \
+ Drivers/lvgl/src/indev/../misc/lv_array.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h
 Core/Inc/main.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -101,4 +112,16 @@ Drivers/lvgl/src/misc/../tick/../misc/../lv_conf_internal.h:
 Drivers/lvgl/src/misc/lv_types.h:
 Drivers/lvgl/src/misc/lv_ll.h:
 Core/Inc/touchscreen.h:
+Drivers/lvgl/src/indev/lv_indev.h:
+Drivers/lvgl/src/indev/../core/lv_group.h:
+Drivers/lvgl/src/indev/../core/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../core/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../core/../misc/lv_ll.h:
+Drivers/lvgl/src/indev/../misc/lv_area.h:
+Drivers/lvgl/src/indev/../misc/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../misc/lv_math.h:
+Drivers/lvgl/src/indev/../misc/lv_timer.h:
+Drivers/lvgl/src/indev/../misc/lv_event.h:
+Drivers/lvgl/src/indev/../misc/lv_array.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
