@@ -1,7 +1,7 @@
 #ifndef TOUCHSCREEN_H
 #define TOUCHSCREEN_H
 
-#include "stm32h753xx.h"
+#include "src/indev/lv_indev.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_def.h"
 #include <stdint.h>
@@ -21,6 +21,7 @@ struct touchScreen {
   uint8_t touched;
 };
 
+void touchRead(lv_indev_t *indev, lv_indev_data_t *data);
 HAL_StatusTypeDef initTouchScreen();
 HAL_StatusTypeDef readTouchScreen(struct touchScreen *touchData);
 #endif // !TOUCHSCREEN_H

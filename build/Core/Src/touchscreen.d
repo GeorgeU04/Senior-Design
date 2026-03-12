@@ -1,16 +1,34 @@
 build/Core/Src/touchscreen.o: Core/Src/touchscreen.c \
- Core/Inc/touchscreen.h \
- Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h \
- Drivers/CMSIS/Include/core_cm7.h Drivers/CMSIS/Include/cmsis_version.h \
- Drivers/CMSIS/Include/cmsis_compiler.h Drivers/CMSIS/Include/cmsis_gcc.h \
- Drivers/CMSIS/Include/mpu_armv7.h Drivers/CMSIS/Include/cachel1_armv7.h \
- Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h \
+ Core/Inc/touchscreen.h Drivers/lvgl/src/indev/lv_indev.h \
+ Drivers/lvgl/src/indev/../core/lv_group.h \
+ Drivers/lvgl/src/indev/../core/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../core/../lv_conf_kconfig.h \
+ Drivers/lvgl/src/indev/../core/../../../lv_conf.h \
+ Drivers/lvgl/src/indev/../core/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../core/../misc/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../core/../misc/lv_ll.h \
+ Drivers/lvgl/src/indev/../core/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../misc/lv_area.h \
+ Drivers/lvgl/src/indev/../misc/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../misc/lv_math.h \
+ Drivers/lvgl/src/indev/../misc/lv_timer.h \
+ Drivers/lvgl/src/indev/../misc/../tick/lv_tick.h \
+ Drivers/lvgl/src/indev/../misc/../tick/../lv_conf_internal.h \
+ Drivers/lvgl/src/indev/../misc/../tick/../misc/lv_types.h \
+ Drivers/lvgl/src/indev/../misc/lv_ll.h \
+ Drivers/lvgl/src/indev/../misc/lv_event.h \
+ Drivers/lvgl/src/indev/../misc/lv_array.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  Core/Inc/stm32h7xx_hal_conf.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
  Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h \
+ Drivers/CMSIS/Include/core_cm7.h Drivers/CMSIS/Include/cmsis_version.h \
+ Drivers/CMSIS/Include/cmsis_compiler.h Drivers/CMSIS/Include/cmsis_gcc.h \
+ Drivers/CMSIS/Include/mpu_armv7.h Drivers/CMSIS/Include/cachel1_armv7.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h \
@@ -39,6 +57,31 @@ build/Core/Src/touchscreen.o: Core/Src/touchscreen.c \
  Core/Inc/stm32h7xx_nucleo_conf.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h
 Core/Inc/touchscreen.h:
+Drivers/lvgl/src/indev/lv_indev.h:
+Drivers/lvgl/src/indev/../core/lv_group.h:
+Drivers/lvgl/src/indev/../core/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../core/../lv_conf_kconfig.h:
+Drivers/lvgl/src/indev/../core/../../../lv_conf.h:
+Drivers/lvgl/src/indev/../core/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../core/../misc/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../core/../misc/lv_ll.h:
+Drivers/lvgl/src/indev/../core/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../misc/lv_area.h:
+Drivers/lvgl/src/indev/../misc/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../misc/lv_math.h:
+Drivers/lvgl/src/indev/../misc/lv_timer.h:
+Drivers/lvgl/src/indev/../misc/../tick/lv_tick.h:
+Drivers/lvgl/src/indev/../misc/../tick/../lv_conf_internal.h:
+Drivers/lvgl/src/indev/../misc/../tick/../misc/lv_types.h:
+Drivers/lvgl/src/indev/../misc/lv_ll.h:
+Drivers/lvgl/src/indev/../misc/lv_event.h:
+Drivers/lvgl/src/indev/../misc/lv_array.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
+Core/Inc/stm32h7xx_hal_conf.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
+Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
 Drivers/CMSIS/Include/core_cm7.h:
 Drivers/CMSIS/Include/cmsis_version.h:
@@ -47,12 +90,6 @@ Drivers/CMSIS/Include/cmsis_gcc.h:
 Drivers/CMSIS/Include/mpu_armv7.h:
 Drivers/CMSIS/Include/cachel1_armv7.h:
 Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:
-Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
-Core/Inc/stm32h7xx_hal_conf.h:
-Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
-Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
-Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
-Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h:
