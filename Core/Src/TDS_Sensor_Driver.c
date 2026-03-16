@@ -31,7 +31,7 @@ TDS TDS_init(char* name){
 void measureVoltage(TDS *sensor){
 	//start ADC conversion
 	HAL_ADC_Start(&hadc1);
-	// Poll ADC1 Perihperal & TimeOut = 10mSec
+	// Poll ADC1 Peripheral & TimeOut = 10mSec
 	HAL_ADC_PollForConversion(&hadc1, 10);
 	// Read The ADC Conversion Result
 	sensor->voltage =(((float) HAL_ADC_GetValue(&hadc1))/4095.0f)*VREF;
@@ -57,16 +57,5 @@ void readTDS(TDS *sensor){
 	ECToTDS(sensor);
 }
 
-float TDS_getVoltage(TDS *sensor){
-	return sensor->voltage;
-}
-
-float TDS_getTDS(TDS *sensor){
-	return sensor->TDSVal;
-}
-
-float TDS_getEC(TDS *sensor){
-	return sensor->ECVal;
-}
 
 
