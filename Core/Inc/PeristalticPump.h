@@ -26,6 +26,9 @@ typedef struct{
 	char name[100];
 	GPIO_TypeDef* GPIOx;
 	uint16_t GPIO_Pin;
+    uint8_t RUNFLAG;
+    uint32_t startTime;
+    uint32_t runTime;
 }Pump;
 
 Pump pump_init(char* Name,GPIO_TypeDef* GPIO, uint16_t Pin);
