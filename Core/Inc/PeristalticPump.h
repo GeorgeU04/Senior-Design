@@ -1,9 +1,5 @@
 /*
  * PeristalticPump.h
- *
- *  Created on: Mar 5, 2026
- *      Author: Rainer
- *
  *      Notes:
  *      pump V+ ---> Power rail
  *      pump GND ---> MOSFET drain
@@ -30,11 +26,13 @@ typedef struct{
 	char name[100];
 	GPIO_TypeDef* GPIOx;
 	uint16_t GPIO_Pin;
+    uint8_t RUNFLAG;
+    uint32_t startTime;
+    uint32_t runTime;
 }Pump;
 
 Pump pump_init(char* Name,GPIO_TypeDef* GPIO, uint16_t Pin);
-void runPump(Pump pump,int time);
-void runPump_1(Pump pump);
-void runPump_10(Pump pump);
+void runPump(Pump *pump,uint32_t ms);
+void checkPump(Pump *pump);
 
 #endif /* INC_PERISTALTICPUMP_H_ */

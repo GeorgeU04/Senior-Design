@@ -1,8 +1,6 @@
 /*
  * TDS_Sensor_Driver.h
  *
- *  Created on: Mar 9, 2026
- *      Author: Rainer
  */
 
 #ifndef INC_TDS_SENSOR_DRIVER_H_
@@ -37,10 +35,5 @@ void ECToTDS(TDS *sensor);
 // USE THIS IN MAIN TO GET DATA
 void readTDS(TDS *sensor);
 
-float TDS_getVoltage(TDS *sensor);
-
-float TDS_getTDS(TDS *sensor);
-
-float TDS_getEC(TDS *sensor);
 
 #endif /* INC_TDS_SENSOR_DRIVER_H_ */
