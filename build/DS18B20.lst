@@ -1,0 +1,836 @@
+ARM GAS  /tmp/ccj1xZaZ.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"DS18B20.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Core/Src/DS18B20.c"
+  19              		.section	.text.DS18B20_Delay_us,"ax",%progbits
+  20              		.align	1
+  21              		.global	DS18B20_Delay_us
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	DS18B20_Delay_us:
+  27              	.LVL0:
+  28              	.LFB340:
+   1:Core/Src/DS18B20.c **** #include "DS18B20.h"
+   2:Core/Src/DS18B20.c **** #include "main.h"
+   3:Core/Src/DS18B20.c **** #include <stdint.h>
+   4:Core/Src/DS18B20.c **** 
+   5:Core/Src/DS18B20.c **** void DS18B20_Delay_us(uint16_t us) {
+  29              		.loc 1 5 36 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 5 36 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 0446     		mov	r4, r0
+   6:Core/Src/DS18B20.c ****   __HAL_TIM_SET_COUNTER(&htim2, 0);
+  40              		.loc 1 6 3 is_stmt 1 view .LVU2
+  41 0004 0748     		ldr	r0, .L4
+  42              	.LVL1:
+  43              		.loc 1 6 3 is_stmt 0 view .LVU3
+  44 0006 0368     		ldr	r3, [r0]
+  45 0008 0022     		movs	r2, #0
+  46 000a 5A62     		str	r2, [r3, #36]
+   7:Core/Src/DS18B20.c ****   HAL_TIM_Base_Start(&htim2);
+  47              		.loc 1 7 3 is_stmt 1 view .LVU4
+  48 000c FFF7FEFF 		bl	HAL_TIM_Base_Start
+  49              	.LVL2:
+   8:Core/Src/DS18B20.c **** 
+   9:Core/Src/DS18B20.c ****   while (__HAL_TIM_GET_COUNTER(&htim2) < us)
+ARM GAS  /tmp/ccj1xZaZ.s 			page 2
+
+
+  50              		.loc 1 9 3 view .LVU5
+  51              	.L2:
+  52              		.loc 1 9 40 discriminator 1 view .LVU6
+  53              		.loc 1 9 10 is_stmt 0 discriminator 1 view .LVU7
+  54 0010 044B     		ldr	r3, .L4
+  55 0012 1B68     		ldr	r3, [r3]
+  56 0014 5B6A     		ldr	r3, [r3, #36]
+  57              		.loc 1 9 40 discriminator 1 view .LVU8
+  58 0016 A342     		cmp	r3, r4
+  59 0018 FAD3     		bcc	.L2
+  10:Core/Src/DS18B20.c ****     ;
+  11:Core/Src/DS18B20.c ****   HAL_TIM_Base_Stop(&htim2);
+  60              		.loc 1 11 3 is_stmt 1 view .LVU9
+  61 001a 0248     		ldr	r0, .L4
+  62 001c FFF7FEFF 		bl	HAL_TIM_Base_Stop
+  63              	.LVL3:
+  12:Core/Src/DS18B20.c **** }
+  64              		.loc 1 12 1 is_stmt 0 view .LVU10
+  65 0020 10BD     		pop	{r4, pc}
+  66              	.LVL4:
+  67              	.L5:
+  68              		.loc 1 12 1 view .LVU11
+  69 0022 00BF     		.align	2
+  70              	.L4:
+  71 0024 00000000 		.word	htim2
+  72              		.cfi_endproc
+  73              	.LFE340:
+  75              		.section	.text.writeBit,"ax",%progbits
+  76              		.align	1
+  77              		.global	writeBit
+  78              		.syntax unified
+  79              		.thumb
+  80              		.thumb_func
+  82              	writeBit:
+  83              	.LVL5:
+  84              	.LFB341:
+  13:Core/Src/DS18B20.c **** 
+  14:Core/Src/DS18B20.c **** void writeBit(uint8_t bit, struct DS18B20 sensor) {
+  85              		.loc 1 14 51 is_stmt 1 view -0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 8
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		.loc 1 14 51 is_stmt 0 view .LVU13
+  90 0000 30B5     		push	{r4, r5, lr}
+  91              	.LCFI1:
+  92              		.cfi_def_cfa_offset 12
+  93              		.cfi_offset 4, -12
+  94              		.cfi_offset 5, -8
+  95              		.cfi_offset 14, -4
+  96 0002 83B0     		sub	sp, sp, #12
+  97              	.LCFI2:
+  98              		.cfi_def_cfa_offset 24
+  99 0004 02AB     		add	r3, sp, #8
+ 100 0006 03E90600 		stmdb	r3, {r1, r2}
+  15:Core/Src/DS18B20.c ****   sensor.port->MODER &= ~(0b11 << (sensor.pin * 2));
+ 101              		.loc 1 15 3 is_stmt 1 view .LVU14
+ 102              		.loc 1 15 9 is_stmt 0 view .LVU15
+ARM GAS  /tmp/ccj1xZaZ.s 			page 3
+
+
+ 103 000a 0C46     		mov	r4, r1
+ 104              		.loc 1 15 14 view .LVU16
+ 105 000c 0A68     		ldr	r2, [r1]
+ 106              		.loc 1 15 42 view .LVU17
+ 107 000e BDF80630 		ldrh	r3, [sp, #6]
+ 108              		.loc 1 15 47 view .LVU18
+ 109 0012 5B00     		lsls	r3, r3, #1
+ 110              		.loc 1 15 32 view .LVU19
+ 111 0014 0321     		movs	r1, #3
+ 112 0016 9940     		lsls	r1, r1, r3
+ 113              		.loc 1 15 22 view .LVU20
+ 114 0018 22EA0102 		bic	r2, r2, r1
+ 115 001c 2260     		str	r2, [r4]
+  16:Core/Src/DS18B20.c ****   sensor.port->MODER |= (0b01 << (sensor.pin * 2)); // set as output
+ 116              		.loc 1 16 3 is_stmt 1 view .LVU21
+ 117              		.loc 1 16 14 is_stmt 0 view .LVU22
+ 118 001e 2268     		ldr	r2, [r4]
+ 119              		.loc 1 16 31 view .LVU23
+ 120 0020 0121     		movs	r1, #1
+ 121 0022 01FA03F3 		lsl	r3, r1, r3
+ 122              		.loc 1 16 22 view .LVU24
+ 123 0026 1343     		orrs	r3, r3, r2
+ 124 0028 2360     		str	r3, [r4]
+  17:Core/Src/DS18B20.c ****   sensor.port->BSRR = (sensor.pinMask << 16);       // pull low
+ 125              		.loc 1 17 3 is_stmt 1 view .LVU25
+ 126              		.loc 1 17 30 is_stmt 0 view .LVU26
+ 127 002a BDF80450 		ldrh	r5, [sp, #4]
+ 128              		.loc 1 17 39 view .LVU27
+ 129 002e 2B04     		lsls	r3, r5, #16
+ 130              		.loc 1 17 21 view .LVU28
+ 131 0030 A361     		str	r3, [r4, #24]
+  18:Core/Src/DS18B20.c **** 
+  19:Core/Src/DS18B20.c ****   if (bit == 0) {
+ 132              		.loc 1 19 3 is_stmt 1 view .LVU29
+ 133              		.loc 1 19 6 is_stmt 0 view .LVU30
+ 134 0032 28B9     		cbnz	r0, .L7
+  20:Core/Src/DS18B20.c ****     DS18B20_Delay_us(60);
+ 135              		.loc 1 20 5 is_stmt 1 view .LVU31
+ 136 0034 3C20     		movs	r0, #60
+ 137              	.LVL6:
+ 138              		.loc 1 20 5 is_stmt 0 view .LVU32
+ 139 0036 FFF7FEFF 		bl	DS18B20_Delay_us
+ 140              	.LVL7:
+  21:Core/Src/DS18B20.c ****     sensor.port->BSRR = (sensor.pinMask); // pull high
+ 141              		.loc 1 21 5 is_stmt 1 view .LVU33
+ 142              		.loc 1 21 23 is_stmt 0 view .LVU34
+ 143 003a A561     		str	r5, [r4, #24]
+ 144              	.L6:
+  22:Core/Src/DS18B20.c ****   } else {
+  23:Core/Src/DS18B20.c ****     DS18B20_Delay_us(10);
+  24:Core/Src/DS18B20.c ****     sensor.port->BSRR = (sensor.pinMask); // pull high
+  25:Core/Src/DS18B20.c ****     DS18B20_Delay_us(50);
+  26:Core/Src/DS18B20.c ****   }
+  27:Core/Src/DS18B20.c **** }
+ 145              		.loc 1 27 1 view .LVU35
+ 146 003c 03B0     		add	sp, sp, #12
+ 147              	.LCFI3:
+ARM GAS  /tmp/ccj1xZaZ.s 			page 4
+
+
+ 148              		.cfi_remember_state
+ 149              		.cfi_def_cfa_offset 12
+ 150              		@ sp needed
+ 151 003e 30BD     		pop	{r4, r5, pc}
+ 152              	.LVL8:
+ 153              	.L7:
+ 154              	.LCFI4:
+ 155              		.cfi_restore_state
+  23:Core/Src/DS18B20.c ****     sensor.port->BSRR = (sensor.pinMask); // pull high
+ 156              		.loc 1 23 5 is_stmt 1 view .LVU36
+ 157 0040 0A20     		movs	r0, #10
+ 158              	.LVL9:
+  23:Core/Src/DS18B20.c ****     sensor.port->BSRR = (sensor.pinMask); // pull high
+ 159              		.loc 1 23 5 is_stmt 0 view .LVU37
+ 160 0042 FFF7FEFF 		bl	DS18B20_Delay_us
+ 161              	.LVL10:
+  24:Core/Src/DS18B20.c ****     DS18B20_Delay_us(50);
+ 162              		.loc 1 24 5 is_stmt 1 view .LVU38
+  24:Core/Src/DS18B20.c ****     DS18B20_Delay_us(50);
+ 163              		.loc 1 24 23 is_stmt 0 view .LVU39
+ 164 0046 A561     		str	r5, [r4, #24]
+  25:Core/Src/DS18B20.c ****   }
+ 165              		.loc 1 25 5 is_stmt 1 view .LVU40
+ 166 0048 3220     		movs	r0, #50
+ 167 004a FFF7FEFF 		bl	DS18B20_Delay_us
+ 168              	.LVL11:
+ 169              		.loc 1 27 1 is_stmt 0 view .LVU41
+ 170 004e F5E7     		b	.L6
+ 171              		.cfi_endproc
+ 172              	.LFE341:
+ 174              		.section	.text.writeByte,"ax",%progbits
+ 175              		.align	1
+ 176              		.global	writeByte
+ 177              		.syntax unified
+ 178              		.thumb
+ 179              		.thumb_func
+ 181              	writeByte:
+ 182              	.LVL12:
+ 183              	.LFB342:
+  28:Core/Src/DS18B20.c **** 
+  29:Core/Src/DS18B20.c **** void writeByte(uint8_t byte, struct DS18B20 sensor) {
+ 184              		.loc 1 29 53 is_stmt 1 view -0
+ 185              		.cfi_startproc
+ 186              		@ args = 0, pretend = 0, frame = 8
+ 187              		@ frame_needed = 0, uses_anonymous_args = 0
+ 188              		.loc 1 29 53 is_stmt 0 view .LVU43
+ 189 0000 30B5     		push	{r4, r5, lr}
+ 190              	.LCFI5:
+ 191              		.cfi_def_cfa_offset 12
+ 192              		.cfi_offset 4, -12
+ 193              		.cfi_offset 5, -8
+ 194              		.cfi_offset 14, -4
+ 195 0002 83B0     		sub	sp, sp, #12
+ 196              	.LCFI6:
+ 197              		.cfi_def_cfa_offset 24
+ 198 0004 0546     		mov	r5, r0
+ 199 0006 02AB     		add	r3, sp, #8
+ARM GAS  /tmp/ccj1xZaZ.s 			page 5
+
+
+ 200 0008 03E90600 		stmdb	r3, {r1, r2}
+  30:Core/Src/DS18B20.c ****   for (uint8_t i = 0; i < 8; ++i) {
+ 201              		.loc 1 30 3 is_stmt 1 view .LVU44
+ 202              	.LBB2:
+ 203              		.loc 1 30 8 view .LVU45
+ 204              	.LVL13:
+ 205              		.loc 1 30 16 is_stmt 0 view .LVU46
+ 206 000c 0024     		movs	r4, #0
+ 207              		.loc 1 30 3 view .LVU47
+ 208 000e 09E0     		b	.L11
+ 209              	.LVL14:
+ 210              	.L12:
+  31:Core/Src/DS18B20.c ****     writeBit(byte & 0x01, sensor);
+ 211              		.loc 1 31 5 is_stmt 1 view .LVU48
+ 212 0010 02AB     		add	r3, sp, #8
+ 213 0012 13E90600 		ldmdb	r3, {r1, r2}
+ 214 0016 05F00100 		and	r0, r5, #1
+ 215 001a FFF7FEFF 		bl	writeBit
+ 216              	.LVL15:
+  32:Core/Src/DS18B20.c ****     byte >>= 1;
+ 217              		.loc 1 32 5 view .LVU49
+ 218              		.loc 1 32 10 is_stmt 0 view .LVU50
+ 219 001e 6D08     		lsrs	r5, r5, #1
+ 220              	.LVL16:
+  30:Core/Src/DS18B20.c ****   for (uint8_t i = 0; i < 8; ++i) {
+ 221              		.loc 1 30 30 is_stmt 1 discriminator 3 view .LVU51
+ 222 0020 0134     		adds	r4, r4, #1
+ 223              	.LVL17:
+  30:Core/Src/DS18B20.c ****   for (uint8_t i = 0; i < 8; ++i) {
+ 224              		.loc 1 30 30 is_stmt 0 discriminator 3 view .LVU52
+ 225 0022 E4B2     		uxtb	r4, r4
+ 226              	.LVL18:
+ 227              	.L11:
+  30:Core/Src/DS18B20.c ****   for (uint8_t i = 0; i < 8; ++i) {
+ 228              		.loc 1 30 25 is_stmt 1 discriminator 1 view .LVU53
+ 229 0024 072C     		cmp	r4, #7
+ 230 0026 F3D9     		bls	.L12
+ 231              	.LBE2:
+  33:Core/Src/DS18B20.c ****   }
+  34:Core/Src/DS18B20.c **** }
+ 232              		.loc 1 34 1 is_stmt 0 view .LVU54
+ 233 0028 03B0     		add	sp, sp, #12
+ 234              	.LCFI7:
+ 235              		.cfi_def_cfa_offset 12
+ 236              		@ sp needed
+ 237 002a 30BD     		pop	{r4, r5, pc}
+ 238              		.loc 1 34 1 view .LVU55
+ 239              		.cfi_endproc
+ 240              	.LFE342:
+ 242              		.section	.text.readBit,"ax",%progbits
+ 243              		.align	1
+ 244              		.global	readBit
+ 245              		.syntax unified
+ 246              		.thumb
+ 247              		.thumb_func
+ 249              	readBit:
+ 250              	.LFB343:
+ARM GAS  /tmp/ccj1xZaZ.s 			page 6
+
+
+  35:Core/Src/DS18B20.c **** 
+  36:Core/Src/DS18B20.c **** uint8_t readBit(struct DS18B20 sensor) {
+ 251              		.loc 1 36 40 is_stmt 1 view -0
+ 252              		.cfi_startproc
+ 253              		@ args = 0, pretend = 0, frame = 8
+ 254              		@ frame_needed = 0, uses_anonymous_args = 0
+ 255 0000 70B5     		push	{r4, r5, r6, lr}
+ 256              	.LCFI8:
+ 257              		.cfi_def_cfa_offset 16
+ 258              		.cfi_offset 4, -16
+ 259              		.cfi_offset 5, -12
+ 260              		.cfi_offset 6, -8
+ 261              		.cfi_offset 14, -4
+ 262 0002 82B0     		sub	sp, sp, #8
+ 263              	.LCFI9:
+ 264              		.cfi_def_cfa_offset 24
+ 265 0004 02AB     		add	r3, sp, #8
+ 266 0006 03E90300 		stmdb	r3, {r0, r1}
+  37:Core/Src/DS18B20.c ****   uint8_t bit = 0;
+ 267              		.loc 1 37 3 view .LVU57
+ 268              	.LVL19:
+  38:Core/Src/DS18B20.c **** 
+  39:Core/Src/DS18B20.c ****   sensor.port->MODER &= ~(0b11 << (2 * sensor.pin));
+ 269              		.loc 1 39 3 view .LVU58
+ 270              		.loc 1 39 9 is_stmt 0 view .LVU59
+ 271 000a 0446     		mov	r4, r0
+ 272              		.loc 1 39 14 view .LVU60
+ 273 000c 0168     		ldr	r1, [r0]
+ 274              		.loc 1 39 46 view .LVU61
+ 275 000e BDF80630 		ldrh	r3, [sp, #6]
+ 276              		.loc 1 39 38 view .LVU62
+ 277 0012 5B00     		lsls	r3, r3, #1
+ 278              		.loc 1 39 32 view .LVU63
+ 279 0014 0322     		movs	r2, #3
+ 280 0016 9A40     		lsls	r2, r2, r3
+ 281              		.loc 1 39 25 view .LVU64
+ 282 0018 D543     		mvns	r5, r2
+ 283              		.loc 1 39 22 view .LVU65
+ 284 001a 21EA0202 		bic	r2, r1, r2
+ 285 001e 0260     		str	r2, [r0]
+  40:Core/Src/DS18B20.c ****   sensor.port->MODER |= (0b01 << (2 * sensor.pin)); // set as output
+ 286              		.loc 1 40 3 is_stmt 1 view .LVU66
+ 287              		.loc 1 40 14 is_stmt 0 view .LVU67
+ 288 0020 0268     		ldr	r2, [r0]
+ 289              		.loc 1 40 31 view .LVU68
+ 290 0022 0121     		movs	r1, #1
+ 291 0024 01FA03F3 		lsl	r3, r1, r3
+ 292              		.loc 1 40 22 view .LVU69
+ 293 0028 1343     		orrs	r3, r3, r2
+ 294 002a 0360     		str	r3, [r0]
+  41:Core/Src/DS18B20.c ****   sensor.port->BSRR = (sensor.pinMask << 16);       // pull low
+ 295              		.loc 1 41 3 is_stmt 1 view .LVU70
+ 296              		.loc 1 41 30 is_stmt 0 view .LVU71
+ 297 002c BDF80460 		ldrh	r6, [sp, #4]
+ 298              		.loc 1 41 39 view .LVU72
+ 299 0030 3304     		lsls	r3, r6, #16
+ 300              		.loc 1 41 21 view .LVU73
+ARM GAS  /tmp/ccj1xZaZ.s 			page 7
+
+
+ 301 0032 8361     		str	r3, [r0, #24]
+  42:Core/Src/DS18B20.c ****   DS18B20_Delay_us(5);
+ 302              		.loc 1 42 3 is_stmt 1 view .LVU74
+ 303 0034 0520     		movs	r0, #5
+ 304 0036 FFF7FEFF 		bl	DS18B20_Delay_us
+ 305              	.LVL20:
+  43:Core/Src/DS18B20.c **** 
+  44:Core/Src/DS18B20.c ****   sensor.port->MODER &= ~(0b11 << (2 * sensor.pin)); // set as input
+ 306              		.loc 1 44 3 view .LVU75
+ 307              		.loc 1 44 14 is_stmt 0 view .LVU76
+ 308 003a 2368     		ldr	r3, [r4]
+ 309              		.loc 1 44 22 view .LVU77
+ 310 003c 1D40     		ands	r5, r5, r3
+ 311 003e 2560     		str	r5, [r4]
+  45:Core/Src/DS18B20.c ****   DS18B20_Delay_us(15);
+ 312              		.loc 1 45 3 is_stmt 1 view .LVU78
+ 313 0040 0F20     		movs	r0, #15
+ 314 0042 FFF7FEFF 		bl	DS18B20_Delay_us
+ 315              	.LVL21:
+  46:Core/Src/DS18B20.c **** 
+  47:Core/Src/DS18B20.c ****   if (sensor.port->IDR & (sensor.pinMask)) {
+ 316              		.loc 1 47 3 view .LVU79
+ 317              		.loc 1 47 18 is_stmt 0 view .LVU80
+ 318 0046 2369     		ldr	r3, [r4, #16]
+ 319              		.loc 1 47 6 view .LVU81
+ 320 0048 1E42     		tst	r6, r3
+ 321 004a 06D1     		bne	.L16
+  37:Core/Src/DS18B20.c **** 
+ 322              		.loc 1 37 11 view .LVU82
+ 323 004c 0024     		movs	r4, #0
+ 324              	.L15:
+ 325              	.LVL22:
+  48:Core/Src/DS18B20.c ****     bit = 1;
+  49:Core/Src/DS18B20.c ****   }
+  50:Core/Src/DS18B20.c ****   DS18B20_Delay_us(45);
+ 326              		.loc 1 50 3 is_stmt 1 view .LVU83
+ 327 004e 2D20     		movs	r0, #45
+ 328 0050 FFF7FEFF 		bl	DS18B20_Delay_us
+ 329              	.LVL23:
+  51:Core/Src/DS18B20.c **** 
+  52:Core/Src/DS18B20.c ****   return bit;
+ 330              		.loc 1 52 3 view .LVU84
+  53:Core/Src/DS18B20.c **** }
+ 331              		.loc 1 53 1 is_stmt 0 view .LVU85
+ 332 0054 2046     		mov	r0, r4
+ 333 0056 02B0     		add	sp, sp, #8
+ 334              	.LCFI10:
+ 335              		.cfi_remember_state
+ 336              		.cfi_def_cfa_offset 16
+ 337              		@ sp needed
+ 338 0058 70BD     		pop	{r4, r5, r6, pc}
+ 339              	.LVL24:
+ 340              	.L16:
+ 341              	.LCFI11:
+ 342              		.cfi_restore_state
+  48:Core/Src/DS18B20.c ****     bit = 1;
+ 343              		.loc 1 48 9 view .LVU86
+ARM GAS  /tmp/ccj1xZaZ.s 			page 8
+
+
+ 344 005a 0124     		movs	r4, #1
+ 345 005c F7E7     		b	.L15
+ 346              		.cfi_endproc
+ 347              	.LFE343:
+ 349              		.section	.text.readByte,"ax",%progbits
+ 350              		.align	1
+ 351              		.global	readByte
+ 352              		.syntax unified
+ 353              		.thumb
+ 354              		.thumb_func
+ 356              	readByte:
+ 357              	.LFB344:
+  54:Core/Src/DS18B20.c **** 
+  55:Core/Src/DS18B20.c **** uint8_t readByte(struct DS18B20 sensor) {
+ 358              		.loc 1 55 41 is_stmt 1 view -0
+ 359              		.cfi_startproc
+ 360              		@ args = 0, pretend = 0, frame = 8
+ 361              		@ frame_needed = 0, uses_anonymous_args = 0
+ 362 0000 30B5     		push	{r4, r5, lr}
+ 363              	.LCFI12:
+ 364              		.cfi_def_cfa_offset 12
+ 365              		.cfi_offset 4, -12
+ 366              		.cfi_offset 5, -8
+ 367              		.cfi_offset 14, -4
+ 368 0002 83B0     		sub	sp, sp, #12
+ 369              	.LCFI13:
+ 370              		.cfi_def_cfa_offset 24
+ 371 0004 02AB     		add	r3, sp, #8
+ 372 0006 03E90300 		stmdb	r3, {r0, r1}
+  56:Core/Src/DS18B20.c ****   uint8_t byte = 0;
+ 373              		.loc 1 56 3 view .LVU88
+ 374              	.LVL25:
+  57:Core/Src/DS18B20.c **** 
+  58:Core/Src/DS18B20.c ****   for (uint8_t i = 0; i < 8; ++i) {
+ 375              		.loc 1 58 3 view .LVU89
+ 376              	.LBB3:
+ 377              		.loc 1 58 8 view .LVU90
+ 378              		.loc 1 58 16 is_stmt 0 view .LVU91
+ 379 000a 0024     		movs	r4, #0
+ 380              	.LBE3:
+  56:Core/Src/DS18B20.c ****   uint8_t byte = 0;
+ 381              		.loc 1 56 11 view .LVU92
+ 382 000c 2546     		mov	r5, r4
+ 383              	.LBB4:
+ 384              		.loc 1 58 3 view .LVU93
+ 385 000e 09E0     		b	.L19
+ 386              	.LVL26:
+ 387              	.L20:
+  59:Core/Src/DS18B20.c ****     byte |= (readBit(sensor) << i);
+ 388              		.loc 1 59 5 is_stmt 1 view .LVU94
+ 389              		.loc 1 59 14 is_stmt 0 view .LVU95
+ 390 0010 02AB     		add	r3, sp, #8
+ 391 0012 13E90300 		ldmdb	r3, {r0, r1}
+ 392 0016 FFF7FEFF 		bl	readBit
+ 393              	.LVL27:
+ 394              		.loc 1 59 30 discriminator 1 view .LVU96
+ 395 001a A040     		lsls	r0, r0, r4
+ARM GAS  /tmp/ccj1xZaZ.s 			page 9
+
+
+ 396              		.loc 1 59 10 discriminator 1 view .LVU97
+ 397 001c 0543     		orrs	r5, r5, r0
+ 398              	.LVL28:
+ 399              		.loc 1 59 10 discriminator 1 view .LVU98
+ 400 001e EDB2     		uxtb	r5, r5
+ 401              	.LVL29:
+  58:Core/Src/DS18B20.c ****     byte |= (readBit(sensor) << i);
+ 402              		.loc 1 58 30 is_stmt 1 discriminator 3 view .LVU99
+ 403 0020 0134     		adds	r4, r4, #1
+ 404              	.LVL30:
+  58:Core/Src/DS18B20.c ****     byte |= (readBit(sensor) << i);
+ 405              		.loc 1 58 30 is_stmt 0 discriminator 3 view .LVU100
+ 406 0022 E4B2     		uxtb	r4, r4
+ 407              	.LVL31:
+ 408              	.L19:
+  58:Core/Src/DS18B20.c ****     byte |= (readBit(sensor) << i);
+ 409              		.loc 1 58 25 is_stmt 1 discriminator 1 view .LVU101
+ 410 0024 072C     		cmp	r4, #7
+ 411 0026 F3D9     		bls	.L20
+ 412              	.LBE4:
+  60:Core/Src/DS18B20.c ****   }
+  61:Core/Src/DS18B20.c ****   return byte;
+ 413              		.loc 1 61 3 view .LVU102
+  62:Core/Src/DS18B20.c **** }
+ 414              		.loc 1 62 1 is_stmt 0 view .LVU103
+ 415 0028 2846     		mov	r0, r5
+ 416 002a 03B0     		add	sp, sp, #12
+ 417              	.LCFI14:
+ 418              		.cfi_def_cfa_offset 12
+ 419              		@ sp needed
+ 420 002c 30BD     		pop	{r4, r5, pc}
+ 421              		.loc 1 62 1 view .LVU104
+ 422              		.cfi_endproc
+ 423              	.LFE344:
+ 425              		.section	.text.sendReset,"ax",%progbits
+ 426              		.align	1
+ 427              		.global	sendReset
+ 428              		.syntax unified
+ 429              		.thumb
+ 430              		.thumb_func
+ 432              	sendReset:
+ 433              	.LFB345:
+  63:Core/Src/DS18B20.c **** 
+  64:Core/Src/DS18B20.c **** uint8_t sendReset(struct DS18B20 sensor) {
+ 434              		.loc 1 64 42 is_stmt 1 view -0
+ 435              		.cfi_startproc
+ 436              		@ args = 0, pretend = 0, frame = 8
+ 437              		@ frame_needed = 0, uses_anonymous_args = 0
+ 438 0000 70B5     		push	{r4, r5, r6, lr}
+ 439              	.LCFI15:
+ 440              		.cfi_def_cfa_offset 16
+ 441              		.cfi_offset 4, -16
+ 442              		.cfi_offset 5, -12
+ 443              		.cfi_offset 6, -8
+ 444              		.cfi_offset 14, -4
+ 445 0002 82B0     		sub	sp, sp, #8
+ 446              	.LCFI16:
+ARM GAS  /tmp/ccj1xZaZ.s 			page 10
+
+
+ 447              		.cfi_def_cfa_offset 24
+ 448 0004 02AB     		add	r3, sp, #8
+ 449 0006 03E90300 		stmdb	r3, {r0, r1}
+  65:Core/Src/DS18B20.c ****   uint8_t response = 0;
+ 450              		.loc 1 65 3 view .LVU106
+ 451              	.LVL32:
+  66:Core/Src/DS18B20.c **** 
+  67:Core/Src/DS18B20.c ****   sensor.port->MODER &= ~(0b11 << (2 * sensor.pin));
+ 452              		.loc 1 67 3 view .LVU107
+ 453              		.loc 1 67 9 is_stmt 0 view .LVU108
+ 454 000a 0446     		mov	r4, r0
+ 455              		.loc 1 67 14 view .LVU109
+ 456 000c 0168     		ldr	r1, [r0]
+ 457              		.loc 1 67 46 view .LVU110
+ 458 000e BDF80630 		ldrh	r3, [sp, #6]
+ 459              		.loc 1 67 38 view .LVU111
+ 460 0012 5B00     		lsls	r3, r3, #1
+ 461              		.loc 1 67 32 view .LVU112
+ 462 0014 0322     		movs	r2, #3
+ 463 0016 9A40     		lsls	r2, r2, r3
+ 464              		.loc 1 67 25 view .LVU113
+ 465 0018 D543     		mvns	r5, r2
+ 466              		.loc 1 67 22 view .LVU114
+ 467 001a 21EA0202 		bic	r2, r1, r2
+ 468 001e 0260     		str	r2, [r0]
+  68:Core/Src/DS18B20.c ****   sensor.port->MODER |= (0b01 << (2 * sensor.pin)); // set as output
+ 469              		.loc 1 68 3 is_stmt 1 view .LVU115
+ 470              		.loc 1 68 14 is_stmt 0 view .LVU116
+ 471 0020 0268     		ldr	r2, [r0]
+ 472              		.loc 1 68 31 view .LVU117
+ 473 0022 0121     		movs	r1, #1
+ 474 0024 01FA03F3 		lsl	r3, r1, r3
+ 475              		.loc 1 68 22 view .LVU118
+ 476 0028 1343     		orrs	r3, r3, r2
+ 477 002a 0360     		str	r3, [r0]
+  69:Core/Src/DS18B20.c **** 
+  70:Core/Src/DS18B20.c ****   sensor.port->BSRR = (sensor.pinMask << 16); // pull low
+ 478              		.loc 1 70 3 is_stmt 1 view .LVU119
+ 479              		.loc 1 70 30 is_stmt 0 view .LVU120
+ 480 002c BDF80460 		ldrh	r6, [sp, #4]
+ 481              		.loc 1 70 39 view .LVU121
+ 482 0030 3304     		lsls	r3, r6, #16
+ 483              		.loc 1 70 21 view .LVU122
+ 484 0032 8361     		str	r3, [r0, #24]
+  71:Core/Src/DS18B20.c ****   DS18B20_Delay_us(480);
+ 485              		.loc 1 71 3 is_stmt 1 view .LVU123
+ 486 0034 4FF4F070 		mov	r0, #480
+ 487 0038 FFF7FEFF 		bl	DS18B20_Delay_us
+ 488              	.LVL33:
+  72:Core/Src/DS18B20.c **** 
+  73:Core/Src/DS18B20.c ****   sensor.port->MODER &= ~(0b11 << (2 * sensor.pin)); // set as input
+ 489              		.loc 1 73 3 view .LVU124
+ 490              		.loc 1 73 14 is_stmt 0 view .LVU125
+ 491 003c 2368     		ldr	r3, [r4]
+ 492              		.loc 1 73 22 view .LVU126
+ 493 003e 1D40     		ands	r5, r5, r3
+ 494 0040 2560     		str	r5, [r4]
+ARM GAS  /tmp/ccj1xZaZ.s 			page 11
+
+
+  74:Core/Src/DS18B20.c ****   DS18B20_Delay_us(60);
+ 495              		.loc 1 74 3 is_stmt 1 view .LVU127
+ 496 0042 3C20     		movs	r0, #60
+ 497 0044 FFF7FEFF 		bl	DS18B20_Delay_us
+ 498              	.LVL34:
+  75:Core/Src/DS18B20.c **** 
+  76:Core/Src/DS18B20.c ****   if (!(sensor.port->IDR & (sensor.pinMask))) {
+ 499              		.loc 1 76 3 view .LVU128
+ 500              		.loc 1 76 20 is_stmt 0 view .LVU129
+ 501 0048 2369     		ldr	r3, [r4, #16]
+ 502              		.loc 1 76 6 view .LVU130
+ 503 004a 1E42     		tst	r6, r3
+ 504 004c 07D0     		beq	.L24
+  65:Core/Src/DS18B20.c **** 
+ 505              		.loc 1 65 11 view .LVU131
+ 506 004e 0024     		movs	r4, #0
+ 507              	.L23:
+ 508              	.LVL35:
+  77:Core/Src/DS18B20.c ****     response = 1;
+  78:Core/Src/DS18B20.c ****   }
+  79:Core/Src/DS18B20.c ****   DS18B20_Delay_us(420);
+ 509              		.loc 1 79 3 is_stmt 1 view .LVU132
+ 510 0050 4FF4D270 		mov	r0, #420
+ 511 0054 FFF7FEFF 		bl	DS18B20_Delay_us
+ 512              	.LVL36:
+  80:Core/Src/DS18B20.c **** 
+  81:Core/Src/DS18B20.c ****   return response;
+ 513              		.loc 1 81 3 view .LVU133
+  82:Core/Src/DS18B20.c **** }
+ 514              		.loc 1 82 1 is_stmt 0 view .LVU134
+ 515 0058 2046     		mov	r0, r4
+ 516 005a 02B0     		add	sp, sp, #8
+ 517              	.LCFI17:
+ 518              		.cfi_remember_state
+ 519              		.cfi_def_cfa_offset 16
+ 520              		@ sp needed
+ 521 005c 70BD     		pop	{r4, r5, r6, pc}
+ 522              	.LVL37:
+ 523              	.L24:
+ 524              	.LCFI18:
+ 525              		.cfi_restore_state
+  77:Core/Src/DS18B20.c ****     response = 1;
+ 526              		.loc 1 77 14 view .LVU135
+ 527 005e 0124     		movs	r4, #1
+ 528 0060 F6E7     		b	.L23
+ 529              		.cfi_endproc
+ 530              	.LFE345:
+ 532              		.section	.text.startConversion,"ax",%progbits
+ 533              		.align	1
+ 534              		.global	startConversion
+ 535              		.syntax unified
+ 536              		.thumb
+ 537              		.thumb_func
+ 539              	startConversion:
+ 540              	.LFB346:
+  83:Core/Src/DS18B20.c **** 
+  84:Core/Src/DS18B20.c **** void startConversion(struct DS18B20 sensor) {
+ARM GAS  /tmp/ccj1xZaZ.s 			page 12
+
+
+ 541              		.loc 1 84 45 is_stmt 1 view -0
+ 542              		.cfi_startproc
+ 543              		@ args = 0, pretend = 0, frame = 8
+ 544              		@ frame_needed = 0, uses_anonymous_args = 0
+ 545 0000 10B5     		push	{r4, lr}
+ 546              	.LCFI19:
+ 547              		.cfi_def_cfa_offset 8
+ 548              		.cfi_offset 4, -8
+ 549              		.cfi_offset 14, -4
+ 550 0002 82B0     		sub	sp, sp, #8
+ 551              	.LCFI20:
+ 552              		.cfi_def_cfa_offset 16
+ 553 0004 CDE90001 		strd	r0, r1, [sp]
+  85:Core/Src/DS18B20.c ****   sendReset(sensor);
+ 554              		.loc 1 85 3 view .LVU137
+ 555 0008 DDE90001 		ldrd	r0, r1, [sp]
+ 556 000c FFF7FEFF 		bl	sendReset
+ 557              	.LVL38:
+  86:Core/Src/DS18B20.c ****   writeByte(0xCC, sensor); // Skip ROM
+ 558              		.loc 1 86 3 view .LVU138
+ 559 0010 DDE90012 		ldrd	r1, r2, [sp]
+ 560 0014 CC20     		movs	r0, #204
+ 561 0016 FFF7FEFF 		bl	writeByte
+ 562              	.LVL39:
+  87:Core/Src/DS18B20.c ****   writeByte(0x44, sensor); // Start conversion
+ 563              		.loc 1 87 3 view .LVU139
+ 564 001a DDE90012 		ldrd	r1, r2, [sp]
+ 565 001e 4420     		movs	r0, #68
+ 566 0020 FFF7FEFF 		bl	writeByte
+ 567              	.LVL40:
+  88:Core/Src/DS18B20.c **** }
+ 568              		.loc 1 88 1 is_stmt 0 view .LVU140
+ 569 0024 02B0     		add	sp, sp, #8
+ 570              	.LCFI21:
+ 571              		.cfi_def_cfa_offset 8
+ 572              		@ sp needed
+ 573 0026 10BD     		pop	{r4, pc}
+ 574              		.cfi_endproc
+ 575              	.LFE346:
+ 577              		.section	.text.readTemperature,"ax",%progbits
+ 578              		.align	1
+ 579              		.global	readTemperature
+ 580              		.syntax unified
+ 581              		.thumb
+ 582              		.thumb_func
+ 584              	readTemperature:
+ 585              	.LFB347:
+  89:Core/Src/DS18B20.c **** 
+  90:Core/Src/DS18B20.c **** float readTemperature(struct DS18B20 sensor) {
+ 586              		.loc 1 90 46 is_stmt 1 view -0
+ 587              		.cfi_startproc
+ 588              		@ args = 0, pretend = 0, frame = 8
+ 589              		@ frame_needed = 0, uses_anonymous_args = 0
+ 590 0000 30B5     		push	{r4, r5, lr}
+ 591              	.LCFI22:
+ 592              		.cfi_def_cfa_offset 12
+ 593              		.cfi_offset 4, -12
+ARM GAS  /tmp/ccj1xZaZ.s 			page 13
+
+
+ 594              		.cfi_offset 5, -8
+ 595              		.cfi_offset 14, -4
+ 596 0002 83B0     		sub	sp, sp, #12
+ 597              	.LCFI23:
+ 598              		.cfi_def_cfa_offset 24
+ 599 0004 CDE90001 		strd	r0, r1, [sp]
+  91:Core/Src/DS18B20.c ****   sendReset(sensor);
+ 600              		.loc 1 91 3 view .LVU142
+ 601 0008 DDE90001 		ldrd	r0, r1, [sp]
+ 602 000c FFF7FEFF 		bl	sendReset
+ 603              	.LVL41:
+  92:Core/Src/DS18B20.c ****   writeByte(0xCC, sensor); // Skip ROM
+ 604              		.loc 1 92 3 view .LVU143
+ 605 0010 DDE90012 		ldrd	r1, r2, [sp]
+ 606 0014 CC20     		movs	r0, #204
+ 607 0016 FFF7FEFF 		bl	writeByte
+ 608              	.LVL42:
+  93:Core/Src/DS18B20.c ****   writeByte(0xBE, sensor); // Read scratchpad
+ 609              		.loc 1 93 3 view .LVU144
+ 610 001a DDE90012 		ldrd	r1, r2, [sp]
+ 611 001e BE20     		movs	r0, #190
+ 612 0020 FFF7FEFF 		bl	writeByte
+ 613              	.LVL43:
+  94:Core/Src/DS18B20.c **** 
+  95:Core/Src/DS18B20.c ****   uint8_t lsb = readByte(sensor);
+ 614              		.loc 1 95 3 view .LVU145
+ 615              		.loc 1 95 17 is_stmt 0 view .LVU146
+ 616 0024 DDE90001 		ldrd	r0, r1, [sp]
+ 617 0028 FFF7FEFF 		bl	readByte
+ 618              	.LVL44:
+ 619 002c 0546     		mov	r5, r0
+ 620              	.LVL45:
+  96:Core/Src/DS18B20.c ****   uint8_t msb = readByte(sensor);
+ 621              		.loc 1 96 3 is_stmt 1 view .LVU147
+ 622              		.loc 1 96 17 is_stmt 0 view .LVU148
+ 623 002e DDE90001 		ldrd	r0, r1, [sp]
+ 624 0032 FFF7FEFF 		bl	readByte
+ 625              	.LVL46:
+  97:Core/Src/DS18B20.c **** 
+  98:Core/Src/DS18B20.c ****   int16_t raw_temp = (msb << 8) | lsb;
+ 626              		.loc 1 98 3 is_stmt 1 view .LVU149
+ 627              		.loc 1 98 33 is_stmt 0 view .LVU150
+ 628 0036 0302     		lsls	r3, r0, #8
+ 629 0038 1BB2     		sxth	r3, r3
+ 630 003a 2DB2     		sxth	r5, r5
+ 631              		.loc 1 98 11 view .LVU151
+ 632 003c 2B43     		orrs	r3, r3, r5
+ 633 003e 00EE103A 		vmov	s0, r3	@ int
+ 634              	.LVL47:
+  99:Core/Src/DS18B20.c **** 
+ 100:Core/Src/DS18B20.c ****   return raw_temp / 16.0f;
+ 635              		.loc 1 100 3 is_stmt 1 view .LVU152
+ 636              		.loc 1 100 19 is_stmt 0 view .LVU153
+ 637 0042 B8EEC00A 		vcvt.f32.s32	s0, s0
+ 638              	.LVL48:
+ 101:Core/Src/DS18B20.c **** }
+ 639              		.loc 1 101 1 view .LVU154
+ARM GAS  /tmp/ccj1xZaZ.s 			page 14
+
+
+ 640 0046 DFED037A 		vldr.32	s15, .L30
+ 641 004a 20EE270A 		vmul.f32	s0, s0, s15
+ 642 004e 03B0     		add	sp, sp, #12
+ 643              	.LCFI24:
+ 644              		.cfi_def_cfa_offset 12
+ 645              		@ sp needed
+ 646 0050 30BD     		pop	{r4, r5, pc}
+ 647              	.LVL49:
+ 648              	.L31:
+ 649              		.loc 1 101 1 view .LVU155
+ 650 0052 00BF     		.align	2
+ 651              	.L30:
+ 652 0054 0000803D 		.word	1031798784
+ 653              		.cfi_endproc
+ 654              	.LFE347:
+ 656              		.text
+ 657              	.Letext0:
+ 658              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 659              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 660              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h"
+ 661              		.file 5 "Core/Inc/DS18B20.h"
+ 662              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 663              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 664              		.file 8 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h"
+ 665              		.file 9 "Core/Inc/main.h"
+ARM GAS  /tmp/ccj1xZaZ.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 DS18B20.c
+     /tmp/ccj1xZaZ.s:20     .text.DS18B20_Delay_us:00000000 $t
+     /tmp/ccj1xZaZ.s:26     .text.DS18B20_Delay_us:00000000 DS18B20_Delay_us
+     /tmp/ccj1xZaZ.s:71     .text.DS18B20_Delay_us:00000024 $d
+     /tmp/ccj1xZaZ.s:76     .text.writeBit:00000000 $t
+     /tmp/ccj1xZaZ.s:82     .text.writeBit:00000000 writeBit
+     /tmp/ccj1xZaZ.s:175    .text.writeByte:00000000 $t
+     /tmp/ccj1xZaZ.s:181    .text.writeByte:00000000 writeByte
+     /tmp/ccj1xZaZ.s:243    .text.readBit:00000000 $t
+     /tmp/ccj1xZaZ.s:249    .text.readBit:00000000 readBit
+     /tmp/ccj1xZaZ.s:350    .text.readByte:00000000 $t
+     /tmp/ccj1xZaZ.s:356    .text.readByte:00000000 readByte
+     /tmp/ccj1xZaZ.s:426    .text.sendReset:00000000 $t
+     /tmp/ccj1xZaZ.s:432    .text.sendReset:00000000 sendReset
+     /tmp/ccj1xZaZ.s:533    .text.startConversion:00000000 $t
+     /tmp/ccj1xZaZ.s:539    .text.startConversion:00000000 startConversion
+     /tmp/ccj1xZaZ.s:578    .text.readTemperature:00000000 $t
+     /tmp/ccj1xZaZ.s:584    .text.readTemperature:00000000 readTemperature
+     /tmp/ccj1xZaZ.s:652    .text.readTemperature:00000054 $d
+
+UNDEFINED SYMBOLS
+HAL_TIM_Base_Start
+HAL_TIM_Base_Stop
+htim2

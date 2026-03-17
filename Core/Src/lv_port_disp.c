@@ -1,5 +1,5 @@
-#include "../Inc/lv_port_disp.h"
-#include "../Inc/ILI9341.h"
+#include "lv_port_disp.h"
+#include "ILI9341.h"
 #include <stddef.h>
 
 /* Send short command to the LCD. This function shall wait until the transaction
