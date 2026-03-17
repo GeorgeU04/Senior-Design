@@ -2,6 +2,25 @@
 #include "main.h"
 #include <stdint.h>
 
+static inline uint16_t pinIndexFromMask(uint16_t pinmask) {
+  return (uint16_t)__builtin_ctz((uint32_t)pinmask); // count trailing zeros
+}
+
+void createDS18B20Sensor(struct DS18B20 *sensor, GPIO_TypeDef *port,
+                         uint16_t pinMask) {
+  sensor->pin = pinIndexFromMask(pinMask);
+  sensor->pinMask = pinMask;
+  sensor->port = port;
+}
+
+void createDS18B20Async(struct DS18B20_Async *async, struct DS18B20 sensor,
+                        uint32_t delayMS) {
+  async->state = DS18B20_IDLE;
+  async->sensor = sensor;
+  async->delayMS = delayMS;
+  async->state = 0;
+}
+
 void DS18B20_Delay_us(uint16_t us) {
   __HAL_TIM_SET_COUNTER(&htim2, 0);
   HAL_TIM_Base_Start(&htim2);
@@ -98,4 +117,24 @@ float readTemperature(struct DS18B20 sensor) {
   int16_t raw_temp = (msb << 8) | lsb;
 
   return raw_temp / 16.0f;
+}
+
+uint8_t asyncTemperatureReading(struct DS18B20_Async *asyncDS18B20,
+                                float *temp) {
+  uint32_t now = HAL_GetTick();
+  switch (asyncDS18B20->state) {
+  case DS18B20_IDLE:
+    startConversion(asyncDS18B20->sensor);
+    asyncDS18B20->startMS = now;
+    asyncDS18B20->state = DS18B20_CONVERTING;
+    return 0;
+  case DS18B20_CONVERTING:
+    if ((now - asyncDS18B20->startMS) >= asyncDS18B20->delayMS) {
+      *temp = readTemperature(asyncDS18B20->sensor);
+      asyncDS18B20->state = DS18B20_IDLE;
+      return 1;
+    }
+    return 0;
+  }
+  return 0;
 }

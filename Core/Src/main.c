@@ -23,7 +23,9 @@
 /* USER CODE BEGIN Includes */
 #include "DS18B20.h"
 #include "GUI.h"
+#include "TDS_Sensor_Driver.h"
 #include "src/misc/lv_timer.h"
+#include "stm32h7xx_hal.h"
 #include "touchscreen.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -70,10 +72,6 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-static inline uint16_t pinIndexFromMask(uint16_t pinmask) {
-  return (uint16_t)__builtin_ctz((uint32_t)pinmask); // count trailing zeros
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -107,17 +105,19 @@ int main(void) {
   MX_I2C1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  float temp = 0;
+  float waterTemp = 0;
+  float enclosureTemp = 0;
+  struct DS18B20 waterTempSensor = {0};
+  struct DS18B20 enclosureTempSensor = {0};
 
-  struct DS18B20 waterTempSensor = {.pinMask = WPDS18B20_Pin,
-                                    .port = WPDS18B20_GPIO_Port,
-                                    .pin = pinIndexFromMask(WPDS18B20_Pin)};
-  struct DS18B20 enclosureTempSensor = {.pinMask = EDS18B20_Pin,
-                                        .port = EDS18B20_GPIO_Port,
-                                        .pin = pinIndexFromMask(EDS18B20_Pin)};
-  struct touchScreen touchScreen = {0};
+  createDS18B20Sensor(&waterTempSensor, WPDS18B20_GPIO_Port, WPDS18B20_Pin);
+  createDS18B20Sensor(&enclosureTempSensor, EDS18B20_GPIO_Port, EDS18B20_Pin);
 
-  HAL_StatusTypeDef st;
+  struct DS18B20_Async asyncWaterSensor = {0};
+  struct DS18B20_Async asyncEnclosureSensor = {0};
+
+  createDS18B20Async(&asyncWaterSensor, waterTempSensor, 750);
+  createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -148,13 +148,18 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // readTouchScreen(&touchScreen);
-    // printf("X: %d Y: %d \r\n", touchScreen.xPos, touchScreen.yPos);
+    if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
+      printf("Water Temp: %f\r\n", waterTemp);
+    }
+    if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp)) {
+      printf("Enclosure Temp: %f\r\n", enclosureTemp);
+    }
     lv_timer_handler();
     HAL_Delay(2);
     /* USER CODE END 3 */
   }
 }
+
 /**
  * @brief System Clock Configuration
  * @retval None
@@ -202,10 +207,10 @@ void SystemClock_Config(void) {
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
-  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
+  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
     Error_Handler();
@@ -233,7 +238,7 @@ static void MX_ADC1_Init(void) {
   /** Common config
    */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
   hadc1.Init.Resolution = ADC_RESOLUTION_16B;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
@@ -261,7 +266,7 @@ static void MX_ADC1_Init(void) {
 
   /** Configure Regular Channel
    */
-  sConfig.Channel = ADC_CHANNEL_2;
+  sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
