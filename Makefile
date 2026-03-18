@@ -66,7 +66,8 @@ Core/Src/DS18B20.c \
 Core/Src/GUI.c \
 Core/Src/plantProfiles.c \
 Core/Src/touchscreen.c \
-Core/Src/TDS_Sensor_Driver.c
+Core/Src/TDS_Sensor_Driver.c \
+Core/Src/homeScreen.c \
 
 ASM_SOURCES =  \
 startup_stm32h753xx.s
