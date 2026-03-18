@@ -24,10 +24,11 @@
 #include "DS18B20.h"
 #include "GUI.h"
 #include "TDS_Sensor_Driver.h"
+#include "homeScreen.h"
+#include "plantProfiles.h"
 #include "src/misc/lv_timer.h"
+#include "src/widgets/label/lv_label.h"
 #include "stm32h7xx_hal.h"
-#include "touchscreen.h"
-#include <stdint.h>
 #include <stdio.h>
 /* USER CODE END Includes */
 
@@ -118,6 +119,10 @@ int main(void) {
 
   createDS18B20Async(&asyncWaterSensor, waterTempSensor, 750);
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
+
+  struct plantProfile currentPlantProfile = {0};
+  loadProfile(&currentPlantProfile, &ARUGULA_PROFILE);
+
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -144,15 +149,18 @@ int main(void) {
   /* USER CODE BEGIN WHILE */
   initScreen();
   uiInitScreens();
+  updatePlantProfileLabels(&currentPlantProfile);
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
       printf("Water Temp: %f\r\n", waterTemp);
+      lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
     }
     if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp)) {
       printf("Enclosure Temp: %f\r\n", enclosureTemp);
+      lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f C", enclosureTemp);
     }
     lv_timer_handler();
     HAL_Delay(2);

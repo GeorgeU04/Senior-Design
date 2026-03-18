@@ -1,60 +1,48 @@
-build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h \
- Core/Inc/lv_port_disp.h Drivers/lvgl/lvgl.h Drivers/lvgl/lv_version.h \
- Drivers/lvgl/src/lv_init.h Drivers/lvgl/src/lv_conf_internal.h \
- Drivers/lvgl/src/lv_conf_kconfig.h Drivers/lvgl/src/../../lv_conf.h \
- Drivers/lvgl/src/misc/lv_types.h \
- Drivers/lvgl/src/misc/../lv_conf_internal.h \
- Drivers/lvgl/src/stdlib/lv_mem.h \
- Drivers/lvgl/src/stdlib/../lv_conf_internal.h \
- Drivers/lvgl/src/stdlib/lv_string.h \
- Drivers/lvgl/src/stdlib/../misc/lv_types.h \
- Drivers/lvgl/src/stdlib/lv_string.h Drivers/lvgl/src/stdlib/lv_sprintf.h \
- Drivers/lvgl/src/misc/lv_log.h Drivers/lvgl/src/misc/lv_types.h \
- Drivers/lvgl/src/misc/lv_timer.h Drivers/lvgl/src/misc/../tick/lv_tick.h \
- Drivers/lvgl/src/misc/../tick/../lv_conf_internal.h \
- Drivers/lvgl/src/misc/../tick/../misc/lv_types.h \
- Drivers/lvgl/src/misc/lv_ll.h Drivers/lvgl/src/misc/lv_math.h \
- Drivers/lvgl/src/misc/lv_array.h Drivers/lvgl/src/misc/lv_async.h \
- Drivers/lvgl/src/misc/lv_anim_timeline.h Drivers/lvgl/src/misc/lv_anim.h \
- Drivers/lvgl/src/misc/lv_math.h Drivers/lvgl/src/misc/lv_timer.h \
- Drivers/lvgl/src/misc/lv_profiler_builtin.h \
- Drivers/lvgl/src/misc/lv_rb.h Drivers/lvgl/src/misc/lv_assert.h \
- Drivers/lvgl/src/misc/lv_log.h Drivers/lvgl/src/misc/../stdlib/lv_mem.h \
- Drivers/lvgl/src/misc/lv_utils.h \
- Drivers/lvgl/src/misc/../draw/lv_draw_buf.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_types.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_area.h \
- Drivers/lvgl/src/misc/../draw/../misc/../lv_conf_internal.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_types.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_math.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_color.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_assert.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_palette.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_color.h \
- Drivers/lvgl/src/misc/../draw/../misc/lv_color_op.h \
- Drivers/lvgl/src/misc/../draw/../stdlib/lv_string.h \
- Drivers/lvgl/src/misc/../draw/lv_image_dsc.h \
- Drivers/lvgl/src/misc/../draw/../lv_conf_internal.h \
- Drivers/lvgl/src/misc/lv_iter.h Drivers/lvgl/src/misc/lv_circle_buf.h \
- Drivers/lvgl/src/misc/lv_tree.h Drivers/lvgl/src/osal/lv_os.h \
- Drivers/lvgl/src/osal/../misc/lv_types.h Drivers/lvgl/src/tick/lv_tick.h \
- Drivers/lvgl/src/core/lv_obj.h \
+build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/homeScreen.h \
+ Core/Inc/plantProfiles.h Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/../lv_conf_internal.h \
+ Drivers/lvgl/src/core/../lv_conf_kconfig.h \
+ Drivers/lvgl/src/core/../../../lv_conf.h \
  Drivers/lvgl/src/core/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/lv_style.h \
  Drivers/lvgl/src/core/../misc/../font/lv_font.h \
  Drivers/lvgl/src/core/../misc/../font/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/../font/../misc/lv_types.h \
  Drivers/lvgl/src/core/../misc/../font/lv_symbol_def.h \
  Drivers/lvgl/src/core/../misc/../font/../draw/lv_draw_buf.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_area.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../lv_conf_internal.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_math.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_assert.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_log.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/lv_mem.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/../lv_conf_internal.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/lv_string.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_palette.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color_op.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../stdlib/lv_string.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/lv_image_dsc.h \
+ Drivers/lvgl/src/core/../misc/../font/../draw/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/../font/../misc/lv_area.h \
  Drivers/lvgl/src/core/../misc/lv_color.h \
  Drivers/lvgl/src/core/../misc/lv_area.h \
  Drivers/lvgl/src/core/../misc/lv_anim.h \
- Drivers/lvgl/src/core/../misc/lv_text.h \
- Drivers/lvgl/src/core/../misc/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/lv_math.h \
+ Drivers/lvgl/src/core/../misc/lv_timer.h \
+ Drivers/lvgl/src/core/../misc/../tick/lv_tick.h \
+ Drivers/lvgl/src/core/../misc/../tick/../lv_conf_internal.h \
+ Drivers/lvgl/src/core/../misc/../tick/../misc/lv_types.h \
+ Drivers/lvgl/src/core/../misc/lv_ll.h \
+ Drivers/lvgl/src/core/../misc/lv_text.h \
  Drivers/lvgl/src/core/../misc/../stdlib/lv_sprintf.h \
+ Drivers/lvgl/src/core/../misc/../stdlib/../misc/lv_types.h \
  Drivers/lvgl/src/core/../misc/lv_assert.h \
  Drivers/lvgl/src/core/../misc/lv_bidi.h \
  Drivers/lvgl/src/core/../misc/lv_grad.h \
@@ -124,7 +112,24 @@ build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_area.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
- Drivers/lvgl/src/core/lv_group.h Drivers/lvgl/src/core/lv_group.h \
+ Drivers/lvgl/src/core/lv_group.h Core/Inc/lv_port_disp.h \
+ Drivers/lvgl/lvgl.h Drivers/lvgl/lv_version.h Drivers/lvgl/src/lv_init.h \
+ Drivers/lvgl/src/lv_conf_internal.h Drivers/lvgl/src/misc/lv_types.h \
+ Drivers/lvgl/src/stdlib/lv_mem.h Drivers/lvgl/src/stdlib/lv_string.h \
+ Drivers/lvgl/src/stdlib/lv_sprintf.h Drivers/lvgl/src/misc/lv_log.h \
+ Drivers/lvgl/src/misc/lv_timer.h Drivers/lvgl/src/misc/lv_math.h \
+ Drivers/lvgl/src/misc/lv_array.h Drivers/lvgl/src/misc/lv_async.h \
+ Drivers/lvgl/src/misc/lv_types.h \
+ Drivers/lvgl/src/misc/lv_anim_timeline.h Drivers/lvgl/src/misc/lv_anim.h \
+ Drivers/lvgl/src/misc/lv_profiler_builtin.h \
+ Drivers/lvgl/src/misc/../lv_conf_internal.h \
+ Drivers/lvgl/src/misc/lv_rb.h Drivers/lvgl/src/misc/lv_assert.h \
+ Drivers/lvgl/src/misc/lv_utils.h \
+ Drivers/lvgl/src/misc/../draw/lv_draw_buf.h \
+ Drivers/lvgl/src/misc/lv_iter.h Drivers/lvgl/src/misc/lv_circle_buf.h \
+ Drivers/lvgl/src/misc/lv_tree.h Drivers/lvgl/src/osal/lv_os.h \
+ Drivers/lvgl/src/osal/../misc/lv_types.h Drivers/lvgl/src/tick/lv_tick.h \
+ Drivers/lvgl/src/core/lv_obj.h Drivers/lvgl/src/core/lv_group.h \
  Drivers/lvgl/src/core/lv_refr.h Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/lv_observer.h Drivers/lvgl/src/indev/lv_indev.h \
  Drivers/lvgl/src/indev/lv_indev_gesture.h \
@@ -459,86 +464,60 @@ build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
  Core/Inc/stm32h7xx_nucleo_conf.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
- Drivers/lvgl/src/core/lv_obj.h Drivers/lvgl/src/core/lv_obj_event.h \
- Drivers/lvgl/src/core/lv_obj_pos.h Drivers/lvgl/src/core/lv_obj_style.h \
+ Drivers/lvgl/src/core/lv_obj_event.h Drivers/lvgl/src/core/lv_obj_pos.h \
+ Drivers/lvgl/src/core/lv_obj_style.h \
  Drivers/lvgl/src/display/lv_display.h Drivers/lvgl/src/misc/lv_event.h \
  Drivers/lvgl/src/widgets/button/lv_button.h \
  Drivers/lvgl/src/widgets/label/lv_label.h Core/Inc/touchscreen.h \
  Drivers/lvgl/src/indev/lv_indev.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h
 Core/Inc/GUI.h:
-Core/Inc/lv_port_disp.h:
-Drivers/lvgl/lvgl.h:
-Drivers/lvgl/lv_version.h:
-Drivers/lvgl/src/lv_init.h:
-Drivers/lvgl/src/lv_conf_internal.h:
-Drivers/lvgl/src/lv_conf_kconfig.h:
-Drivers/lvgl/src/../../lv_conf.h:
-Drivers/lvgl/src/misc/lv_types.h:
-Drivers/lvgl/src/misc/../lv_conf_internal.h:
-Drivers/lvgl/src/stdlib/lv_mem.h:
-Drivers/lvgl/src/stdlib/../lv_conf_internal.h:
-Drivers/lvgl/src/stdlib/lv_string.h:
-Drivers/lvgl/src/stdlib/../misc/lv_types.h:
-Drivers/lvgl/src/stdlib/lv_string.h:
-Drivers/lvgl/src/stdlib/lv_sprintf.h:
-Drivers/lvgl/src/misc/lv_log.h:
-Drivers/lvgl/src/misc/lv_types.h:
-Drivers/lvgl/src/misc/lv_timer.h:
-Drivers/lvgl/src/misc/../tick/lv_tick.h:
-Drivers/lvgl/src/misc/../tick/../lv_conf_internal.h:
-Drivers/lvgl/src/misc/../tick/../misc/lv_types.h:
-Drivers/lvgl/src/misc/lv_ll.h:
-Drivers/lvgl/src/misc/lv_math.h:
-Drivers/lvgl/src/misc/lv_array.h:
-Drivers/lvgl/src/misc/lv_async.h:
-Drivers/lvgl/src/misc/lv_anim_timeline.h:
-Drivers/lvgl/src/misc/lv_anim.h:
-Drivers/lvgl/src/misc/lv_math.h:
-Drivers/lvgl/src/misc/lv_timer.h:
-Drivers/lvgl/src/misc/lv_profiler_builtin.h:
-Drivers/lvgl/src/misc/lv_rb.h:
-Drivers/lvgl/src/misc/lv_assert.h:
-Drivers/lvgl/src/misc/lv_log.h:
-Drivers/lvgl/src/misc/../stdlib/lv_mem.h:
-Drivers/lvgl/src/misc/lv_utils.h:
-Drivers/lvgl/src/misc/../draw/lv_draw_buf.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_types.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_area.h:
-Drivers/lvgl/src/misc/../draw/../misc/../lv_conf_internal.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_types.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_math.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_color.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_assert.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_palette.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_color.h:
-Drivers/lvgl/src/misc/../draw/../misc/lv_color_op.h:
-Drivers/lvgl/src/misc/../draw/../stdlib/lv_string.h:
-Drivers/lvgl/src/misc/../draw/lv_image_dsc.h:
-Drivers/lvgl/src/misc/../draw/../lv_conf_internal.h:
-Drivers/lvgl/src/misc/lv_iter.h:
-Drivers/lvgl/src/misc/lv_circle_buf.h:
-Drivers/lvgl/src/misc/lv_tree.h:
-Drivers/lvgl/src/osal/lv_os.h:
-Drivers/lvgl/src/osal/../misc/lv_types.h:
-Drivers/lvgl/src/tick/lv_tick.h:
+Core/Inc/homeScreen.h:
+Core/Inc/plantProfiles.h:
 Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/../lv_conf_internal.h:
+Drivers/lvgl/src/core/../lv_conf_kconfig.h:
+Drivers/lvgl/src/core/../../../lv_conf.h:
 Drivers/lvgl/src/core/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../misc/lv_style.h:
 Drivers/lvgl/src/core/../misc/../font/lv_font.h:
 Drivers/lvgl/src/core/../misc/../font/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../misc/../font/../misc/lv_types.h:
 Drivers/lvgl/src/core/../misc/../font/lv_symbol_def.h:
 Drivers/lvgl/src/core/../misc/../font/../draw/lv_draw_buf.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_area.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../lv_conf_internal.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_math.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_assert.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_log.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/lv_mem.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/../lv_conf_internal.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/lv_string.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/../stdlib/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_palette.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../misc/lv_color_op.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../stdlib/lv_string.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/lv_image_dsc.h:
+Drivers/lvgl/src/core/../misc/../font/../draw/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../misc/../font/../misc/lv_area.h:
 Drivers/lvgl/src/core/../misc/lv_color.h:
 Drivers/lvgl/src/core/../misc/lv_area.h:
 Drivers/lvgl/src/core/../misc/lv_anim.h:
-Drivers/lvgl/src/core/../misc/lv_text.h:
-Drivers/lvgl/src/core/../misc/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/lv_math.h:
+Drivers/lvgl/src/core/../misc/lv_timer.h:
+Drivers/lvgl/src/core/../misc/../tick/lv_tick.h:
+Drivers/lvgl/src/core/../misc/../tick/../lv_conf_internal.h:
+Drivers/lvgl/src/core/../misc/../tick/../misc/lv_types.h:
+Drivers/lvgl/src/core/../misc/lv_ll.h:
+Drivers/lvgl/src/core/../misc/lv_text.h:
 Drivers/lvgl/src/core/../misc/../stdlib/lv_sprintf.h:
+Drivers/lvgl/src/core/../misc/../stdlib/../misc/lv_types.h:
 Drivers/lvgl/src/core/../misc/lv_assert.h:
 Drivers/lvgl/src/core/../misc/lv_bidi.h:
 Drivers/lvgl/src/core/../misc/lv_grad.h:
@@ -610,6 +589,36 @@ Drivers/lvgl/src/core/../indev/../misc/lv_area.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
+Core/Inc/lv_port_disp.h:
+Drivers/lvgl/lvgl.h:
+Drivers/lvgl/lv_version.h:
+Drivers/lvgl/src/lv_init.h:
+Drivers/lvgl/src/lv_conf_internal.h:
+Drivers/lvgl/src/misc/lv_types.h:
+Drivers/lvgl/src/stdlib/lv_mem.h:
+Drivers/lvgl/src/stdlib/lv_string.h:
+Drivers/lvgl/src/stdlib/lv_sprintf.h:
+Drivers/lvgl/src/misc/lv_log.h:
+Drivers/lvgl/src/misc/lv_timer.h:
+Drivers/lvgl/src/misc/lv_math.h:
+Drivers/lvgl/src/misc/lv_array.h:
+Drivers/lvgl/src/misc/lv_async.h:
+Drivers/lvgl/src/misc/lv_types.h:
+Drivers/lvgl/src/misc/lv_anim_timeline.h:
+Drivers/lvgl/src/misc/lv_anim.h:
+Drivers/lvgl/src/misc/lv_profiler_builtin.h:
+Drivers/lvgl/src/misc/../lv_conf_internal.h:
+Drivers/lvgl/src/misc/lv_rb.h:
+Drivers/lvgl/src/misc/lv_assert.h:
+Drivers/lvgl/src/misc/lv_utils.h:
+Drivers/lvgl/src/misc/../draw/lv_draw_buf.h:
+Drivers/lvgl/src/misc/lv_iter.h:
+Drivers/lvgl/src/misc/lv_circle_buf.h:
+Drivers/lvgl/src/misc/lv_tree.h:
+Drivers/lvgl/src/osal/lv_os.h:
+Drivers/lvgl/src/osal/../misc/lv_types.h:
+Drivers/lvgl/src/tick/lv_tick.h:
+Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/lv_group.h:
 Drivers/lvgl/src/core/lv_refr.h:
 Drivers/lvgl/src/core/lv_obj.h:
@@ -957,7 +966,6 @@ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
 Core/Inc/stm32h7xx_nucleo_conf.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
-Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/lv_obj_event.h:
 Drivers/lvgl/src/core/lv_obj_pos.h:
 Drivers/lvgl/src/core/lv_obj_style.h:
