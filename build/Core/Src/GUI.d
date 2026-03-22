@@ -464,8 +464,8 @@ build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/homeScreen.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
  Core/Inc/stm32h7xx_nucleo_conf.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
- Drivers/lvgl/src/core/lv_obj_event.h Drivers/lvgl/src/core/lv_obj_pos.h \
- Drivers/lvgl/src/core/lv_obj_style.h \
+ Core/Inc/settingsScreen.h Drivers/lvgl/src/core/lv_obj_event.h \
+ Drivers/lvgl/src/core/lv_obj_pos.h Drivers/lvgl/src/core/lv_obj_style.h \
  Drivers/lvgl/src/display/lv_display.h Drivers/lvgl/src/misc/lv_event.h \
  Drivers/lvgl/src/widgets/button/lv_button.h \
  Drivers/lvgl/src/widgets/label/lv_label.h Core/Inc/touchscreen.h \
@@ -966,6 +966,7 @@ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
 Core/Inc/stm32h7xx_nucleo_conf.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
+Core/Inc/settingsScreen.h:
 Drivers/lvgl/src/core/lv_obj_event.h:
 Drivers/lvgl/src/core/lv_obj_pos.h:
 Drivers/lvgl/src/core/lv_obj_style.h:
