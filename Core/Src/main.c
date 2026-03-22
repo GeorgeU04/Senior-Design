@@ -26,6 +26,7 @@
 #include "TDS_Sensor_Driver.h"
 #include "homeScreen.h"
 #include "plantProfiles.h"
+#include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
 #include "stm32h7xx_hal.h"
@@ -155,12 +156,21 @@ int main(void) {
 
     /* USER CODE BEGIN 3 */
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
-      printf("Water Temp: %f\r\n", waterTemp);
-      lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
+      if (useFahrenheit) {
+        lv_label_set_text_fmt(waterTempLabel, "Water: %.1f F",
+                              waterTemp * 9 / 5.0f + 32);
+      } else {
+        lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
+      }
     }
     if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp)) {
-      printf("Enclosure Temp: %f\r\n", enclosureTemp);
-      lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f C", enclosureTemp);
+      if (useFahrenheit) {
+        lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f F",
+                              enclosureTemp * 9 / 5.0f + 32);
+      } else {
+        lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f C",
+                              enclosureTemp);
+      }
     }
     lv_timer_handler();
     HAL_Delay(2);
