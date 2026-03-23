@@ -2,6 +2,7 @@
 #include "homeScreen.h"
 #include "lv_port_disp.h"
 #include "main.h"
+#include "plantSelectionScreen.h"
 #include "settingsScreen.h"
 #include "src/core/lv_obj.h"
 #include "src/core/lv_obj_event.h"
@@ -122,10 +123,7 @@ static void drawScreens(void) {
   drawSettingsScreen(settingsScreen);
 
   drawNavbar(plantSelectScreen);
-  lv_obj_t *label = lv_label_create(plantSelectScreen);
-  lv_label_set_text(label, "Plant Screen");
-  lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+  drawPlantSelectionScreen(plantSelectScreen);
 }
 
 void uiInitScreens(void) {

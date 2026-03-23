@@ -19,9 +19,21 @@ struct plantProfile {
   uint8_t redLightPercentage;
 };
 
-extern const struct plantProfile LETTUCE_PROFILE;
 extern const struct plantProfile ARUGULA_PROFILE;
+extern const struct plantProfile LETTUCE_PROFILE;
+extern const struct plantProfile BASIL_PROFILE;
+extern const struct plantProfile SPINACH_PROFILE;
+extern const struct plantProfile KALE_PROFILE;
+extern const struct plantProfile BOK_CHOY_PROFILE;
+extern const struct plantProfile SWISS_CHARD_PROFILE;
+extern const struct plantProfile CILANTRO_PROFILE;
+extern const struct plantProfile PARSLEY_PROFILE;
+extern const struct plantProfile MINT_PROFILE;
+extern const struct plantProfile GREEN_ONION_PROFILE;
+extern const struct plantProfile ROMAINE_PROFILE;
+extern const struct plantProfile BUTTERHEAD_PROFILE;
+extern const struct plantProfile MUSTARD_GREENS_PROFILE;
 
-void loadProfile(struct plantProfile *dest, const struct plantProfile *src);
+void loadProfile(const struct plantProfile *src);
 const char *getStageName(enum growthStage stage);
 #endif // !PLANTPROFILES_H
