@@ -26,6 +26,7 @@
 #include "TDS_Sensor_Driver.h"
 #include "homeScreen.h"
 #include "plantProfiles.h"
+#include "plantSelectionScreen.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -121,9 +122,6 @@ int main(void) {
   createDS18B20Async(&asyncWaterSensor, waterTempSensor, 750);
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
 
-  struct plantProfile currentPlantProfile = {0};
-  loadProfile(&currentPlantProfile, &ARUGULA_PROFILE);
-
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -150,7 +148,6 @@ int main(void) {
   /* USER CODE BEGIN WHILE */
   initScreen();
   uiInitScreens();
-  updatePlantProfileLabels(&currentPlantProfile);
   while (1) {
     /* USER CODE END WHILE */
 

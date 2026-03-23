@@ -68,6 +68,7 @@ Core/Src/plantProfiles.c \
 Core/Src/touchscreen.c \
 Core/Src/TDS_Sensor_Driver.c \
 Core/Src/settingsScreen.c \
+Core/Src/plantSelectionScreen.c \
 Core/Src/homeScreen.c
 
 ASM_SOURCES =  \
