@@ -3,6 +3,7 @@
 
 #include "plantProfiles.h"
 #include "src/core/lv_obj.h"
+#include <stdint.h>
 
 /* Sensor labels */
 extern lv_obj_t *waterTempLabel;
@@ -17,6 +18,9 @@ extern lv_obj_t *plantStageLabel;
 extern lv_obj_t *plantLightOnLabel;
 extern lv_obj_t *plantRGBLabel;
 extern lv_obj_t *plantDurationLabel;
+extern lv_obj_t *growingDaysLabel;
+
+extern uint32_t growthDays;
 
 void drawHomeScreen(lv_obj_t *homeScreen);
 void updatePlantProfileLabels(const struct plantProfile *profile);

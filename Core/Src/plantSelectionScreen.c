@@ -6,7 +6,6 @@
 #include "src/misc/lv_event.h"
 #include <stdint.h>
 
-static lv_obj_t *plantList = NULL;
 const struct plantProfile *currentPlantProfile = NULL;
 
 static const struct plantProfile *const plantProfiles[] = {

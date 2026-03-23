@@ -19,6 +19,9 @@ lv_obj_t *plantStageLabel = NULL;
 lv_obj_t *plantLightOnLabel = NULL;
 lv_obj_t *plantRGBLabel = NULL;
 lv_obj_t *plantDurationLabel = NULL;
+lv_obj_t *growingDaysLabel = NULL;
+
+uint32_t growthDays = 0;
 
 void drawHomeScreen(lv_obj_t *homeScreen) {
   lv_obj_set_style_text_font(homeScreen, &lv_font_montserrat_14, 0);
@@ -99,6 +102,12 @@ void drawHomeScreen(lv_obj_t *homeScreen) {
   lv_label_set_text(plantDurationLabel, "Duration: --- days");
   lv_obj_set_style_text_color(plantDurationLabel, lv_color_hex(0xFFFFFF), 0);
   lv_obj_align(plantDurationLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+
+  y += padding;
+  growingDaysLabel = lv_label_create(homeScreen);
+  lv_label_set_text(growingDaysLabel, "Day: ---");
+  lv_obj_set_style_text_color(growingDaysLabel, lv_color_hex(0xFFFFFF), 0);
+  lv_obj_align(growingDaysLabel, LV_ALIGN_TOP_RIGHT, 0, y);
 }
 
 void updatePlantProfileLabels(const struct plantProfile *p) {
@@ -115,7 +124,10 @@ void updatePlantProfileLabels(const struct plantProfile *p) {
                         p->blueLightPercentage);
 
   lv_label_set_text_fmt(plantDurationLabel, "Duration: %lu days",
-                        p->growthDurationDays);
+                        (unsigned long)p->growthDurationDays);
+  growthDays = 1;
+  lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
+                        (unsigned long)growthDays);
 }
 
 // Unused for now. Currently updating the text for each individual sensor.

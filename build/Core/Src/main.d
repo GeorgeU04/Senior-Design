@@ -35,9 +35,10 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
  Core/Inc/stm32h7xx_nucleo_conf.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h Core/Inc/DS18B20.h \
- Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h Core/Inc/GUI.h \
- Core/Inc/TDS_Sensor_Driver.h Core/Inc/main.h Core/Inc/homeScreen.h \
- Core/Inc/plantProfiles.h Drivers/lvgl/src/core/lv_obj.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h \
+ Core/Inc/DS3231s.h Core/Inc/GUI.h Core/Inc/TDS_Sensor_Driver.h \
+ Core/Inc/main.h Core/Inc/homeScreen.h Core/Inc/plantProfiles.h \
+ Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../lv_conf_kconfig.h \
  Drivers/lvgl/src/core/../../../lv_conf.h \
@@ -150,9 +151,8 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_area.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
- Drivers/lvgl/src/core/lv_group.h Core/Inc/plantProfiles.h \
- Core/Inc/plantSelectionScreen.h Drivers/lvgl/src/misc/lv_types.h \
- Core/Inc/settingsScreen.h Drivers/lvgl/src/misc/lv_timer.h \
+ Drivers/lvgl/src/core/lv_group.h Core/Inc/settingsScreen.h \
+ Drivers/lvgl/src/misc/lv_timer.h \
  Drivers/lvgl/src/widgets/label/lv_label.h \
  Drivers/lvgl/src/widgets/label/../../lv_conf_internal.h \
  Drivers/lvgl/src/widgets/label/../../misc/lv_types.h \
@@ -205,6 +205,7 @@ Core/Inc/stm32h7xx_nucleo_conf.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
 Core/Inc/DS18B20.h:
 Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
+Core/Inc/DS3231s.h:
 Core/Inc/GUI.h:
 Core/Inc/TDS_Sensor_Driver.h:
 Core/Inc/main.h:
@@ -325,9 +326,6 @@ Drivers/lvgl/src/core/../indev/../misc/lv_area.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
-Core/Inc/plantProfiles.h:
-Core/Inc/plantSelectionScreen.h:
-Drivers/lvgl/src/misc/lv_types.h:
 Core/Inc/settingsScreen.h:
 Drivers/lvgl/src/misc/lv_timer.h:
 Drivers/lvgl/src/widgets/label/lv_label.h:
