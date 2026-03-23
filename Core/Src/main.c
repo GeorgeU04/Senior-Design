@@ -22,16 +22,15 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "DS18B20.h"
+#include "DS3231s.h"
 #include "GUI.h"
 #include "TDS_Sensor_Driver.h"
 #include "homeScreen.h"
-#include "plantProfiles.h"
-#include "plantSelectionScreen.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
 #include "stm32h7xx_hal.h"
-#include <stdio.h>
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define USING_SCREEN 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -110,6 +109,9 @@ int main(void) {
   /* USER CODE BEGIN 2 */
   float waterTemp = 0;
   float enclosureTemp = 0;
+  uint8_t time[3];
+  struct RTC_DS3231s clock = {0};
+  uint8_t currentDay = 0;
   struct DS18B20 waterTempSensor = {0};
   struct DS18B20 enclosureTempSensor = {0};
 
@@ -144,14 +146,27 @@ int main(void) {
     Error_Handler();
   }
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+/* Infinite loop */
+/* USER CODE BEGIN WHILE */
+#if USING_SCREEN
   initScreen();
   uiInitScreens();
+#endif
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+#if USING_SCREEN
+    // increments the counter each day
+    // could use alarm, but kind of overkill
+    readTimeData(time);
+    parseTime(&clock, time);
+    if (currentDay != clock.day) {
+      currentDay = clock.day;
+      lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
+                            (unsigned long)++growthDays);
+    }
+
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
       if (useFahrenheit) {
         lv_label_set_text_fmt(waterTempLabel, "Water: %.1f F",
@@ -169,8 +184,10 @@ int main(void) {
                               enclosureTemp);
       }
     }
+
     lv_timer_handler();
     HAL_Delay(2);
+#endif /* ifdef USING_SCREEN */
     /* USER CODE END 3 */
   }
 }
