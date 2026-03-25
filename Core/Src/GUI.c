@@ -1,6 +1,9 @@
 #include "GUI.h"
+#include "homeScreen.h"
 #include "lv_port_disp.h"
 #include "main.h"
+#include "plantSelectionScreen.h"
+#include "settingsScreen.h"
 #include "src/core/lv_obj.h"
 #include "src/core/lv_obj_event.h"
 #include "src/core/lv_obj_pos.h"
@@ -114,22 +117,13 @@ static void createScreens(void) {
 
 static void drawScreens(void) {
   drawNavbar(homeScreen);
-  lv_obj_t *label = lv_label_create(homeScreen);
-  lv_label_set_text(label, "Home Screen");
-  lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+  drawHomeScreen(homeScreen);
 
   drawNavbar(settingsScreen);
-  label = lv_label_create(settingsScreen);
-  lv_label_set_text(label, "Settings Screen");
-  lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+  drawSettingsScreen(settingsScreen);
 
   drawNavbar(plantSelectScreen);
-  label = lv_label_create(plantSelectScreen);
-  lv_label_set_text(label, "Plant Screen");
-  lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+  drawPlantSelectionScreen(plantSelectScreen);
 }
 
 void uiInitScreens(void) {
@@ -137,8 +131,3 @@ void uiInitScreens(void) {
   drawScreens();
   lv_screen_load(homeScreen);
 }
-
-void setTemperature(float c);
-void setWaterLevel(float percent);
-void setNutrientDensity(float ec);
-void setPlantInfo(const char *name, const char *stage);

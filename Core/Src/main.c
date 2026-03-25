@@ -22,13 +22,19 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "DS18B20.h"
+#include "DS3231s.h"
 #include "GUI.h"
 #include "TDS_Sensor_Driver.h"
+#include "fans.h"
+#include "homeScreen.h"
+#include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
+#include "src/widgets/label/lv_label.h"
+#include "stm32h753xx.h"
 #include "stm32h7xx_hal.h"
-#include "touchscreen.h"
+#include "stm32h7xx_hal_def.h"
+#include "stm32h7xx_hal_tim.h"
 #include <stdint.h>
-#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +44,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define USING_SCREEN 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,10 +59,17 @@ ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
+struct RTC_DS3231s clock = {0};
+struct DS18B20 waterTempSensor = {0};
+struct DS18B20 enclosureTempSensor = {0};
+struct DS18B20_Async asyncWaterSensor = {0};
+struct DS18B20_Async asyncEnclosureSensor = {0};
+struct fan fan0 = {0};
+struct maintainableDevices devices = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -65,6 +78,7 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,20 +118,26 @@ int main(void) {
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_TIM2_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+
   float waterTemp = 0;
   float enclosureTemp = 0;
-  struct DS18B20 waterTempSensor = {0};
-  struct DS18B20 enclosureTempSensor = {0};
+  uint8_t time[3];
+  uint8_t currentDay = 0;
 
   createDS18B20Sensor(&waterTempSensor, WPDS18B20_GPIO_Port, WPDS18B20_Pin);
   createDS18B20Sensor(&enclosureTempSensor, EDS18B20_GPIO_Port, EDS18B20_Pin);
 
-  struct DS18B20_Async asyncWaterSensor = {0};
-  struct DS18B20_Async asyncEnclosureSensor = {0};
-
   createDS18B20Async(&asyncWaterSensor, waterTempSensor, 750);
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
+
+  createFan(&fan0, &htim1, TIM_CHANNEL_4);
+
+  devices.fan0 = &fan0;
+  devices.waterTempSensor = &asyncWaterSensor;
+  devices.enclosureTempSensor = &asyncEnclosureSensor;
+
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -142,22 +162,48 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+#if USING_SCREEN
   initScreen();
   uiInitScreens();
+#endif
   while (1) {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
-    if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
-      printf("Water Temp: %f\r\n", waterTemp);
+#if USING_SCREEN
+    // increments the counter each day
+    // could use alarm, but kind of overkill
+    readTimeData(time);
+    parseTime(&clock, time);
+    if (currentDay != clock.day) {
+      currentDay = clock.day;
+      lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
+                            (unsigned long)++growthDays);
     }
-    if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp)) {
-      printf("Enclosure Temp: %f\r\n", enclosureTemp);
+
+    if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp) &&
+        asyncWaterSensor.validReading) {
+      if (useFahrenheit) {
+        lv_label_set_text_fmt(waterTempLabel, "Water: %.1f F",
+                              waterTemp * 9 / 5.0f + 32);
+      } else {
+        lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
+      }
+    }
+    if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp) &&
+        asyncEnclosureSensor.validReading) {
+      if (useFahrenheit) {
+        lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f F",
+                              enclosureTemp * 9 / 5.0f + 32);
+      } else {
+        lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f C",
+                              enclosureTemp);
+      }
     }
     lv_timer_handler();
     HAL_Delay(2);
-    /* USER CODE END 3 */
+#endif /* ifdef USING_SCREEN */
   }
+  /* USER CODE END 3 */
 }
 
 /**
@@ -325,6 +371,77 @@ static void MX_I2C1_Init(void) {
 }
 
 /**
+ * @brief TIM1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_TIM1_Init(void) {
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 4799;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK) {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK) {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK) {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK) {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK) {
+    Error_Handler();
+  }
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.BreakFilter = 0;
+  sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
+  sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
+  sBreakDeadTimeConfig.Break2Filter = 0;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK) {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+  HAL_TIM_MspPostInit(&htim1);
+}
+
+/**
  * @brief TIM2 Initialization Function
  * @param None
  * @retval None
@@ -380,6 +497,7 @@ static void MX_GPIO_Init(void) {
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 

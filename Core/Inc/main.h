@@ -40,6 +40,16 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
+struct maintainableDevices {
+  struct DS18B20_Async *waterTempSensor;
+  struct DS18B20_Async *enclosureTempSensor;
+  struct fan *fan3;
+  struct fan *fan2;
+  struct fan *fan1;
+  struct fan *fan0;
+};
+
+extern struct maintainableDevices devices;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -59,6 +69,8 @@ extern COM_InitTypeDef BspCOMInit;
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
