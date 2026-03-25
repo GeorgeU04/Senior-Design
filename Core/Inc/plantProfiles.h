@@ -3,14 +3,12 @@
 
 #include <stdint.h>
 
-enum growthStage { EARLY_SEEDLING, SEEDLING, VEGETATIVE, MATURE };
+enum growthStage {EARLY_GROWTH, LATE_GROWTH, EARLY_BLOOM, MID_LATE_BLOOM };
 
 struct plantProfile {
   char name[32];
   float enclosureTemp;
   float waterTemp;
-  float pH;
-  float TDS;
   enum growthStage stage;
   uint32_t growthDurationDays;
   uint16_t lightOnMinutes;
