@@ -152,7 +152,7 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
  Drivers/lvgl/src/core/lv_group.h Core/Inc/settingsScreen.h \
- Drivers/lvgl/src/misc/lv_timer.h \
+ Core/Inc/DS18B20.h Core/Inc/fans.h Drivers/lvgl/src/misc/lv_timer.h \
  Drivers/lvgl/src/widgets/label/lv_label.h \
  Drivers/lvgl/src/widgets/label/../../lv_conf_internal.h \
  Drivers/lvgl/src/widgets/label/../../misc/lv_types.h \
@@ -329,6 +329,8 @@ Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
 Core/Inc/settingsScreen.h:
+Core/Inc/DS18B20.h:
+Core/Inc/fans.h:
 Drivers/lvgl/src/misc/lv_timer.h:
 Drivers/lvgl/src/widgets/label/lv_label.h:
 Drivers/lvgl/src/widgets/label/../../lv_conf_internal.h:

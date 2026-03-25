@@ -1,11 +1,11 @@
 #include "DS18B20.h"
 #include "main.h"
+#include <stddef.h>
 #include <stdint.h>
 
 static inline uint16_t pinIndexFromMask(uint16_t pinmask) {
   return (uint16_t)__builtin_ctz((uint32_t)pinmask); // count trailing zeros
 }
-
 void createDS18B20Sensor(struct DS18B20 *sensor, GPIO_TypeDef *port,
                          uint16_t pinMask) {
   sensor->pin = pinIndexFromMask(pinMask);
@@ -106,17 +106,37 @@ void startConversion(struct DS18B20 sensor) {
   writeByte(0x44, sensor); // Start conversion
 }
 
-float readTemperature(struct DS18B20 sensor) {
-  sendReset(sensor);
+uint8_t readTemperature(struct DS18B20 sensor, float *temp) {
+  uint8_t scratchPad[9];
+  if (!sendReset(sensor))
+    return 0;
   writeByte(0xCC, sensor); // Skip ROM
   writeByte(0xBE, sensor); // Read scratchpad
 
-  uint8_t lsb = readByte(sensor);
-  uint8_t msb = readByte(sensor);
+  uint8_t calculatedCrc = 0;
+  for (uint8_t i = 0; i < 9; ++i)
+    scratchPad[i] = readByte(sensor);
 
-  int16_t raw_temp = (msb << 8) | lsb;
+  // x^8 + x^5 + x^4 + x^0 = 0b00110001 = 0x31
+  // ignore the x^8 as CRC 8 always has that anyways
+  // 0x31 must be flipped as we are shifting right (LSB first) which gives 0x8C
+  for (uint8_t i = 0; i < 8; ++i) {
+    uint8_t input = scratchPad[i];
+    for (uint8_t j = 0; j < 8; ++j) {
+      uint8_t mix = (calculatedCrc ^ input) & 0x01;
+      calculatedCrc >>= 1;
+      if (mix)
+        calculatedCrc ^= 0x8C;
+      input >>= 1;
+    }
+  }
 
-  return raw_temp / 16.0f;
+  if (calculatedCrc != scratchPad[8])
+    return 0;
+
+  int16_t rawTemp = (int16_t)(((uint16_t)(scratchPad[1] << 8)) | scratchPad[0]);
+  *temp = rawTemp / 16.0f;
+  return 1;
 }
 
 uint8_t asyncTemperatureReading(struct DS18B20_Async *asyncDS18B20,
@@ -130,7 +150,7 @@ uint8_t asyncTemperatureReading(struct DS18B20_Async *asyncDS18B20,
     return 0;
   case DS18B20_CONVERTING:
     if ((now - asyncDS18B20->startMS) >= asyncDS18B20->delayMS) {
-      *temp = readTemperature(asyncDS18B20->sensor);
+      asyncDS18B20->validReading = readTemperature(asyncDS18B20->sensor, temp);
       asyncDS18B20->state = DS18B20_IDLE;
       return 1;
     }
