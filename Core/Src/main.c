@@ -44,7 +44,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 0
+#define USING_SCREEN 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -63,7 +63,13 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
+struct RTC_DS3231s clock = {0};
+struct DS18B20 waterTempSensor = {0};
+struct DS18B20 enclosureTempSensor = {0};
+struct DS18B20_Async asyncWaterSensor = {0};
+struct DS18B20_Async asyncEnclosureSensor = {0};
+struct fan fan0 = {0};
+struct maintainableDevices devices = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -114,25 +120,23 @@ int main(void) {
   MX_TIM2_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+
   float waterTemp = 0;
   float enclosureTemp = 0;
   uint8_t time[3];
-  struct RTC_DS3231s clock = {0};
   uint8_t currentDay = 0;
-  struct DS18B20 waterTempSensor = {0};
-  struct DS18B20 enclosureTempSensor = {0};
 
   createDS18B20Sensor(&waterTempSensor, WPDS18B20_GPIO_Port, WPDS18B20_Pin);
   createDS18B20Sensor(&enclosureTempSensor, EDS18B20_GPIO_Port, EDS18B20_Pin);
 
-  struct DS18B20_Async asyncWaterSensor = {0};
-  struct DS18B20_Async asyncEnclosureSensor = {0};
-
   createDS18B20Async(&asyncWaterSensor, waterTempSensor, 750);
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
 
-  struct fan fan1 = {0};
-  createFan(&fan1, &htim1, TIM_CHANNEL_4);
+  createFan(&fan0, &htim1, TIM_CHANNEL_4);
+
+  devices.fan0 = &fan0;
+  devices.waterTempSensor = &asyncWaterSensor;
+  devices.enclosureTempSensor = &asyncEnclosureSensor;
 
   /* USER CODE END 2 */
 
@@ -162,9 +166,6 @@ int main(void) {
   initScreen();
   uiInitScreens();
 #endif
-  runFan(&fan1, HIGH);
-  HAL_Delay(5000);
-  stopFan(&fan1);
   while (1) {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
@@ -179,7 +180,8 @@ int main(void) {
                             (unsigned long)++growthDays);
     }
 
-    if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp)) {
+    if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp) &&
+        asyncWaterSensor.validReading) {
       if (useFahrenheit) {
         lv_label_set_text_fmt(waterTempLabel, "Water: %.1f F",
                               waterTemp * 9 / 5.0f + 32);
@@ -187,7 +189,8 @@ int main(void) {
         lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
       }
     }
-    if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp)) {
+    if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp) &&
+        asyncEnclosureSensor.validReading) {
       if (useFahrenheit) {
         lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f F",
                               enclosureTemp * 9 / 5.0f + 32);
@@ -196,7 +199,6 @@ int main(void) {
                               enclosureTemp);
       }
     }
-
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */
