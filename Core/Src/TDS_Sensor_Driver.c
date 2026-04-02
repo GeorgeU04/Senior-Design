@@ -16,8 +16,7 @@
 TDS TDS_init(char *name) {
   TDS sensor;
 
-  strncpy(sensor.name, name, sizeof(sensor.name));
-  sensor.name[sizeof(sensor.name) - 1] = '\0';
+  snprintf(sensor.name, sizeof(sensor.name), "%s", name);
   sensor.voltage = 0;
   sensor.ECVal = 0;
   sensor.TDSVal = 0;

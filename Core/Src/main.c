@@ -70,6 +70,7 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
+TDS tds = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -138,6 +139,7 @@ int main(void) {
   devices.waterTempSensor = &asyncWaterSensor;
   devices.enclosureTempSensor = &asyncEnclosureSensor;
 
+  tds = TDS_init("TDS");
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -199,6 +201,9 @@ int main(void) {
                               enclosureTemp);
       }
     }
+    // add a delay for updating TDS
+    readTDS(&tds);
+    lv_label_set_text_fmt(TDSLabel, "TDS: %.1f uS/cm", tds.TDSVal);
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */
