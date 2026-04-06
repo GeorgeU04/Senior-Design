@@ -47,6 +47,8 @@ struct maintainableDevices {
   struct fan *fan2;
   struct fan *fan1;
   struct fan *fan0;
+  struct TDS *tds;
+  struct pH *ph;
 };
 
 extern struct maintainableDevices devices;
@@ -55,6 +57,8 @@ extern struct maintainableDevices devices;
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 extern ADC_HandleTypeDef hadc1;
+
+extern ADC_HandleTypeDef hadc2;
 
 extern I2C_HandleTypeDef hi2c1;
 
@@ -84,6 +88,24 @@ void Error_Handler(void);
 #define WPDS18B20_GPIO_Port GPIOF
 #define EDS18B20_Pin GPIO_PIN_2
 #define EDS18B20_GPIO_Port GPIOF
+#define pHSensor_Pin GPIO_PIN_0
+#define pHSensor_GPIO_Port GPIOC
+#define TDS_Pin GPIO_PIN_6
+#define TDS_GPIO_Port GPIOA
+#define heater_Pin GPIO_PIN_7
+#define heater_GPIO_Port GPIOE
+#define cooler_Pin GPIO_PIN_8
+#define cooler_GPIO_Port GPIOE
+#define pHDown_Pin GPIO_PIN_10
+#define pHDown_GPIO_Port GPIOE
+#define pHUp_Pin GPIO_PIN_12
+#define pHUp_GPIO_Port GPIOE
+#define FloraMicro_Pin GPIO_PIN_15
+#define FloraMicro_GPIO_Port GPIOE
+#define FloraBloom_Pin GPIO_PIN_10
+#define FloraBloom_GPIO_Port GPIOB
+#define FloraGrow_Pin GPIO_PIN_11
+#define FloraGrow_GPIO_Port GPIOB
 #define RSX_Pin GPIO_PIN_6
 #define RSX_GPIO_Port GPIOC
 #define CDX_Pin GPIO_PIN_7

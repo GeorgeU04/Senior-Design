@@ -7,32 +7,29 @@
 #define INC_PH_SENSOR_DRIVER_H_
 
 #include "main.h"
-#include "stm32l4xx_hal.h"
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 extern ADC_HandleTypeDef hadc1;
 
+struct pH {
+  char name[100];
+  float voltage;
+  float pHVal;
+  float slope;
+  float offset;
+};
 
-typedef struct {
-	char name [100];
-	float voltage;
-	float pHVal;
-	float slope;
-	float offset;
-} pH;
-
-pH pH_init(char *name);
+struct pH pH_init(char *name);
 
 // Reads analog sensor as voltage
-void readVoltage(pH *sensor);
+void readVoltage(struct pH *sensor);
 
 // convert the voltage to pH
-void voltageTopH(pH *sensor);
+void voltageTopH(struct pH *sensor);
 
 // USE THIS IN MAIN TO GET DATA
-void readpH(pH *sensor);
-
+void readpH(struct pH *sensor);
 
 #endif /* INC_PH_SENSOR_DRIVER_H_ */

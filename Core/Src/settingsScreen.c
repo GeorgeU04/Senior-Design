@@ -1,6 +1,8 @@
 #include "settingsScreen.h"
 #include "DS18B20.h"
+#include "TDS_Sensor_Driver.h"
 #include "main.h"
+#include "pH_Sensor_Driver.h"
 #include "src/misc/lv_area.h"
 #include "src/widgets/button/lv_button.h"
 #include "src/widgets/label/lv_label.h"
@@ -50,6 +52,8 @@ static void setErrorText(char *text, size_t size) {
     strncat(text, "Enclosure Temp: Error\n", (size - strlen(text)) - 1);
   if (systemStatus & (1 << PH_LEVEL))
     strncat(text, "pH: Error\n", (size - strlen(text)) - 1);
+  if (systemStatus & (1 << TDS_LEVEL))
+    strncat(text, "ECS: Error\n", (size - strlen(text)) - 1);
   if (systemStatus & (1 << WATER_LEVEL))
     strncat(text, "Water Level: Error\n", (size - strlen(text)) - 1);
   if (systemStatus & (1 << FAN_0))
@@ -80,6 +84,8 @@ void getSystemStatus() {
   /* Check temp sensors */
   float waterTemps[2] = {0};
   float enclosureTemps[2] = {0};
+  float ECSVals[3] = {0};
+  float pHVals[3] = {0};
   uint8_t waterTempInValid = 0;
   uint8_t enclosureTempInValid = 0;
   uint8_t i = 0;
@@ -108,6 +114,22 @@ void getSystemStatus() {
       (enclosureTemps[0] == 0.0f && enclosureTemps[1] == 0.0f)) {
     systemStatus |= 1 << ENCLOSURE_TEMP;
   }
+  i = 0;
+  while (i < 3) {
+    readTDS(devices.tds);
+    ECSVals[i] = devices.tds->ECVal;
+    readpH(devices.ph);
+    pHVals[i++] = devices.ph->pHVal;
+  }
+
+  if (ECSVals[0] > 3 && ECSVals[1] > 3 && ECSVals[2] > 3) {
+    systemStatus |= 1 << TDS_LEVEL;
+  }
+
+  if (pHVals[0] > 14 && pHVals[1] > 14 && pHVals[2] > 14) {
+    systemStatus |= 1 << PH_LEVEL;
+  }
+
   drawPopUp();
 }
 
