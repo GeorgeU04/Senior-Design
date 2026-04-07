@@ -7,6 +7,7 @@
 #include "src/widgets/label/lv_label.h"
 #include <stdint.h>
 #include <string.h>
+#include "lights.h"
 
 lv_obj_t *waterTempLabel = NULL;
 lv_obj_t *enclosureTempLabel = NULL;
@@ -119,15 +120,17 @@ void updatePlantProfileLabels(const struct plantProfile *p) {
 
   lv_label_set_text_fmt(plantLightOnLabel, "Light On: %u min",
                         p->lightOnMinutes);
-  lv_label_set_text_fmt(plantRGBLabel, "W/R/B: %u/%u/%u %%",
-                        p->whiteLightPercentage, p->redLightPercentage,
-                        p->blueLightPercentage);
+  lv_label_set_text_fmt(plantRGBLabel, "W/R/B/NIR: %u/%u/%u/%u %%",
+                          p->whiteLightPercentage, p->redLightPercentage,
+                          p->blueLightPercentage, p->nirLightPercentage);
 
   lv_label_set_text_fmt(plantDurationLabel, "Duration: %lu days",
                         (unsigned long)p->growthDurationDays);
   growthDays = 1;
   lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                         (unsigned long)growthDays);
+
+  Lights_ApplyProfile(p);
 }
 
 // Unused for now. Currently updating the text for each individual sensor.
