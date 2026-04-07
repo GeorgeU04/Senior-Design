@@ -129,6 +129,8 @@ void updatePlantProfileLabels(const struct plantProfile *p) {
   growthDays = 1;
   lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                         (unsigned long)growthDays);
+
+  Lights_ApplyProfile(p);
 }
 
 // Unused for now. Currently updating the text for each individual sensor.
