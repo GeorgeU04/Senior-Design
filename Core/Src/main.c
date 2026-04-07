@@ -24,15 +24,18 @@
 #include "DS18B20.h"
 #include "DS3231s.h"
 #include "GUI.h"
+#include "PeristalticPump.h"
 #include "TDS_Sensor_Driver.h"
 #include "fans.h"
 #include "homeScreen.h"
+#include "pH_Sensor_Driver.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
 #include "stm32h753xx.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_def.h"
+#include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_tim.h"
 #include <stdint.h>
 #include "lights.h"
@@ -58,6 +61,7 @@
 
 COM_InitTypeDef BspCOMInit;
 ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
 
 I2C_HandleTypeDef hi2c1;
 
@@ -72,15 +76,20 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
+struct TDS tds = {0};
+struct pH PH = {0};
+struct Pump pump = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void PeriphCommonClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_ADC2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -112,6 +121,9 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
+  /* Configure the peripherals common clocks */
+  PeriphCommonClock_Config();
+
   /* USER CODE BEGIN SysInit */
   /* USER CODE END SysInit */
 
@@ -121,6 +133,7 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
 
   float waterTemp = 0;
@@ -135,6 +148,10 @@ int main(void)
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
 
   createFan(&fan0, &htim1, TIM_CHANNEL_4);
+
+  tds = TDS_init("TDS");
+  PH = pH_init("PH");
+  pump = pump_init("P1", GPIOB, GPIO_PIN_11);
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
@@ -168,6 +185,7 @@ int main(void)
 #if USING_SCREEN
   initScreen();
   uiInitScreens();
+  runPump(&pump, 10000);
 #endif
   while (1) {
     /* USER CODE END WHILE */
@@ -175,7 +193,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 #if USING_SCREEN
     // increments the counter each day
-    // could use alarm, but kind of overkill
+    // could use intterupt alarm, but kind of overkill
     readTimeData(time);
     parseTime(&clock, time);
     if (currentDay != clock.day) {
@@ -203,6 +221,15 @@ int main(void)
                               enclosureTemp);
       }
     }
+
+    readTDS(&tds);
+    lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", tds.ECVal);
+
+    readpH(&PH);
+    lv_label_set_text_fmt(pHLabel, "pH: %.2f", PH.pHVal);
+
+    checkPump(&pump);
+
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */
@@ -541,8 +568,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, WPDS18B20_Pin|EDS18B20_Pin, GPIO_PIN_RESET);
@@ -560,6 +587,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : heater_Pin cooler_Pin pHDown_Pin pHUp_Pin
+                           FloraMicro_Pin */
+  GPIO_InitStruct.Pin =
+      heater_Pin | cooler_Pin | pHDown_Pin | pHUp_Pin | FloraMicro_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : FloraBloom_Pin FloraGrow_Pin */
+  GPIO_InitStruct.Pin = FloraBloom_Pin | FloraGrow_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : RSX_Pin CDX_Pin CSX_Pin WRX_Pin */
   GPIO_InitStruct.Pin = RSX_Pin|CDX_Pin|CSX_Pin|WRX_Pin;

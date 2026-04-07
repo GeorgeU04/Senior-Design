@@ -13,11 +13,10 @@
 #define VREF 3.3f // STM32 ADC reference voltage **swap 3.3 for 5 if neeeded**
 
 // Make sure to initialize first
-TDS TDS_init(char *name) {
-  TDS sensor;
+struct TDS TDS_init(char *name) {
+  struct TDS sensor;
 
-  strncpy(sensor.name, name, sizeof(sensor.name));
-  sensor.name[sizeof(sensor.name) - 1] = '\0';
+  snprintf(sensor.name, sizeof(sensor.name), "%s", name);
   sensor.voltage = 0;
   sensor.ECVal = 0;
   sensor.TDSVal = 0;
@@ -26,7 +25,7 @@ TDS TDS_init(char *name) {
 }
 
 // Reads sensor input and stores voltage value
-void measureVoltage(TDS *sensor) {
+void measureVoltage(struct TDS *sensor) {
   // start ADC conversion
   HAL_ADC_Start(&hadc1);
   // Poll ADC1 Perihperal & TimeOut = 10mSec
@@ -36,7 +35,7 @@ void measureVoltage(TDS *sensor) {
 }
 
 // convert voltage to EC
-void voltageToEC(TDS *sensor) {
+void voltageToEC(struct TDS *sensor) {
   float V = sensor->voltage;
   // DFRobot polynomial: outputs EC in µS/cm
   float ec_uS = 133.42f * V * V * V - 255.86f * V * V + 857.39f * V;
@@ -44,17 +43,17 @@ void voltageToEC(TDS *sensor) {
 }
 
 // Convert EC value to TDS
-void ECToTDS(TDS *sensor) { sensor->TDSVal = sensor->ECVal * 500; }
+void ECToTDS(struct TDS *sensor) { sensor->TDSVal = sensor->ECVal * 500; }
 
 // USE THIS IN MAIN TO GET DATA
-void readTDS(TDS *sensor) {
+void readTDS(struct TDS *sensor) {
   measureVoltage(sensor);
   voltageToEC(sensor);
   ECToTDS(sensor);
 }
 
-float TDS_getVoltage(TDS *sensor) { return sensor->voltage; }
+float TDS_getVoltage(struct TDS *sensor) { return sensor->voltage; }
 
-float TDS_getTDS(TDS *sensor) { return sensor->TDSVal; }
+float TDS_getTDS(struct TDS *sensor) { return sensor->TDSVal; }
 
-float TDS_getEC(TDS *sensor) { return sensor->ECVal; }
+float TDS_getEC(struct TDS *sensor) { return sensor->ECVal; }

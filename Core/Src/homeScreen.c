@@ -62,7 +62,7 @@ void drawHomeScreen(lv_obj_t *homeScreen) {
   y += padding;
 
   TDSLabel = lv_label_create(homeScreen);
-  lv_label_set_text(TDSLabel, "TDS: __._ uS/cm");
+  lv_label_set_text(TDSLabel, "ECS: __._ mS/cm");
   lv_obj_set_style_text_color(TDSLabel, lv_color_hex(0xFFFFFF), 0);
   lv_obj_align(TDSLabel, LV_ALIGN_TOP_LEFT, 0, y);
 
