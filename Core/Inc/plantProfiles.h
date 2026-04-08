@@ -15,6 +15,7 @@ struct plantProfile {
   uint8_t whiteLightPercentage;
   uint8_t blueLightPercentage;
   uint8_t redLightPercentage;
+  uint8_t nirLightPercentage;
 };
 
 extern const struct plantProfile ARUGULA_PROFILE;
