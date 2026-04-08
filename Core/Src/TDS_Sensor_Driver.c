@@ -9,6 +9,7 @@
  */
 
 #include "TDS_Sensor_Driver.h"
+#include <stdio.h>
 
 #define VREF 3.3f // STM32 ADC reference voltage **swap 3.3 for 5 if neeeded**
 
