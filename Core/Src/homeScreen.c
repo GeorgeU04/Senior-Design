@@ -50,7 +50,7 @@ void drawHomeScreen(lv_obj_t *homeScreen) {
   y += padding;
 
   waterLevelLabel = lv_label_create(homeScreen);
-  lv_label_set_text(waterLevelLabel, "Water Lvl: ___%");
+  lv_label_set_text(waterLevelLabel, "Water Lvl: ____");
   lv_obj_set_style_text_color(waterLevelLabel, lv_color_hex(0xFFFFFF), 0);
   lv_obj_align(waterLevelLabel, LV_ALIGN_TOP_LEFT, 0, y);
   y += padding;

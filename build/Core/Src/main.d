@@ -165,7 +165,8 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/lvgl/src/widgets/label/../../draw/lv_draw.h \
  Drivers/lvgl/src/widgets/label/../../core/lv_observer.h \
  Drivers/lvgl/src/widgets/label/../../core/lv_obj.h \
- Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
+ Core/Inc/waterLevelSensor.h
 Core/Inc/main.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 Core/Inc/stm32h7xx_hal_conf.h:
@@ -347,3 +348,4 @@ Drivers/lvgl/src/widgets/label/../../draw/lv_draw.h:
 Drivers/lvgl/src/widgets/label/../../core/lv_observer.h:
 Drivers/lvgl/src/widgets/label/../../core/lv_obj.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
+Core/Inc/waterLevelSensor.h:

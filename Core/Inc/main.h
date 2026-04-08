@@ -60,6 +60,8 @@ extern ADC_HandleTypeDef hadc1;
 
 extern ADC_HandleTypeDef hadc2;
 
+extern ADC_HandleTypeDef hadc3;
+
 extern I2C_HandleTypeDef hi2c1;
 
 extern TIM_HandleTypeDef htim2;
@@ -90,8 +92,12 @@ void Error_Handler(void);
 #define EDS18B20_GPIO_Port GPIOF
 #define pHSensor_Pin GPIO_PIN_0
 #define pHSensor_GPIO_Port GPIOC
-#define TDS_Pin GPIO_PIN_6
-#define TDS_GPIO_Port GPIOA
+#define waterLevelSensor_Pin GPIO_PIN_3
+#define waterLevelSensor_GPIO_Port GPIOC
+#define waterLevelSensorA3_Pin GPIO_PIN_3
+#define waterLevelSensorA3_GPIO_Port GPIOA
+#define TDSSensor_Pin GPIO_PIN_6
+#define TDSSensor_GPIO_Port GPIOA
 #define heater_Pin GPIO_PIN_7
 #define heater_GPIO_Port GPIOE
 #define cooler_Pin GPIO_PIN_8
@@ -106,6 +112,8 @@ void Error_Handler(void);
 #define FloraBloom_GPIO_Port GPIOB
 #define FloraGrow_Pin GPIO_PIN_11
 #define FloraGrow_GPIO_Port GPIOB
+#define waterLevelSensorPower_Pin GPIO_PIN_2
+#define waterLevelSensorPower_GPIO_Port GPIOG
 #define RSX_Pin GPIO_PIN_6
 #define RSX_GPIO_Port GPIOC
 #define CDX_Pin GPIO_PIN_7
