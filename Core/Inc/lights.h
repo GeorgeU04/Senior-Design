@@ -16,7 +16,7 @@
  *       = (percentage / 100.0) * 4800
  */
 
-#define LIGHTS_ARR 4799U   // matches htim1.Init.Period in main.c
+#define LIGHTS_ARR 4799U // matches htim1.Init.Period in main.c
 
 // Initialize PWM channels and start outputs at 0%
 void Lights_Init(void);
@@ -28,8 +28,9 @@ void Lights_ApplyProfile(const struct plantProfile *profile);
 void Lights_SetBlue(uint8_t percentage);
 void Lights_SetRed(uint8_t percentage);
 void Lights_SetNIR(uint8_t percentage);
+void Lights_SetWhite(uint8_t percentage);
 
-// Turn all three channels off
+// Turn all four channels off
 void Lights_Off(void);
 
 #endif

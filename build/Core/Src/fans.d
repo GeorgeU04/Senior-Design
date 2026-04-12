@@ -1,4 +1,4 @@
-build/Core/Src/fans.o: Core/Src/fans.c Core/Inc/fans.h \
+build/Core/Src/fans.o: Core/Src/fans.c Core/Inc/fans.h Core/Inc/main.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  Core/Inc/stm32h7xx_hal_conf.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -31,8 +31,12 @@ build/Core/Src/fans.o: Core/Src/fans.c Core/Inc/fans.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
+ Core/Inc/stm32h7xx_nucleo_conf.h \
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h
 Core/Inc/fans.h:
+Core/Inc/main.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 Core/Inc/stm32h7xx_hal_conf.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -69,3 +73,6 @@ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
+Core/Inc/stm32h7xx_nucleo_conf.h:
+Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:

@@ -64,7 +64,9 @@ extern ADC_HandleTypeDef hadc3;
 
 extern I2C_HandleTypeDef hi2c1;
 
+extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
 
 extern UART_HandleTypeDef huart1;
 
@@ -102,10 +104,18 @@ void Error_Handler(void);
 #define heater_GPIO_Port GPIOE
 #define cooler_Pin GPIO_PIN_8
 #define cooler_GPIO_Port GPIOE
+#define blueLight_Pin GPIO_PIN_9
+#define blueLight_GPIO_Port GPIOE
 #define pHDown_Pin GPIO_PIN_10
 #define pHDown_GPIO_Port GPIOE
+#define redLight_Pin GPIO_PIN_11
+#define redLight_GPIO_Port GPIOE
 #define pHUp_Pin GPIO_PIN_12
 #define pHUp_GPIO_Port GPIOE
+#define NIRLight_Pin GPIO_PIN_13
+#define NIRLight_GPIO_Port GPIOE
+#define fan1_Pin GPIO_PIN_14
+#define fan1_GPIO_Port GPIOE
 #define FloraMicro_Pin GPIO_PIN_15
 #define FloraMicro_GPIO_Port GPIOE
 #define FloraBloom_Pin GPIO_PIN_10
@@ -138,6 +148,8 @@ void Error_Handler(void);
 #define D6_GPIO_Port GPIOD
 #define D7_Pin GPIO_PIN_7
 #define D7_GPIO_Port GPIOD
+#define whiteLight_Pin GPIO_PIN_4
+#define whiteLight_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
