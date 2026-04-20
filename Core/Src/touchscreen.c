@@ -33,8 +33,6 @@ void touchRead(lv_indev_t *indev, lv_indev_data_t *data) {
   if (st == HAL_OK && t.touched) {
 
     data->state = LV_INDEV_STATE_PRESSED;
-    // i hate this stupid fucking touchscreen. It took so many attempts to
-    // understand how the screen was rotating
     data->point.x = 239 - t.xPos;
     data->point.y = 319 - t.yPos;
     last = data->point;

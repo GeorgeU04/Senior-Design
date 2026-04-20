@@ -47,6 +47,8 @@ struct maintainableDevices {
   struct fan *fan2;
   struct fan *fan1;
   struct fan *fan0;
+  struct TDS *tds;
+  struct pH *ph;
 };
 
 extern struct maintainableDevices devices;
@@ -56,9 +58,15 @@ extern struct maintainableDevices devices;
 /* USER CODE BEGIN EC */
 extern ADC_HandleTypeDef hadc1;
 
+extern ADC_HandleTypeDef hadc2;
+
+extern ADC_HandleTypeDef hadc3;
+
 extern I2C_HandleTypeDef hi2c1;
 
+extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
 
 extern UART_HandleTypeDef huart1;
 
@@ -84,6 +92,38 @@ void Error_Handler(void);
 #define WPDS18B20_GPIO_Port GPIOF
 #define EDS18B20_Pin GPIO_PIN_2
 #define EDS18B20_GPIO_Port GPIOF
+#define pHSensor_Pin GPIO_PIN_0
+#define pHSensor_GPIO_Port GPIOC
+#define waterLevelSensor_Pin GPIO_PIN_3
+#define waterLevelSensor_GPIO_Port GPIOC
+#define waterLevelSensorA3_Pin GPIO_PIN_3
+#define waterLevelSensorA3_GPIO_Port GPIOA
+#define TDSSensor_Pin GPIO_PIN_6
+#define TDSSensor_GPIO_Port GPIOA
+#define heater_Pin GPIO_PIN_7
+#define heater_GPIO_Port GPIOE
+#define cooler_Pin GPIO_PIN_8
+#define cooler_GPIO_Port GPIOE
+#define blueLight_Pin GPIO_PIN_9
+#define blueLight_GPIO_Port GPIOE
+#define pHDown_Pin GPIO_PIN_10
+#define pHDown_GPIO_Port GPIOE
+#define redLight_Pin GPIO_PIN_11
+#define redLight_GPIO_Port GPIOE
+#define pHUp_Pin GPIO_PIN_12
+#define pHUp_GPIO_Port GPIOE
+#define NIRLight_Pin GPIO_PIN_13
+#define NIRLight_GPIO_Port GPIOE
+#define fan1_Pin GPIO_PIN_14
+#define fan1_GPIO_Port GPIOE
+#define FloraMicro_Pin GPIO_PIN_15
+#define FloraMicro_GPIO_Port GPIOE
+#define FloraBloom_Pin GPIO_PIN_10
+#define FloraBloom_GPIO_Port GPIOB
+#define FloraGrow_Pin GPIO_PIN_11
+#define FloraGrow_GPIO_Port GPIOB
+#define waterLevelSensorPower_Pin GPIO_PIN_2
+#define waterLevelSensorPower_GPIO_Port GPIOG
 #define RSX_Pin GPIO_PIN_6
 #define RSX_GPIO_Port GPIOC
 #define CDX_Pin GPIO_PIN_7
@@ -108,6 +148,8 @@ void Error_Handler(void);
 #define D6_GPIO_Port GPIOD
 #define D7_Pin GPIO_PIN_7
 #define D7_GPIO_Port GPIOD
+#define whiteLight_Pin GPIO_PIN_4
+#define whiteLight_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

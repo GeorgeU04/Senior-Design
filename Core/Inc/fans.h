@@ -1,7 +1,7 @@
 #ifndef FANS_H
 #define FANS_H
 
-#include "stm32h7xx_hal.h"
+#include "main.h"
 #include <stdint.h>
 
 enum fanState { OFF, LOW, MED, HIGH, MAX };

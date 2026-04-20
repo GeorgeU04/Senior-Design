@@ -6,6 +6,7 @@
 static inline uint16_t pinIndexFromMask(uint16_t pinmask) {
   return (uint16_t)__builtin_ctz((uint32_t)pinmask); // count trailing zeros
 }
+
 void createDS18B20Sensor(struct DS18B20 *sensor, GPIO_TypeDef *port,
                          uint16_t pinMask) {
   sensor->pin = pinIndexFromMask(pinMask);

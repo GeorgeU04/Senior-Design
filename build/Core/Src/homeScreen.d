@@ -125,7 +125,7 @@ build/Core/Src/homeScreen.o: Core/Src/homeScreen.c Core/Inc/homeScreen.h \
  Drivers/lvgl/src/widgets/label/../../misc/lv_text.h \
  Drivers/lvgl/src/widgets/label/../../draw/lv_draw.h \
  Drivers/lvgl/src/widgets/label/../../core/lv_observer.h \
- Drivers/lvgl/src/widgets/label/../../core/lv_obj.h
+ Drivers/lvgl/src/widgets/label/../../core/lv_obj.h Core/Inc/lights.h
 Core/Inc/homeScreen.h:
 Core/Inc/plantProfiles.h:
 Drivers/lvgl/src/core/lv_obj.h:
@@ -258,3 +258,4 @@ Drivers/lvgl/src/widgets/label/../../misc/lv_text.h:
 Drivers/lvgl/src/widgets/label/../../draw/lv_draw.h:
 Drivers/lvgl/src/widgets/label/../../core/lv_observer.h:
 Drivers/lvgl/src/widgets/label/../../core/lv_obj.h:
+Core/Inc/lights.h:

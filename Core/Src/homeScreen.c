@@ -7,6 +7,7 @@
 #include "src/widgets/label/lv_label.h"
 #include <stdint.h>
 #include <string.h>
+#include "lights.h"
 
 lv_obj_t *waterTempLabel = NULL;
 lv_obj_t *enclosureTempLabel = NULL;
@@ -49,7 +50,7 @@ void drawHomeScreen(lv_obj_t *homeScreen) {
   y += padding;
 
   waterLevelLabel = lv_label_create(homeScreen);
-  lv_label_set_text(waterLevelLabel, "Water Lvl: ___%");
+  lv_label_set_text(waterLevelLabel, "Water Lvl: ____");
   lv_obj_set_style_text_color(waterLevelLabel, lv_color_hex(0xFFFFFF), 0);
   lv_obj_align(waterLevelLabel, LV_ALIGN_TOP_LEFT, 0, y);
   y += padding;
@@ -61,7 +62,7 @@ void drawHomeScreen(lv_obj_t *homeScreen) {
   y += padding;
 
   TDSLabel = lv_label_create(homeScreen);
-  lv_label_set_text(TDSLabel, "TDS: __._ uS/cm");
+  lv_label_set_text(TDSLabel, "ECS: __._ mS/cm");
   lv_obj_set_style_text_color(TDSLabel, lv_color_hex(0xFFFFFF), 0);
   lv_obj_align(TDSLabel, LV_ALIGN_TOP_LEFT, 0, y);
 
@@ -119,15 +120,17 @@ void updatePlantProfileLabels(const struct plantProfile *p) {
 
   lv_label_set_text_fmt(plantLightOnLabel, "Light On: %u min",
                         p->lightOnMinutes);
-  lv_label_set_text_fmt(plantRGBLabel, "W/R/B: %u/%u/%u %%",
-                        p->whiteLightPercentage, p->redLightPercentage,
-                        p->blueLightPercentage);
+  lv_label_set_text_fmt(plantRGBLabel, "W/R/B/NIR: %u/%u/%u/%u %%",
+                          p->whiteLightPercentage, p->redLightPercentage,
+                          p->blueLightPercentage, p->nirLightPercentage);
 
   lv_label_set_text_fmt(plantDurationLabel, "Duration: %lu days",
                         (unsigned long)p->growthDurationDays);
   growthDays = 1;
   lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                         (unsigned long)growthDays);
+
+  Lights_ApplyProfile(p);
 }
 
 // Unused for now. Currently updating the text for each individual sensor.

@@ -10,20 +10,20 @@
  *
  */
 
-// Make sure to initialize the new pump first. Initialize a new name, and pin info.
-//will return a pump struct object
-Pump pump_init(char* Name,GPIO_TypeDef* GPIO, uint16_t Pin){
-	Pump newPump;
-	strcpy(newPump.name, Name);
-	newPump.GPIOx = GPIO;
-	newPump.GPIO_Pin = Pin;
+// Make sure to initialize the new pump first. Initialize a new name, and pin
+// info.
+// will return a pump struct object
+struct Pump pump_init(char *Name, GPIO_TypeDef *GPIO, uint16_t Pin) {
+  struct Pump newPump;
+  strcpy(newPump.name, Name);
+  newPump.GPIOx = GPIO;
+  newPump.GPIO_Pin = Pin;
 
-	newPump.RUNFLAG = 0;
-	newPump.startTime = 0;
-	newPump.runTime = 0;
+  newPump.RUNFLAG = 0;
+  newPump.startTime = 0;
+  newPump.runTime = 0;
 
-
-	return newPump;
+  return newPump;
 }
 
 // Run pump for set amount of time. Remember, dispenses 1.5 mL/Second

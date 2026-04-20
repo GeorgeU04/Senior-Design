@@ -14,22 +14,20 @@
 #define INC_PERISTALTICPUMP_H_
 
 #include "main.h"
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdint.h>
-#include "stm32l4xx_hal.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // Helps individualize each pump
-typedef struct{
-	char name[100];
-	GPIO_TypeDef* GPIOx;
-	uint16_t GPIO_Pin;
-    uint8_t RUNFLAG;
-    uint32_t startTime;
-    uint32_t runTime;
-}Pump;
+struct Pump {
+  char name[100];
+  GPIO_TypeDef *GPIOx;
+  uint16_t GPIO_Pin;
+  uint8_t RUNFLAG;
+  uint32_t startTime;
+  uint32_t runTime;
+};
 
 Pump pump_init(char* Name,GPIO_TypeDef* GPIO, uint16_t Pin);
 void runPump_Inverted(Pump *pump,uint32_t ms);

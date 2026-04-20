@@ -18,56 +18,53 @@
  */
 #include "pH_Sensor_Driver.h"
 
+struct pH pH_init(char *name) {
+  struct pH sensor;
 
+  float V4, V7;
 
-pH pH_init(char *name){
-	pH sensor;
-
-	float V4, V7;
-
-	strncpy(sensor.name, name, sizeof(sensor.name));
-    sensor.name[sizeof(sensor.name)-1] = '\0';
-    sensor.voltage = 0.0f;
-    sensor.pHVal = 0.0f;
-    sensor.slope = (4.0f-7.0f)/(1.95 - 1.44); //hard code V4 and V7 values. FORMAT: (V4 - V7)
-    sensor.offset = 7.0f -(sensor.slope*(1.44)); //FORMAT: (sensor.slope* V7)
-	return sensor;
+  strncpy(sensor.name, name, sizeof(sensor.name));
+  sensor.name[sizeof(sensor.name) - 1] = '\0';
+  sensor.voltage = 0.0f;
+  sensor.pHVal = 0.0f;
+  sensor.slope = (4.0f - 7.0f) /
+                 (1.95 - 1.44); // hard code V4 and V7 values. FORMAT: (V4 - V7)
+  sensor.offset = 7.0f - (sensor.slope * (1.44)); // FORMAT: (sensor.slope* V7)
+  return sensor;
 }
 /*
 void calibrate_pH7(pH *sensor){
-	readVoltage(&sensor);
-	sensor->V7 = sensor->voltage;
+        readVoltage(&sensor);
+        sensor->V7 = sensor->voltage;
 }
 
 void calibrate_pH4(pH *sensor){
-	readVoltage(&sensor);
-	sensor->V4 = sensor->voltage;
+        readVoltage(&sensor);
+        sensor->V4 = sensor->voltage;
 }
 */
 
 // Reads analog sensor as voltage
-void readVoltage(pH *sensor){
-	uint32_t adcValue =0;
+void readVoltage(struct pH *sensor) {
+  uint32_t adcValue = 0;
 
-	for(int i = 0; i < 10; i++){
-		HAL_ADC_Start(&hadc1);
-        HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		adcValue += HAL_ADC_GetValue(&hadc1);      // read 12-bit ADC
-	}
-	float volt = ((float)(adcValue/10.0f) / 4095.0f) * 3.3f; // convert to volts
-	sensor->voltage = volt;
+  for (int i = 0; i < 10; i++) {
+    HAL_ADC_Start(&hadc2);
+    HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+    adcValue += HAL_ADC_GetValue(&hadc2); // read 12-bit ADC
+  }
+  float volt = ((float)(adcValue / 10.0f) / 4095.0f) * 3.3f; // convert to volts
+  sensor->voltage = volt;
 }
 
 // convert the voltage to pH
-void voltageTopH(pH *sensor){
-	sensor->pHVal=(sensor->slope * sensor->voltage) + sensor->offset; // approximate pH
+void voltageTopH(struct pH *sensor) {
+  sensor->pHVal =
+      (sensor->slope * sensor->voltage) + sensor->offset; // approximate pH
 }
 
 // USE THIS IN MAIN TO GET DATA
-void readpH(pH *sensor){
-	readVoltage(sensor);
-	voltageToPH(sensor);
+void readpH(struct pH *sensor) {
+  readVoltage(sensor);
+  voltageTopH(sensor);
 }
-
-
-
