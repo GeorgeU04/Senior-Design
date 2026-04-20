@@ -24,12 +24,12 @@
 #include "DS18B20.h"
 #include "DS3231s.h"
 #include "GUI.h"
-#include "PeristalticPump.h"
-#include "TDS_Sensor_Driver.h"
+//#include "PeristalticPump.h"
+//#include "TDS_Sensor_Driver.h"
 #include "fans.h"
 #include "homeScreen.h"
 #include "lights.h"
-#include "pH_Sensor_Driver.h"
+//#include "pH_Sensor_Driver.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -41,6 +41,8 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_tim.h"
 #include "waterLevelSensor.h"
+#include "PHDose.h"
+#Include "NutrientDose.h"
 #include <stdint.h>
 /* USER CODE END Includes */
 
@@ -80,9 +82,9 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
-struct TDS tds = {0};
-struct pH PH = {0};
-struct Pump pump = {0};
+//struct TDS tds = {0};
+//struct pH PH = {0};
+//struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
 /* USER CODE END PV */
 
@@ -164,9 +166,12 @@ int main(void) {
 
   createWaterLevelSensor(&waterLevelSensor, waterLevelSensorPower_GPIO_Port,
                          waterLevelSensorPower_Pin, &hadc3);
-  tds = TDS_init("TDS");
-  PH = pH_init("PH");
-  pump = pump_init("P1", GPIOB, GPIO_PIN_11);
+  /////////////////TDS, PH, PUMPS//////////////////////
+  //tds = TDS_init("TDS");
+  //PH = pH_init("PH");
+  //pump = pump_init("P1", GPIOB, GPIO_PIN_11);
+  PHDose_init();
+  NutrientDose_init();
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
@@ -205,7 +210,6 @@ int main(void) {
   uint16_t currentTick = 0;
   initScreen();
   uiInitScreens();
-  runPump(&pump, 10000);
 #endif
   while (1) {
     /* USER CODE END WHILE */
@@ -243,11 +247,11 @@ int main(void) {
       }
     }
     if (currentTick >= screenRefresh) {
-      readTDS(&tds);
-      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", tds.ECVal);
+      readTDS(&TDSSensor);
+      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", TDSSensor.ECVal);
 
-      readpH(&PH);
-      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PH.pHVal);
+      readpH(&PHSensor);
+      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PHSensor.pHVal);
 
       waterLevel = readWaterLevel(&waterLevelSensor);
       if (waterLevel < 3000) {
@@ -257,7 +261,7 @@ int main(void) {
       }
     }
 
-    checkPump(&pump);
+    //checkPump(&pump);
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */

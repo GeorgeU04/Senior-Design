@@ -2,11 +2,11 @@
 
 #include "NutrientDose.h"
 
-static TDS TDSSensor;
+struct TDS TDSSensor ={0};
 
-static Pump growPump;
-static Pump microPump;
-static Pump bloomPump;
+struct Pump growPump ={0};
+struct Pump microPump ={0};
+struct Pump bloomPump ={0};
 
 static Doser grow;
 static Doser micro;

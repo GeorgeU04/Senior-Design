@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-static Pump upPump;
-static Pump downPump;
-static pH PHSensor;
+struct Pump upPump ={0};
+struct Pump downPump ={0};
+struct pH PHSensor ={0};
 static Doser upDoser;
 static Doser downDoser;
 static char msg[200];
