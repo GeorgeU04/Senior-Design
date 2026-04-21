@@ -29,8 +29,10 @@ struct Pump {
   uint32_t runTime;
 };
 
-struct Pump pump_init(char *Name, GPIO_TypeDef *GPIO, uint16_t Pin);
-void runPump(struct Pump *pump, uint32_t ms);
-void checkPump(struct Pump *pump);
+Pump pump_init(char* Name,GPIO_TypeDef* GPIO, uint16_t Pin);
+void runPump_Inverted(Pump *pump,uint32_t ms);
+void checkPump_Inverted(Pump *pump);
+void runPump_NonInverted(Pump *pump,uint32_t ms);
+void checkPump_NonInverted(Pump *pump);
 
 #endif /* INC_PERISTALTICPUMP_H_ */
