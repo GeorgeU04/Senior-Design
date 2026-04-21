@@ -1,3 +1,6 @@
+#ifndef DOSER_H
+#define DOSER_H
+
 /* Doser.h
  *
  *	Flow:
@@ -33,10 +36,15 @@ typedef struct {
 void doser_init(Doser *doser, struct Pump *pump, float mlPerSecond,
                 float stepVolumeMl, uint32_t mixDelayMs);
 
-void doser_start(Doser *doser, float volumeMl); // Start a new dose command in mL
-void doser_update_inverted(Doser *doser); // call this every loop to update the doser
-void doser_update_noninverted(Doser *doser); // call this every loop to update the doser
+void doser_start(Doser *doser,
+                 float volumeMl); // Start a new dose command in mL
+void doser_update_inverted(
+    Doser *doser); // call this every loop to update the doser
+void doser_update_noninverted(
+    Doser *doser); // call this every loop to update the doser
 
 uint8_t doser_isBusy(Doser *doser); // Returns 1 if doser is busy, 0 if idle
 
 void doser_reset(Doser *doser); // Stop and clear current job
+
+#endif // !DOSER_H

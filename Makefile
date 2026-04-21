@@ -74,8 +74,10 @@ Core/Src/fans.c \
 Core/Src/pH_Sensor_Driver.c \
 Core/Src/PeristalticPump.c \
 Core/Src/waterLevelSensor.c \
+Core/Src/PHDose.c \
 Core/Src/Doser.c \
 Core/Src/lights.c \
+Core/Src/NutrientDose.c \
 Core/Src/homeScreen.c
 
 ASM_SOURCES =  \

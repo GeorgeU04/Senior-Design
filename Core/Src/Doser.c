@@ -76,17 +76,16 @@ void doser_start(Doser *doser, float volumeMl) {
   doser->waitingForPump = 0;
 }
 
-void doser_update_inverted(Doser *doser){
-    uint32_t now;
-    float currentStepMl;
-    uint32_t runTimeMs;
+void doser_update_inverted(Doser *doser) {
+  uint32_t now;
+  float currentStepMl;
+  uint32_t runTimeMs;
 
   if (doser == NULL || doser->pump == NULL) {
     return;
   }
 
-    
-    checkPump_Inverted(doser->pump);	// let the pump update
+  checkPump_Inverted(doser->pump); // let the pump update
 
   if (!doser->active) {
     return;
@@ -129,85 +128,64 @@ void doser_update_inverted(Doser *doser){
     return;
   }
 
-    runPump_Inverted(doser->pump, runTimeMs);
-    doser->remainingVolumeMl -= currentStepMl;
-    doser->waitingForPump = 1;
+  runPump_Inverted(doser->pump, runTimeMs);
+  doser->remainingVolumeMl -= currentStepMl;
+  doser->waitingForPump = 1;
 }
 
-void doser_update_noninverted(Doser *doser){
-    uint32_t now;
-    float currentStepMl;
-    uint32_t runTimeMs;
+void doser_update_noninverted(Doser *doser) {
+  uint32_t now;
+  float currentStepMl;
+  uint32_t runTimeMs;
 
-    if (doser == NULL || doser->pump == NULL)
-    {
-        return;
-    }
+  if (doser == NULL || doser->pump == NULL) {
+    return;
+  }
 
-    checkPump_NonInverted(doser->pump);	// let the pump update
+  checkPump_NonInverted(doser->pump); // let the pump update
 
-    if (!doser->active)
-    {
-        return;
-    }
+  if (!doser->active) {
+    return;
+  }
 
-	if (doser->stepVolumeMl <= 0.0f)
-	{
-		doser->active = 0;
-		return;
-	}
+  if (doser->stepVolumeMl <= 0.0f) {
+    doser->active = 0;
+    return;
+  }
 
-    now = HAL_GetTick();
+  now = HAL_GetTick();
 
-    if (doser->pump->RUNFLAG)	// If pump is running, wait for completion
-    {
-        doser->waitingForPump = 1;
-        return;
-    }
-
-    if (doser->waitingForPump)	//When pump finished, waiting state is active
-    {
-        doser->waitingForPump = 0;
-        doser->waitingForMix = 1;
-        doser->lastEventTime = now;
-        return;
-    }
-
-    if (doser->waitingForMix)  // Wait for mixing to complete
-    {
-        if ((now - doser->lastEventTime) < doser->mixDelayMs)
-        {
-            return;
-        }
-
-        doser->waitingForMix = 0;
-    }
-
-    if (doser->remainingVolumeMl <= 0.0f) // Set doser inactive if volume is satisfied
-    {
-        doser->active = 0;
-        return;
-    }
-
-    currentStepMl = doser->stepVolumeMl;
-
-    if (doser->remainingVolumeMl < doser->stepVolumeMl)
-    {
-        currentStepMl = doser->remainingVolumeMl;
-    }
-
-    runTimeMs = doser_volumeToTimeMs(doser, currentStepMl);
-
-    if (runTimeMs == 0)
-    {
-        doser->active = 0;
-        return;
-    }
-
-    runPump_NonInverted(doser->pump, runTimeMs);
-    doser->remainingVolumeMl -= currentStepMl;
+  if (doser->pump->RUNFLAG) // If pump is running, wait for completion
+  {
     doser->waitingForPump = 1;
-}
+    return;
+  }
+
+  if (doser->waitingForPump) // When pump finished, waiting state is active
+  {
+    doser->waitingForPump = 0;
+    doser->waitingForMix = 1;
+    doser->lastEventTime = now;
+    return;
+  }
+
+  if (doser->waitingForMix) // Wait for mixing to complete
+  {
+    if ((now - doser->lastEventTime) < doser->mixDelayMs) {
+      return;
+    }
+
+    doser->waitingForMix = 0;
+  }
+
+  if (doser->remainingVolumeMl <=
+      0.0f) // Set doser inactive if volume is satisfied
+  {
+    doser->active = 0;
+    return;
+  }
+
+  currentStepMl = doser->stepVolumeMl;
 
   if (doser->remainingVolumeMl < doser->stepVolumeMl) {
     currentStepMl = doser->remainingVolumeMl;
@@ -220,7 +198,22 @@ void doser_update_noninverted(Doser *doser){
     return;
   }
 
-  runPump(doser->pump, runTimeMs);
+  runPump_NonInverted(doser->pump, runTimeMs);
+  doser->remainingVolumeMl -= currentStepMl;
+  doser->waitingForPump = 1;
+  //} seems to be misplaced
+  if (doser->remainingVolumeMl < doser->stepVolumeMl) {
+    currentStepMl = doser->remainingVolumeMl;
+  }
+
+  runTimeMs = doser_volumeToTimeMs(doser, currentStepMl);
+
+  if (runTimeMs == 0) {
+    doser->active = 0;
+    return;
+  }
+
+  // runPump(doser->pump, runTimeMs);
   doser->remainingVolumeMl -= currentStepMl;
   doser->waitingForPump = 1;
 }

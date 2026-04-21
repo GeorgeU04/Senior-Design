@@ -24,12 +24,15 @@
 #include "DS18B20.h"
 #include "DS3231s.h"
 #include "GUI.h"
-//#include "PeristalticPump.h"
-//#include "TDS_Sensor_Driver.h"
+// #include "PeristalticPump.h"
+// #include "TDS_Sensor_Driver.h"
+#include "TDS_Sensor_Driver.h"
 #include "fans.h"
 #include "homeScreen.h"
 #include "lights.h"
-//#include "pH_Sensor_Driver.h"
+// #include "pH_Sensor_Driver.h"
+#include "NutrientDose.h"
+#include "PHDose.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -41,9 +44,9 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_tim.h"
 #include "waterLevelSensor.h"
-#include "PHDose.h"
-#Include "NutrientDose.h"
 #include <stdint.h>
+#include <stdio.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +57,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define USING_SCREEN 0
+#define USING_DEBUG 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -82,9 +86,9 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
-//struct TDS tds = {0};
-//struct pH PH = {0};
-//struct Pump pump = {0};
+struct TDS tds = {0};
+struct pH PH = {0};
+struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
 /* USER CODE END PV */
 
@@ -167,11 +171,11 @@ int main(void) {
   createWaterLevelSensor(&waterLevelSensor, waterLevelSensorPower_GPIO_Port,
                          waterLevelSensorPower_Pin, &hadc3);
   /////////////////TDS, PH, PUMPS//////////////////////
-  //tds = TDS_init("TDS");
-  //PH = pH_init("PH");
-  //pump = pump_init("P1", GPIOB, GPIO_PIN_11);
-  PHDose_init();
-  NutrientDose_init();
+  // tds = TDS_init("TDS");
+  // PH = pH_init("PH");
+  // pump = pump_init("P1", GPIOB, GPIO_PIN_11);
+  // PHDose_init();
+  // NutrientDose_init();
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
@@ -203,9 +207,6 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  Lights_SetWhite(50);
-  Lights_SetBlue(50);
-  Lights_SetRed(50);
 #if USING_SCREEN
   uint16_t currentTick = 0;
   initScreen();
@@ -215,6 +216,82 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+#if USING_DEBUG
+    int32_t cmd = 0;
+    float temp = 0;
+    printf("Choose Command to Execute:\r\n");
+    printf("1 - Turn on white light\r\n");
+    printf("2 - Turn on red light\r\n");
+    printf("3 - Turn on blue light\r\n");
+    printf("4 - Read ECS\r\n");
+    printf("5 - Read water level\r\n");
+    printf("6 - Read enclosure temp\r\n");
+    printf("7 - Read water temp\r\n");
+    printf("8 - Turn on fans\r\n");
+    printf("9 - Turn off red light\r\n");
+    printf("10 - Turn off blue light\r\n");
+    printf("11 - Turn off white light\r\n");
+    scanf("%d", &cmd); // scanf bad but just for demo
+    switch (cmd) {
+    case 1:
+      // Turn on white lights
+      printf("White Light On\r\n");
+      Lights_SetWhite(100);
+      break;
+    case 2:
+      // Turn on red lights
+      printf("Red Light On\r\n");
+      Lights_SetRed(100);
+      break;
+    case 3:
+      // Turn on blue light
+      printf("Blue Light On\r\n");
+      Lights_SetBlue(100);
+      break;
+    case 4:
+      // Read ECS
+      readTDS(&tds);
+      printf("ECS: %f\r\n", tds.ECVal);
+      break;
+    case 5:
+      // Read water level
+      if (readWaterLevel(&waterLevelSensor) < 3000)
+        printf("Water Level: %s\r\n", "Refill");
+      else
+        printf("Water Level: %s\r\n", "Good");
+      break;
+    case 6:
+      // Read enclosure temp
+      readTemperature(enclosureTempSensor, &temp);
+      printf("Enclosure Temp: %f\r\n", temp);
+      break;
+    case 7:
+      // Read water temp
+      readTemperature(waterTempSensor, &temp);
+      printf("Water Temp: %f\r\n", temp);
+      break;
+    case 8:
+      // Turn on fans
+      runFan(&fan0, HIGH);
+      break;
+    case 9:
+      // Turn off red lights
+      Lights_SetRed(0);
+      break;
+    case 10:
+      // Turn off blue lights
+      Lights_SetBlue(0);
+      break;
+    case 11:
+      // Turn off white lights
+      Lights_SetWhite(0);
+      break;
+    default:
+      printf("Invalid command\r\n");
+      break;
+    }
+#endif
+
 #if USING_SCREEN
     currentTick = HAL_GetTick();
     // increments the counter each day
@@ -261,7 +338,7 @@ int main(void) {
       }
     }
 
-    //checkPump(&pump);
+    // checkPump(&pump);
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */
