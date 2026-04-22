@@ -207,6 +207,9 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+PHDoseUpdate();
+nutrientDoseUpdate();
+
 #if USING_SCREEN
   uint16_t currentTick = 0;
   initScreen();
@@ -223,7 +226,7 @@ int main(void) {
     printf("1 - Turn on white light\r\n");
     printf("2 - Turn on red light\r\n");
     printf("3 - Turn on blue light\r\n");
-    printf("4 - Read ECS\r\n");
+    printf("4 - Read ECS and pH\r\n");
     printf("5 - Read water level\r\n");
     printf("6 - Read enclosure temp\r\n");
     printf("7 - Read water temp\r\n");
@@ -231,6 +234,10 @@ int main(void) {
     printf("9 - Turn off red light\r\n");
     printf("10 - Turn off blue light\r\n");
     printf("11 - Turn off white light\r\n");
+    printf("12 - Run nutrient dosing demo\r\n");
+    printf("13 - Run pH balancing demo\r\n");
+    printf("14 - Run enclosure temperature regulation demo\r\n");
+    printf("15 - Run reservoir temperature regulation demo\r\n");
     scanf("%d", &cmd); // scanf bad but just for demo
     switch (cmd) {
     case 1:
@@ -250,8 +257,9 @@ int main(void) {
       break;
     case 4:
       // Read ECS
-      readTDS(&tds);
-      printf("ECS: %f\r\n", tds.ECVal);
+      readTDS(&TDSSensor);
+      readpH(&PHSensor);
+      printf("ECS: %f\r\npH: %f\r\n", TDSSensor.ECVal, PHSensor.pHVal);
       break;
     case 5:
       // Read water level
@@ -286,6 +294,18 @@ int main(void) {
       // Turn off white lights
       Lights_SetWhite(0);
       break;
+    case 12:
+    	// Run nutrient pumps and read TDS at the end
+    	nutrientDose_Demo();
+    case 13:
+    	//Read current PH and adjust to 5.5 - 6.5
+    	PHDose();
+    case 14:
+    	// Read enclosure temp
+    	// force high temp reading to get fans to run
+    case 15:
+    	// Read water temp
+    	// force high temp reading to get cooler to run
     default:
       printf("Invalid command\r\n");
       break;

@@ -23,6 +23,7 @@ typedef enum {
 } SystemState;
 
 void nutrientDose_init(void);
+void nutrientDoseUpdate(void);
 void nutrientDose(void);
 void nutrientDose_Demo(void);
 #endif
