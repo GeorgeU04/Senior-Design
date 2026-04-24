@@ -78,6 +78,7 @@ Core/Src/PHDose.c \
 Core/Src/Doser.c \
 Core/Src/lights.c \
 Core/Src/NutrientDose.c \
+Core/Src/climateControl.c \
 Core/Src/homeScreen.c
 
 ASM_SOURCES =  \

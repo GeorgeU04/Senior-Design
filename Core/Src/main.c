@@ -33,6 +33,7 @@
 // #include "pH_Sensor_Driver.h"
 #include "NutrientDose.h"
 #include "PHDose.h"
+#include "climateControl.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -56,8 +57,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 0
-#define USING_DEBUG 1
+#define USING_SCREEN 1
+#define USING_DEBUG 0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -90,6 +91,8 @@ struct TDS tds = {0};
 struct pH PH = {0};
 struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
+struct heater heater = {0};
+struct cooler cooler = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -170,6 +173,9 @@ int main(void) {
 
   createWaterLevelSensor(&waterLevelSensor, waterLevelSensorPower_GPIO_Port,
                          waterLevelSensorPower_Pin, &hadc3);
+
+  createCooler(&cooler, cooler_GPIO_Port, cooler_Pin);
+  createHeater(&heater, cooler_GPIO_Port, cooler_Pin);
   /////////////////TDS, PH, PUMPS//////////////////////
   // tds = TDS_init("TDS");
   // PH = pH_init("PH");
@@ -217,7 +223,7 @@ int main(void) {
 
     /* USER CODE BEGIN 3 */
 #if USING_DEBUG
-    int32_t cmd = 0;
+    int32_t cmd = -1;
     float temp = 0;
     printf("Choose Command to Execute:\r\n");
     printf("1 - Turn on white light\r\n");
@@ -231,7 +237,14 @@ int main(void) {
     printf("9 - Turn off red light\r\n");
     printf("10 - Turn off blue light\r\n");
     printf("11 - Turn off white light\r\n");
+    printf("12 - Turn on cooler\r\n");
+    printf("13 - Turn off cooler\r\n");
+    printf("14 - Turn on heater\r\n");
+    printf("15 - Turn off heater\r\n");
+    printf("16 - Turn off fans\r\n");
+    setvbuf(stdin, NULL, _IONBF, 0);
     scanf("%d", &cmd); // scanf bad but just for demo
+
     switch (cmd) {
     case 1:
       // Turn on white lights
@@ -286,10 +299,26 @@ int main(void) {
       // Turn off white lights
       Lights_SetWhite(0);
       break;
+    case 12:
+      turnOnCooler(&cooler);
+      break;
+    case 13:
+      turnOffCooler(&cooler);
+      break;
+    case 14:
+      turnOnHeater(&heater);
+      break;
+    case 15:
+      turnOffHeater(&heater);
+      break;
+    case 16:
+      stopFan(&fan0);
+      break;
     default:
       printf("Invalid command\r\n");
       break;
     }
+    HAL_Delay(1000);
 #endif
 
 #if USING_SCREEN
@@ -324,11 +353,11 @@ int main(void) {
       }
     }
     if (currentTick >= screenRefresh) {
-      readTDS(&TDSSensor);
-      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", TDSSensor.ECVal);
+      readTDS(&tds);
+      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", tds.ECVal);
 
-      readpH(&PHSensor);
-      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PHSensor.pHVal);
+      readpH(&PH);
+      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PH.pHVal);
 
       waterLevel = readWaterLevel(&waterLevelSensor);
       if (waterLevel < 3000) {
