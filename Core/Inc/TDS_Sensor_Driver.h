@@ -3,10 +3,12 @@
  *
  */
 
-#ifndef INC_TDS_SENSOR_DRIVER_H_
-#define INC_TDS_SENSOR_DRIVER_H_
+#ifndef TDS_SENSOR_DRIVER
+#define TDS_SENSOR_DRIVER
 
 #include "main.h"
+#include <stdio.h>
+#include <string.h>
 
 extern ADC_HandleTypeDef hadc1;
 

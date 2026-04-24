@@ -3,8 +3,8 @@
  *
  */
 
-#ifndef INC_PH_SENSOR_DRIVER_H_
-#define INC_PH_SENSOR_DRIVER_H_
+#ifndef PH_SENSOR_DRIVER_H
+#define PH_SENSOR_DRIVER_H
 
 #include "main.h"
 #include <stdint.h>

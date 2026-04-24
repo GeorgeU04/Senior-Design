@@ -6,6 +6,7 @@
 #include "PeristalticPump.h"
 #include "main.h"
 #include "pH_Sensor_Driver.h"
+#include <string.h>
 
 extern UART_HandleTypeDef huart2;
 
@@ -18,7 +19,7 @@ extern UART_HandleTypeDef huart2;
 #define PH_LOW_LIMIT 5.8f
 #define PH_HIGH_LIMIT 6.2f
 
-void PHDose_init(void);
-void PHDoseUpdate(void);
-void PHDose(void);
+void PHDose_init(struct pH *PHSensor);
+void PHDoseUpdate();
+void PHDose(struct pH *PHSensor);
 #endif

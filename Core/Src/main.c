@@ -24,16 +24,14 @@
 #include "DS18B20.h"
 #include "DS3231s.h"
 #include "GUI.h"
-// #include "PeristalticPump.h"
-// #include "TDS_Sensor_Driver.h"
+#include "NutrientDose.h"
+#include "PHDose.h"
+#include "PeristalticPump.h"
 #include "TDS_Sensor_Driver.h"
+#include "climateControl.h"
 #include "fans.h"
 #include "homeScreen.h"
 #include "lights.h"
-// #include "pH_Sensor_Driver.h"
-#include "NutrientDose.h"
-#include "PHDose.h"
-#include "climateControl.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -57,8 +55,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 1
-#define USING_DEBUG 0
+#define USING_SCREEN 0
+#define USING_DEBUG 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -87,8 +85,8 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
-struct TDS tds = {0};
-struct pH PH = {0};
+struct TDS TDSSensor = {0};
+struct pH PHSensor = {0};
 struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
 struct heater heater = {0};
@@ -176,12 +174,13 @@ int main(void) {
 
   createCooler(&cooler, cooler_GPIO_Port, cooler_Pin);
   createHeater(&heater, cooler_GPIO_Port, cooler_Pin);
+
   /////////////////TDS, PH, PUMPS//////////////////////
-  // tds = TDS_init("TDS");
-  // PH = pH_init("PH");
-  // pump = pump_init("P1", GPIOB, GPIO_PIN_11);
+  TDSSensor = TDS_init("TDS");
+  PHSensor = pH_init("PH");
+  pump = pump_init("P1", GPIOB, GPIO_PIN_11);
   // PHDose_init();
-  // NutrientDose_init();
+  //  NutrientDose_init();
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
@@ -213,8 +212,8 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-PHDoseUpdate();
-nutrientDoseUpdate();
+  PHDoseUpdate();
+  nutrientDoseUpdate();
 
 #if USING_SCREEN
   uint16_t currentTick = 0;
@@ -226,117 +225,153 @@ nutrientDoseUpdate();
 
     /* USER CODE BEGIN 3 */
 #if USING_DEBUG
-    int32_t cmd = -1;
+    int32_t cmd = 0;
     float temp = 0;
+
     printf("Choose Command to Execute:\r\n");
-    printf("1 - Turn on white light\r\n");
-    printf("2 - Turn on red light\r\n");
-    printf("3 - Turn on blue light\r\n");
-    printf("4 - Read ECS and pH\r\n");
-    printf("5 - Read water level\r\n");
-    printf("6 - Read enclosure temp\r\n");
-    printf("7 - Read water temp\r\n");
-    printf("8 - Turn on fans\r\n");
-    printf("9 - Turn off red light\r\n");
-    printf("10 - Turn off blue light\r\n");
-    printf("11 - Turn off white light\r\n");
-    printf("12 - Run nutrient dosing demo\r\n");
-    printf("13 - Run pH balancing demo\r\n");
-    printf("14 - Run enclosure temperature regulation demo\r\n");
-    printf("15 - Run reservoir temperature regulation demo\r\n");
-    printf("12 - Turn on cooler\r\n");
-    printf("13 - Turn off cooler\r\n");
-    printf("14 - Turn on heater\r\n");
-    printf("15 - Turn off heater\r\n");
-    printf("16 - Turn off fans\r\n");
+    printf("\r\n-- Lights --\r\n");
+    printf("1  - Turn on white light\r\n");
+    printf("2  - Turn off white light\r\n");
+    printf("3  - Turn on red light\r\n");
+    printf("4  - Turn off red light\r\n");
+    printf("5  - Turn on blue light\r\n");
+    printf("6  - Turn off blue light\r\n");
+
+    printf("\r\n-- Sensor Readings --\r\n");
+    printf("10 - Read EC and pH\r\n");
+    printf("11 - Read water level\r\n");
+    printf("12 - Read enclosure temperature\r\n");
+    printf("13 - Read water temperature\r\n");
+
+    printf("\r\n-- Fans / Cooling / Heating --\r\n");
+    printf("20 - Turn on fans\r\n");
+    printf("21 - Turn off fans\r\n");
+    printf("22 - Turn on cooler\r\n");
+    printf("23 - Turn off cooler\r\n");
+    printf("24 - Turn on heater\r\n");
+    printf("25 - Turn off heater\r\n");
+
+    printf("\r\n-- Demos --\r\n");
+    printf("30 - Run nutrient dosing demo\r\n");
+    printf("31 - Run pH balancing demo\r\n");
+    printf("32 - Run enclosure temperature regulation demo\r\n");
+    printf("33 - Run reservoir temperature regulation demo\r\n");
+
     setvbuf(stdin, NULL, _IONBF, 0);
     scanf("%d", &cmd); // scanf bad but just for demo
 
     switch (cmd) {
     case 1:
-      // Turn on white lights
       printf("White Light On\r\n");
       Lights_SetWhite(100);
       break;
+
     case 2:
-      // Turn on red lights
+      printf("White Light Off\r\n");
+      Lights_SetWhite(0);
+      break;
+
+    case 3:
       printf("Red Light On\r\n");
       Lights_SetRed(100);
       break;
-    case 3:
-      // Turn on blue light
+
+    case 4:
+      printf("Red Light Off\r\n");
+      Lights_SetRed(0);
+      break;
+
+    case 5:
       printf("Blue Light On\r\n");
       Lights_SetBlue(100);
       break;
-    case 4:
-      // Read ECS
+
+    case 6:
+      printf("Blue Light Off\r\n");
+      Lights_SetBlue(0);
+      break;
+
+    case 10:
       readTDS(&TDSSensor);
       readpH(&PHSensor);
-      printf("ECS: %f\r\npH: %f\r\n", TDSSensor.ECVal, PHSensor.pHVal);
+      printf("EC: %f\r\npH: %f\r\n", TDSSensor.ECVal, PHSensor.pHVal);
       break;
-    case 5:
-      // Read water level
-      if (readWaterLevel(&waterLevelSensor) < 3000)
-        printf("Water Level: %s\r\n", "Refill");
-      else
-        printf("Water Level: %s\r\n", "Good");
+
+    case 11:
+      if (readWaterLevel(&waterLevelSensor) < 3000) {
+        printf("Water Level: Refill\r\n");
+      } else {
+        printf("Water Level: Good\r\n");
+      }
       break;
-    case 6:
-      // Read enclosure temp
+
+    case 12:
       readTemperature(enclosureTempSensor, &temp);
       printf("Enclosure Temp: %f\r\n", temp);
       break;
-    case 7:
-      // Read water temp
+
+    case 13:
       readTemperature(waterTempSensor, &temp);
       printf("Water Temp: %f\r\n", temp);
       break;
-    case 8:
-      // Turn on fans
+
+    case 20:
+      printf("Fans On\r\n");
       runFan(&fan0, HIGH);
       break;
-    case 9:
-      // Turn off red lights
-      Lights_SetRed(0);
-      break;
-    case 10:
-      // Turn off blue lights
-      Lights_SetBlue(0);
-      break;
-    case 11:
-      // Turn off white lights
-      Lights_SetWhite(0);
-      break;
-    case 12:
-    	// Run nutrient pumps and read TDS at the end
-    	nutrientDose_Demo();
-    case 13:
-    	//Read current PH and adjust to 5.5 - 6.5
-    	PHDose();
-    case 14:
-    	// Read enclosure temp
-    	// force high temp reading to get fans to run
-    case 15:
-    	// Read water temp
-    	// force high temp reading to get cooler to run
-      turnOnCooler(&cooler);
-      break;
-    case 13:
-      turnOffCooler(&cooler);
-      break;
-    case 14:
-      turnOnHeater(&heater);
-      break;
-    case 15:
-      turnOffHeater(&heater);
-      break;
-    case 16:
+
+    case 21:
+      printf("Fans Off\r\n");
       stopFan(&fan0);
       break;
+
+    case 22:
+      printf("Cooler On\r\n");
+      turnOnCooler(&cooler);
+      break;
+
+    case 23:
+      printf("Cooler Off\r\n");
+      turnOffCooler(&cooler);
+      break;
+
+    case 24:
+      printf("Heater On\r\n");
+      turnOnHeater(&heater);
+      break;
+
+    case 25:
+      printf("Heater Off\r\n");
+      turnOffHeater(&heater);
+      break;
+
+    case 30:
+      printf("Running nutrient dosing demo\r\n");
+      nutrientDose_Demo(&TDSSensor);
+      break;
+
+    case 31:
+      printf("Running pH balancing demo\r\n");
+      PHDose(&PHSensor);
+      break;
+
+    case 32:
+      printf("Running enclosure temperature regulation demo\r\n");
+      // Add demo function here when implemented
+      // enclosureTempRegulationDemo();
+      break;
+
+    case 33:
+      printf("Running reservoir temperature regulation demo\r\n");
+      // Add demo function here when implemented
+      // reservoirTempRegulationDemo();
+      break;
+
     default:
       printf("Invalid command\r\n");
       break;
     }
+
     HAL_Delay(1000);
 #endif
 
