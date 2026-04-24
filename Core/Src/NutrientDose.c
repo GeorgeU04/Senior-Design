@@ -52,11 +52,14 @@ void nutrientDose_init(){
   doser_init(&bloom, &bloomPump, 1.5, 0.5, 1000);
 }
 
-// Place this in main loop
-void nutrientDose(){
+void nutrientDoseUpdate(){
 	  doser_update_inverted(&micro);
 	  doser_update_inverted(&grow);
 	  doser_update_inverted(&bloom);
+
+}
+// Place this in main loop
+void nutrientDose(){
 	  switch(state)
 	      {
 	          case STATE_IDLE:

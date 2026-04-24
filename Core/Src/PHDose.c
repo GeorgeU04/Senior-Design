@@ -38,10 +38,12 @@ void PHDose_init(){
 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
 }
 
-void PHDose(){
+void PHDoseUpdate(){
 	doser_update_noninverted(&upDoser);
 	doser_update_noninverted(&downDoser);
+}
 
+void PHDose(){
 	uint8_t busyUp = doser_isBusy(&upDoser);
 	uint8_t busyDown = doser_isBusy(&downDoser);
 

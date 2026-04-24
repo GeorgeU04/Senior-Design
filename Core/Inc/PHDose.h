@@ -19,6 +19,6 @@ extern UART_HandleTypeDef huart2;
 #define PH_HIGH_LIMIT 6.2f
 
 void PHDose_init(void);
-
+void PHDoseUpdate(void);
 void PHDose(void);
 #endif
