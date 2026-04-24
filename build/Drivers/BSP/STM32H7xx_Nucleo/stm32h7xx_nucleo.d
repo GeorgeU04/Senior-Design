@@ -35,7 +35,8 @@ build/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.o: \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
 Core/Inc/stm32h7xx_nucleo_conf.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -75,3 +76,4 @@ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
