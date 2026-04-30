@@ -5,10 +5,10 @@
 
 /*
  * light channels:
- *   TIM1_CH1 (PE9)  → 440nm Blue
+ *   TIM3_CH1 (PB1)  → 440nm Blue
  *   TIM1_CH2 (PE11)  → 660nm Red
  *   TIM1_CH3 (PE13) → 850nm NIR
- *   TIM3_CH1 (PB4)
+ *   TIM4_CH1 (PD12)
  */
 
 // External timer handler
@@ -22,13 +22,14 @@ static uint32_t percentToCCR(uint8_t percentage) {
 
 void Lights_Init(void) {
   // Start PWM output on all four light channels at 0% duty cycle
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); /* Blue  440nm */
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4); /* Blue  440nm */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2); /* Red   660nm */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3); /* NIR   850nm */
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); /* White */
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1); /* White */
 
   __HAL_TIM_MOE_ENABLE(&htim1);
   __HAL_TIM_MOE_ENABLE(&htim3);
+  __HAL_TIM_MOE_ENABLE(&htim4);
 
   // Start with all lights off
   Lights_Off();
@@ -45,7 +46,7 @@ void Lights_ApplyProfile(const struct plantProfile *profile) {
 
 // Lights_SetBlue
 void Lights_SetBlue(uint8_t percentage) {
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, percentToCCR(percentage));
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, percentToCCR(percentage));
 }
 
 // Lights_SetRed
@@ -59,13 +60,13 @@ void Lights_SetNIR(uint8_t percentage) {
 }
 
 void Lights_SetWhite(uint8_t percentage) {
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, percentToCCR(percentage));
+  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, percentToCCR(percentage));
 }
 
 // Lights_Off
 void Lights_Off(void) {
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 0);
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 0);
+  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 0);
 }

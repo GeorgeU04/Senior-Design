@@ -11,17 +11,17 @@ void createHeater(struct heater *heater, GPIO_TypeDef *port, uint16_t pinMask) {
 }
 
 void turnOnCooler(struct cooler *cooler) {
-  cooler->port->BSRR = (cooler->pinMask << 16);
-}
-
-void turnOffCooler(struct cooler *cooler) {
   cooler->port->BSRR = (cooler->pinMask);
 }
 
+void turnOffCooler(struct cooler *cooler) {
+  cooler->port->BSRR = (cooler->pinMask << 16);
+}
+
 void turnOnHeater(struct heater *heater) {
-  heater->port->BSRR = (heater->pinMask << 16);
+  heater->port->BSRR = (heater->pinMask);
 }
 
 void turnOffHeater(struct heater *heater) {
-  heater->port->BSRR = (heater->pinMask);
+  heater->port->BSRR = (heater->pinMask << 16);
 }

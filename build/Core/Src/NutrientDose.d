@@ -1,6 +1,6 @@
 build/Core/Src/NutrientDose.o: Core/Src/NutrientDose.c \
- Core/Inc/NutrientDose.h Core/Inc/PeristalticPump.h Core/Inc/main.h \
- Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ Core/Inc/NutrientDose.h Core/Inc/Doser.h Core/Inc/PeristalticPump.h \
+ Core/Inc/main.h Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  Core/Inc/stm32h7xx_hal_conf.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -35,10 +35,11 @@ build/Core/Src/NutrientDose.o: Core/Src/NutrientDose.c \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
  Core/Inc/stm32h7xx_nucleo_conf.h \
- Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h Core/Inc/Doser.h \
- Core/Inc/TDS_Sensor_Driver.h Core/Inc/FeedProfile.h \
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
+ Core/Inc/FeedProfile.h Core/Inc/TDS_Sensor_Driver.h \
  Core/Inc/plantProfiles.h
 Core/Inc/NutrientDose.h:
+Core/Inc/Doser.h:
 Core/Inc/PeristalticPump.h:
 Core/Inc/main.h:
 Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -80,7 +81,6 @@ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
 Core/Inc/stm32h7xx_nucleo_conf.h:
 Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
-Core/Inc/Doser.h:
-Core/Inc/TDS_Sensor_Driver.h:
 Core/Inc/FeedProfile.h:
+Core/Inc/TDS_Sensor_Driver.h:
 Core/Inc/plantProfiles.h:

@@ -20,8 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_nucleo.h"
-#include "stm32h7xx_hal_def.h"
-#include <stdint.h>
 
 /** @addtogroup BSP
  * @{
@@ -540,15 +538,14 @@ int fputc(int ch, FILE *f)
   return ch;
 }
 
-int __io_getchar() {
+int __io_getchar(void) {
   uint8_t ch;
   HAL_UART_Receive(&hcom_uart[COM_ActiveLogPort], &ch, 1, HAL_MAX_DELAY);
   HAL_UART_Transmit(&hcom_uart[COM_ActiveLogPort], &ch, 1, COM_POLL_TIMEOUT);
-  return (int)ch;
+  return ch;
 }
-
-#endif /* USE_COM_LOG */
-#endif /* USE_BSP_COM_FEATURE */
+#endif
+#endif
 
 /**
  * @}

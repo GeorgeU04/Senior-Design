@@ -24,16 +24,14 @@
 #include "DS18B20.h"
 #include "DS3231s.h"
 #include "GUI.h"
-// #include "PeristalticPump.h"
-// #include "TDS_Sensor_Driver.h"
+#include "NutrientDose.h"
+#include "PHDose.h"
+#include "PeristalticPump.h"
 #include "TDS_Sensor_Driver.h"
+#include "climateControl.h"
 #include "fans.h"
 #include "homeScreen.h"
 #include "lights.h"
-// #include "pH_Sensor_Driver.h"
-#include "NutrientDose.h"
-#include "PHDose.h"
-#include "climateControl.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -57,8 +55,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 1
-#define USING_DEBUG 0
+#define USING_SCREEN 0
+#define USING_DEBUG 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -78,6 +76,7 @@ I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 struct RTC_DS3231s clock = {0};
@@ -87,8 +86,8 @@ struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
 struct maintainableDevices devices = {0};
-struct TDS tds = {0};
-struct pH PH = {0};
+struct TDS TDSSensor = {0};
+struct pH PHSensor = {0};
 struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
 struct heater heater = {0};
@@ -106,12 +105,45 @@ static void MX_TIM1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void enclosureTempRegulationDemo(struct DS18B20 sensor, struct fan fan) {
+  float temp = 0;
+  startConversion(sensor);
+  HAL_Delay(750);
+  readTemperature(sensor, &temp);
+  temp = temp * 9 / 5 + 32;
+  if (temp > 70) {
+    printf("Temp %f is greater than 70 F, executing cooling\r\n", temp);
+    runFan(&fan, MED);
+    HAL_Delay(10000);
+    stopFan(&fan);
+    return;
+  }
+  printf("Temp %f is less than or equal to 70 F, no cooling needed\r\n", temp);
+}
+
+void reservoirTempRegulationDemo(struct DS18B20 sensor, struct cooler cooler) {
+  float temp = 0;
+  startConversion(sensor);
+  HAL_Delay(750);
+  readTemperature(sensor, &temp);
+  temp = temp * 9 / 5 + 32;
+  if (temp > 70) {
+    printf("Temp %f is greater than 70 F, executing cooling\r\n", temp);
+    turnOnCooler(&cooler);
+    HAL_Delay(10000);
+    turnOffCooler(&cooler);
+    return;
+  }
+  printf("Temp %f is less than or equal to 70 F, no cooling needed\r\n", temp);
+}
 
 /* USER CODE END 0 */
 
@@ -152,6 +184,7 @@ int main(void) {
   MX_ADC2_Init();
   MX_ADC3_Init();
   MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
   // update screen 5 times a second to avoid flickering value updates
@@ -175,18 +208,20 @@ int main(void) {
                          waterLevelSensorPower_Pin, &hadc3);
 
   createCooler(&cooler, cooler_GPIO_Port, cooler_Pin);
-  createHeater(&heater, cooler_GPIO_Port, cooler_Pin);
+  createHeater(&heater, heater_GPIO_Port, heater_Pin);
+
   /////////////////TDS, PH, PUMPS//////////////////////
-  // tds = TDS_init("TDS");
-  // PH = pH_init("PH");
-  // pump = pump_init("P1", GPIOB, GPIO_PIN_11);
+  TDSSensor = TDS_init("TDS");
+  PHSensor = pH_init("PH");
+  pump = pump_init("P1", GPIOB, GPIO_PIN_11);
   // PHDose_init();
-  // NutrientDose_init();
+  //  NutrientDose_init();
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
   devices.enclosureTempSensor = &asyncEnclosureSensor;
-
+  runFan(&fan0, OFF);
+  stopFan(&fan0);
   Lights_Init();
 
   /* USER CODE END 2 */
@@ -226,113 +261,213 @@ int main(void) {
 	  PHDoseUpdate();
 	  nutrientDoseUpdate();
 #if USING_DEBUG
-    int32_t cmd = -1;
+    int32_t cmd = 0;
     float temp = 0;
+
     printf("Choose Command to Execute:\r\n");
-    printf("1 - Turn on white light\r\n");
-    printf("2 - Turn on red light\r\n");
-    printf("3 - Turn on blue light\r\n");
-    printf("4 - Read ECS and pH\r\n");
-    printf("5 - Read water level\r\n");
-    printf("6 - Read enclosure temp\r\n");
-    printf("7 - Read water temp\r\n");
-    printf("8 - Turn on fans\r\n");
-    printf("9 - Turn off red light\r\n");
-    printf("10 - Turn off blue light\r\n");
-    printf("11 - Turn off white light\r\n");
-    printf("12 - Run nutrient dosing demo\r\n");
-    printf("13 - Run pH balancing demo\r\n");
-    printf("14 - Run enclosure temperature regulation demo\r\n");
-    printf("15 - Run reservoir temperature regulation demo\r\n");
-    printf("12 - Turn on cooler\r\n");
-    printf("13 - Turn off cooler\r\n");
-    printf("14 - Turn on heater\r\n");
-    printf("15 - Turn off heater\r\n");
-    printf("16 - Turn off fans\r\n");
+    printf("\r\n-- Lights --\r\n");
+    printf("1  - Turn on white light\r\n");
+    printf("2  - Turn off white light\r\n");
+    printf("3  - Turn on red light\r\n");
+    printf("4  - Turn off red light\r\n");
+    printf("5  - Turn on blue light\r\n");
+    printf("6  - Turn off blue light\r\n");
+
+    printf("\r\n-- Sensor Readings --\r\n");
+    printf("10 - Read EC and pH\r\n");
+    printf("11 - Read water level\r\n");
+    printf("12 - Read enclosure temperature\r\n");
+    printf("13 - Read water temperature\r\n");
+
+    printf("\r\n-- Fans / Cooling / Heating / Pumps --\r\n");
+    printf("20 - Turn on fans\r\n");
+    printf("21 - Turn off fans\r\n");
+    printf("22 - Turn on cooler\r\n");
+    printf("23 - Turn off cooler\r\n");
+    printf("24 - Turn on heater\r\n");
+    printf("25 - Turn off heater\r\n");
+    printf("26 - Turn on pH up pump\r\n");
+    printf("27 - Turn off pH up pump\r\n");
+    printf("28 - Turn on pH down pump\r\n");
+    printf("29 - Turn off pH down pump\r\n");
+    printf("30 - Turn on FloraBloom pump\r\n");
+    printf("31 - Turn off FloraBloom pump\r\n");
+    printf("32 - Turn on FloraMicro pump\r\n");
+    printf("33 - Turn off FloraMicro pump\r\n");
+    printf("34 - Turn on FloraGrow pump\r\n");
+    printf("35 - Turn off FloraGrow pump\r\n");
+
+    printf("\r\n-- Demos --\r\n");
+    printf("36 - Run nutrient dosing demo\r\n");
+    printf("37 - Run pH balancing demo\r\n");
+    printf("38 - Run enclosure temperature regulation demo\r\n");
+    printf("39 - Run reservoir temperature regulation demo\r\n");
+
     setvbuf(stdin, NULL, _IONBF, 0);
     scanf("%d", &cmd); // scanf bad but just for demo
+    puts("");
 
     switch (cmd) {
     case 1:
-      // Turn on white lights
       printf("White Light On\r\n");
       Lights_SetWhite(100);
       break;
+
     case 2:
-      // Turn on red lights
+      printf("White Light Off\r\n");
+      Lights_SetWhite(0);
+      break;
+
+    case 3:
       printf("Red Light On\r\n");
       Lights_SetRed(100);
+      Lights_SetNIR(100);
       break;
-    case 3:
-      // Turn on blue light
+
+    case 4:
+      printf("Red Light Off\r\n");
+      Lights_SetRed(0);
+      Lights_SetNIR(0);
+      break;
+
+    case 5:
       printf("Blue Light On\r\n");
       Lights_SetBlue(100);
       break;
-    case 4:
-      // Read ECS
-      readTDS(&TDSSensor);
-      readpH(&PHSensor);
-      printf("ECS: %f\r\npH: %f\r\n", TDSSensor.ECVal, PHSensor.pHVal);
-      break;
-    case 5:
-      // Read water level
-      if (readWaterLevel(&waterLevelSensor) < 3000)
-        printf("Water Level: %s\r\n", "Refill");
-      else
-        printf("Water Level: %s\r\n", "Good");
-      break;
+
     case 6:
-      // Read enclosure temp
-      readTemperature(enclosureTempSensor, &temp);
-      printf("Enclosure Temp: %f\r\n", temp);
-      break;
-    case 7:
-      // Read water temp
-      readTemperature(waterTempSensor, &temp);
-      printf("Water Temp: %f\r\n", temp);
-      break;
-    case 8:
-      // Turn on fans
-      runFan(&fan0, HIGH);
-      break;
-    case 9:
-      // Turn off red lights
-      Lights_SetRed(0);
-      break;
-    case 10:
-      // Turn off blue lights
+      printf("Blue Light Off\r\n");
       Lights_SetBlue(0);
       break;
+
+    case 10:
+      readTDS(&TDSSensor);
+      readpH(&PHSensor);
+      printf("EC: %f\r\npH: %f\r\n", TDSSensor.ECVal, PHSensor.pHVal);
+      break;
+
     case 11:
-      // Turn off white lights
-      Lights_SetWhite(0);
+      if (readWaterLevel(&waterLevelSensor) < 3000) {
+        printf("Water Level: Refill\r\n");
+      } else {
+        printf("Water Level: Good\r\n");
+      }
       break;
+
     case 12:
-    	// Run nutrient pumps and read TDS at the end
-    	nutrientDose_Demo();
+      startConversion(enclosureTempSensor);
+      HAL_Delay(750);
+      readTemperature(enclosureTempSensor, &temp);
+      printf("Enclosure Temp: %f\r\n", temp * 9 / 5 + 32);
+      break;
+
     case 13:
-    	//Read current PH and adjust to 5.5 - 6.5
-    	PHDose();
-    case 14:
-    	// Read enclosure temp
-    	// force high temp reading to get fans to run
-    case 15:
-    	// Read water temp
-    	// force high temp reading to get cooler to run
-      turnOnCooler(&cooler);
+      startConversion(waterTempSensor);
+      HAL_Delay(750);
+      readTemperature(waterTempSensor, &temp);
+      printf("Water Temp: %f\r\n", temp * 9 / 5 + 32);
       break;
-    case 13:
-      turnOffCooler(&cooler);
+
+    case 20:
+      printf("Fans On\r\n");
+      runFan(&fan0, HIGH);
       break;
-    case 14:
-      turnOnHeater(&heater);
-      break;
-    case 15:
-      turnOffHeater(&heater);
-      break;
-    case 16:
+
+    case 21:
+      printf("Fans Off\r\n");
       stopFan(&fan0);
       break;
+
+    case 22:
+      printf("Cooler On\r\n");
+      turnOnCooler(&cooler);
+      break;
+
+    case 23:
+      printf("Cooler Off\r\n");
+      turnOffCooler(&cooler);
+      break;
+
+    case 24:
+      printf("Heater On\r\n");
+      turnOnHeater(&heater);
+      break;
+
+    case 25:
+      printf("Heater Off\r\n");
+      turnOffHeater(&heater);
+      break;
+
+    case 26:
+      printf("pH Up Pump On\r\n");
+      GPIOE->BSRR = GPIO_PIN_12;
+      break;
+
+    case 27:
+      printf("pH Up Pump Off\r\n");
+      GPIOE->BSRR = (GPIO_PIN_12 << 16);
+      break;
+
+    case 28:
+      printf("pH Down Pump On\r\n");
+      GPIOE->BSRR = GPIO_PIN_10;
+      break;
+
+    case 29:
+      printf("pH Down Pump Off\r\n");
+      GPIOE->BSRR = (GPIO_PIN_10 << 16);
+      break;
+
+    case 30:
+      printf("FloraBloom Pump On\r\n");
+      GPIOB->BSRR = (GPIO_PIN_10 << 16);
+      break;
+
+    case 31:
+      printf("FloraBloom Pump Off\r\n");
+      GPIOB->BSRR = (GPIO_PIN_10);
+      break;
+
+    case 32:
+      printf("FloraMicro Pump On\r\n");
+      GPIOE->BSRR = (GPIO_PIN_15 << 16);
+      break;
+
+    case 33:
+      printf("FloraMicro Pump Off\r\n");
+      GPIOE->BSRR = (GPIO_PIN_15);
+      break;
+
+    case 34:
+      printf("FloraGrow Pump On\r\n");
+      GPIOB->BSRR = (GPIO_PIN_11 << 16);
+      break;
+
+    case 35:
+      printf("FloraGrow Pump Off\r\n");
+      GPIOB->BSRR = (GPIO_PIN_11);
+      break;
+
+    case 36:
+      printf("Running nutrient dosing demo\r\n");
+      nutrientDose_Demo(&TDSSensor);
+      break;
+
+    case 37:
+      printf("Running pH balancing demo\r\n");
+      PHDose(&PHSensor);
+      break;
+
+    case 38:
+      printf("Running enclosure temperature regulation demo\r\n");
+      enclosureTempRegulationDemo(enclosureTempSensor, fan0);
+      break;
+
+    case 39:
+      printf("Running reservoir temperature regulation demo\r\n");
+      reservoirTempRegulationDemo(waterTempSensor, cooler);
+      break;
+
     default:
       printf("Invalid command\r\n");
       break;
@@ -372,11 +507,11 @@ int main(void) {
       }
     }
     if (currentTick >= screenRefresh) {
-      readTDS(&tds);
-      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", tds.ECVal);
+      readTDS(&TDSSensor);
+      lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", TDSSensor.ECVal);
 
-      readpH(&PH);
-      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PH.pHVal);
+      readpH(&PHSensor);
+      lv_label_set_text_fmt(pHLabel, "pH: %.2f", PHSensor.pHVal);
 
       waterLevel = readWaterLevel(&waterLevelSensor);
       if (waterLevel < 3000) {
@@ -497,7 +632,7 @@ static void MX_ADC1_Init(void) {
    */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_16B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
@@ -742,9 +877,6 @@ static void MX_TIM1_Init(void) {
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK) {
-    Error_Handler();
-  }
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK) {
     Error_Handler();
   }
@@ -857,13 +989,57 @@ static void MX_TIM3_Init(void) {
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK) {
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK) {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
 
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
+}
+
+/**
+ * @brief TIM4 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_TIM4_Init(void) {
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 0;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 4799;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim4) != HAL_OK) {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK) {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK) {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+  HAL_TIM_MspPostInit(&htim4);
 }
 
 /**
@@ -882,10 +1058,10 @@ static void MX_GPIO_Init(void) {
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, WPDS18B20_Pin | EDS18B20_Pin, GPIO_PIN_RESET);
