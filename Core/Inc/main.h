@@ -67,6 +67,7 @@ extern I2C_HandleTypeDef hi2c1;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
 
 extern UART_HandleTypeDef huart1;
 
@@ -100,12 +101,12 @@ void Error_Handler(void);
 #define waterLevelSensorA3_GPIO_Port GPIOA
 #define TDSSensor_Pin GPIO_PIN_6
 #define TDSSensor_GPIO_Port GPIOA
+#define blueLight_Pin GPIO_PIN_1
+#define blueLight_GPIO_Port GPIOB
 #define heater_Pin GPIO_PIN_7
 #define heater_GPIO_Port GPIOE
 #define cooler_Pin GPIO_PIN_8
 #define cooler_GPIO_Port GPIOE
-#define blueLight_Pin GPIO_PIN_9
-#define blueLight_GPIO_Port GPIOE
 #define pHDown_Pin GPIO_PIN_10
 #define pHDown_GPIO_Port GPIOE
 #define redLight_Pin GPIO_PIN_11
@@ -122,6 +123,8 @@ void Error_Handler(void);
 #define FloraBloom_GPIO_Port GPIOB
 #define FloraGrow_Pin GPIO_PIN_11
 #define FloraGrow_GPIO_Port GPIOB
+#define whiteLight_Pin GPIO_PIN_12
+#define whiteLight_GPIO_Port GPIOD
 #define waterLevelSensorPower_Pin GPIO_PIN_2
 #define waterLevelSensorPower_GPIO_Port GPIOG
 #define RSX_Pin GPIO_PIN_6
@@ -148,8 +151,6 @@ void Error_Handler(void);
 #define D6_GPIO_Port GPIOD
 #define D7_Pin GPIO_PIN_7
 #define D7_GPIO_Port GPIOD
-#define whiteLight_Pin GPIO_PIN_4
-#define whiteLight_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
