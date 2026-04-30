@@ -248,14 +248,6 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  PHDoseUpdate();
-  nutrientDoseUpdate();
-#ifdef USING_DEBUG
-  // pumps need to be set high initially for demo
-  GPIOB->BSRR = (GPIO_PIN_11);
-  GPIOB->BSRR = (GPIO_PIN_10);
-  GPIOE->BSRR = (GPIO_PIN_15);
-#endif
 
 #if USING_SCREEN
   uint16_t currentTick = 0;
@@ -266,6 +258,8 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  PHDoseUpdate();
+	  nutrientDoseUpdate();
 #if USING_DEBUG
     int32_t cmd = 0;
     float temp = 0;

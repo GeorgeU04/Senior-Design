@@ -12,21 +12,29 @@ static Doser bloom;
 
 static char msg[200];
 
-static const float GALLONS = 0.5f; // edit this accordingly
+static float GALLONS;//edit this accordingly
 
 // mL/Gal --> Specified in feed profile
 
-static float microDosePerGallon = 3.6f;
-static float growDosePerGallon = 3.4f;
-static float bloomDosePerGallon = 2.6f;
+static float microDosePerGallon;
+static float growDosePerGallon;
+static float bloomDosePerGallon;
 
-static float microDose = 0.0f;
-static float growDose = 0.0f;
-static float bloomDose = 0.0f;
+static float microDose;
+static float growDose;
+static float bloomDose;
 
-static SystemState state = STATE_IDLE;
+static SystemState state;
 
-void nutrientDose_init(struct TDS *TDSSensor) {
+void nutrientDose_init(){
+  GALLONS = 0.5f;
+
+  microDosePerGallon = 3.6f;
+  growDosePerGallon  = 3.4f;
+  bloomDosePerGallon = 2.6f;
+
+  state = STATE_IDLE;
+
   microDose = GALLONS * microDosePerGallon;
   growDose = GALLONS * growDosePerGallon;
   bloomDose = GALLONS * bloomDosePerGallon;
@@ -38,14 +46,15 @@ void nutrientDose_init(struct TDS *TDSSensor) {
   growPump = pump_init("FloraGrow", GPIOB, GPIO_PIN_6);   //	D5
   bloomPump = pump_init("FloraBloom", GPIOB, GPIO_PIN_7); //	D4
 
-  // Necessary because nutrient pumps will use an INVERTED setup. (SET == off,
-  // RESET == on)
-  //  If not initialized early, it the pumps will continuously run on their own
-  HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
+//Necessary because nutrient pumps will use an INVERTED setup. (SET == off, RESET == on)
+// If not initialized early, it the pumps will continuously run on their own
+  //NEW NOTE (04/30/2026) set high in  GPIO section of main
+
+  /*HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
-
-  // edit final param (mix time) as needed
+*/
+// edit final param (mix time) as needed
   doser_init(&grow, &growPump, 1.5, 0.5, 1000);
   doser_init(&micro, &microPump, 1.5, 0.5, 1000);
   doser_init(&bloom, &bloomPump, 1.5, 0.5, 1000);
@@ -106,59 +115,69 @@ void nutrientDose(struct TDS *TDSSensor) {
   }
 }
 
-void nutrientDose_Demo(struct TDS *TDSSensor) {
-  doser_update_inverted(&micro);
-  doser_update_inverted(&grow);
-  doser_update_inverted(&bloom);
-  switch (state) {
-  case STATE_IDLE:
-    // Start sequence once
-    printf("Starting Micro dose...\r\n");
-    doser_start(&micro, microDose);
+void nutrientDose_Demo(){
+	  switch(state)
+	      {
+	          case STATE_IDLE:
+	              // Start sequence once
+	              snprintf(msg, sizeof(msg), "Starting Micro dose...\r\n");
+	        	  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+	        	  doser_start(&micro, microDose);
 
-    state = STATE_DOSE_MICRO;
-    break;
+	              state = STATE_DOSE_MICRO;
+	              break;
 
-  case STATE_DOSE_MICRO:
-    if (!doser_isBusy(&micro)) {
-      printf("Micro complete. Starting Grow...\r\n");
-      doser_start(&grow, growDose);
-      state = STATE_DOSE_GROW;
-    }
-    break;
+	          case STATE_DOSE_MICRO:
+	              if (!doser_isBusy(&micro))
+	              {
+	                  snprintf(msg, sizeof(msg), "Micro complete. Starting Grow...\r\n");
+		        	  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+	            	  doser_start(&grow, growDose);
+	                  state = STATE_DOSE_GROW;
+	              }
+	              break;
 
-  case STATE_DOSE_GROW:
-    if (!doser_isBusy(&grow)) {
-      printf("Grow complete. Starting Bloom...\r\n");
-      doser_start(&bloom, bloomDose);
-      state = STATE_DOSE_BLOOM;
-    }
-    break;
+	          case STATE_DOSE_GROW:
+	              if (!doser_isBusy(&grow))
+	              {
+	                  snprintf(msg, sizeof(msg), "Grow complete. Starting Bloom...\r\n");
+		        	  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+	                  doser_start(&bloom, bloomDose);
+	                  state = STATE_DOSE_BLOOM;
 
-  case STATE_DOSE_BLOOM:
-    if (!doser_isBusy(&bloom)) {
-      printf("Bloom complete. Reading TDS...\r\n");
+	              }
+	              break;
 
-      // Final TDS read
-      readTDS(TDSSensor);
-      printf("Final TDS: %.2f\r\n", TDSSensor->TDSVal);
-      state = STATE_DONE;
-      printf("Reservoir nutrient balancing complete.\r\n");
+	          case STATE_DOSE_BLOOM:
+	              if (!doser_isBusy(&bloom))
+	              {
+	                  snprintf(msg, sizeof(msg), "Bloom complete. Reading TDS...\r\n");
+		        	  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+					  
+	            	  // Final TDS read
+	                  readTDS(&TDSSensor);
+	                  snprintf(msg, sizeof(msg),"Final TDS: %.2f\r\n",TDSSensor.TDSVal);
+	                  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+	                  state = STATE_DONE;
+		              snprintf(msg, sizeof(msg), "Reservoir nutrient balancing complete.\r\n");
+		        	  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+					
+					  // make sure to set pins high when pumping is complete
+					  HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
+					  HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
+					  HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
+					  //remove this and delay after demo
+					  for(int i = 0; i < 3; i++){
+						  readTDS(&TDSSensor);
+						  snprintf(msg, sizeof(msg),"Final TDS: %.2f\r\n",TDSSensor.TDSVal);
+						  HAL_UART_Transmit(&huart2,(uint8_t*)msg,strlen(msg),HAL_MAX_DELAY);
+						  HAL_Delay(1000);
+					  }					  
+	              }
+	              break;
 
-      // make sure to set pins high when pumping is complete
-      HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
-      // remove this and delay after demo
-      for (int i = 0; i < 3; i++) {
-        readTDS(TDSSensor);
-        printf("Final TDS: %.2f\r\n", TDSSensor->TDSVal);
-        HAL_Delay(1000);
-      }
-    }
-    break;
-
-  case STATE_DONE:
-    break;
-  }
+	          case STATE_DONE:
+	        	  break;
+	      }
+	
 }
