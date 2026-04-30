@@ -213,8 +213,6 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-PHDoseUpdate();
-nutrientDoseUpdate();
 
 #if USING_SCREEN
   uint16_t currentTick = 0;
@@ -225,6 +223,8 @@ nutrientDoseUpdate();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  PHDoseUpdate();
+	  nutrientDoseUpdate();
 #if USING_DEBUG
     int32_t cmd = -1;
     float temp = 0;

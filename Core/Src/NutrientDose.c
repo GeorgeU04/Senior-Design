@@ -14,21 +14,29 @@ static Doser bloom;
 
 static char msg[200];
 
-static const float GALLONS = 0.5f;//edit this accordingly
+static float GALLONS;//edit this accordingly
 
 // mL/Gal --> Specified in feed profile
 
-static float microDosePerGallon = 3.6f;
-static float growDosePerGallon  = 3.4f;
-static float bloomDosePerGallon = 2.6f;
+static float microDosePerGallon;
+static float growDosePerGallon;
+static float bloomDosePerGallon;
 
-static float microDose = 0.0f;
-static float growDose  = 0.0f;
-static float bloomDose = 0.0f;
+static float microDose;
+static float growDose;
+static float bloomDose;
 
-static SystemState state = STATE_IDLE;
+static SystemState state;
 
 void nutrientDose_init(){
+  GALLONS = 0.5f;
+
+  microDosePerGallon = 3.6f;
+  growDosePerGallon  = 3.4f;
+  bloomDosePerGallon = 2.6f;
+
+  state = STATE_IDLE;
+
   microDose = GALLONS * microDosePerGallon;
   growDose  = GALLONS * growDosePerGallon;
   bloomDose = GALLONS * bloomDosePerGallon;
@@ -42,10 +50,12 @@ void nutrientDose_init(){
 
 //Necessary because nutrient pumps will use an INVERTED setup. (SET == off, RESET == on)
 // If not initialized early, it the pumps will continuously run on their own
-  HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
+  //NEW NOTE (04/30/2026) set high in  GPIO section of main
+
+  /*HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
-
+*/
 // edit final param (mix time) as needed
   doser_init(&grow, &growPump, 1.5, 0.5, 1000);
   doser_init(&micro, &microPump, 1.5, 0.5, 1000);
@@ -120,9 +130,6 @@ void nutrientDose(){
 }
 
 void nutrientDose_Demo(){
-	  doser_update_inverted(&micro);
-	  doser_update_inverted(&grow);
-	  doser_update_inverted(&bloom);
 	  switch(state)
 	      {
 	          case STATE_IDLE:
