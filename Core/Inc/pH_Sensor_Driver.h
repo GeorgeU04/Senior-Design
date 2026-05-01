@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
 
 struct pH {
   char name[100];

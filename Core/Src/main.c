@@ -214,7 +214,7 @@ int main(void) {
   /////////////////TDS, PH, PUMPS//////////////////////
   TDSSensor = TDS_init("TDS");
   PHSensor = pH_init("PH");
-  // PHDose_init();
+  PHDose_init(&PHSensor);
   nutrientDose_init(&TDSSensor);
 
   devices.fan0 = &fan0;
@@ -258,7 +258,6 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    PHDoseUpdate();
 #if USING_DEBUG
     int32_t cmd = 0;
     float temp = 0;
@@ -458,7 +457,10 @@ int main(void) {
 
     case 37:
       printf("Running pH balancing demo\r\n");
-      PHDose(&PHSensor);
+      while(PHSensor->pHVal < PH_LOW_LIMIT || PHSensor->pHVal > PH_HIGH_LIMIT){
+    	  PHDoseUpdate();
+          PHDose(&PHSensor);
+      }
       break;
 
     case 38:

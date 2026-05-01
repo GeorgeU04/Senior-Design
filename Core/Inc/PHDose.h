@@ -8,8 +8,6 @@
 #include "pH_Sensor_Driver.h"
 #include <string.h>
 
-extern UART_HandleTypeDef huart2;
-
 #define TANK_GALLONS 3.0f
 
 // based on 1:50 pH/water ratio
@@ -20,6 +18,6 @@ extern UART_HandleTypeDef huart2;
 #define PH_HIGH_LIMIT 6.2f
 
 void PHDose_init(struct pH *PHSensor);
-void PHDoseUpdate();
+void PHDoseUpdate(void);
 void PHDose(struct pH *PHSensor);
 #endif
