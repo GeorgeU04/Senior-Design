@@ -25,4 +25,6 @@ void nutrientDose_init(struct TDS *TDSSenor);
 void nutrientDoseUpdate(void);
 void nutrientDose(struct TDS *TDSSenor);
 void nutrientDose_Demo(struct TDS *TDSSenor);
+SystemState getState(void);
+void setState(SystemState s);
 #endif

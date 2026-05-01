@@ -37,7 +37,7 @@ build/Core/Src/NutrientDose.o: Core/Src/NutrientDose.c \
  Core/Inc/stm32h7xx_nucleo_conf.h \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
  Core/Inc/FeedProfile.h Core/Inc/TDS_Sensor_Driver.h \
- Core/Inc/plantProfiles.h
+ Core/Inc/plantProfiles.h Core/Inc/main.h
 Core/Inc/NutrientDose.h:
 Core/Inc/Doser.h:
 Core/Inc/PeristalticPump.h:
@@ -84,3 +84,4 @@ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
 Core/Inc/FeedProfile.h:
 Core/Inc/TDS_Sensor_Driver.h:
 Core/Inc/plantProfiles.h:
+Core/Inc/main.h:
