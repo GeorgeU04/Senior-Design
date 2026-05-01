@@ -45,6 +45,7 @@
 #include "waterLevelSensor.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* USER CODE END Includes */
 
@@ -55,8 +56,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 0
-#define USING_DEBUG 1
+#define USING_SCREEN 1
+#define USING_DEBUG 0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -213,9 +214,8 @@ int main(void) {
   /////////////////TDS, PH, PUMPS//////////////////////
   TDSSensor = TDS_init("TDS");
   PHSensor = pH_init("PH");
-  pump = pump_init("P1", GPIOB, GPIO_PIN_11);
-  // PHDose_init();
-  //  NutrientDose_init();
+  PHDose_init(&PHSensor);
+  nutrientDose_init(&TDSSensor);
 
   devices.fan0 = &fan0;
   devices.waterTempSensor = &asyncWaterSensor;
@@ -258,8 +258,6 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  PHDoseUpdate();
-	  nutrientDoseUpdate();
 #if USING_DEBUG
     int32_t cmd = 0;
     float temp = 0;
@@ -450,12 +448,19 @@ int main(void) {
 
     case 36:
       printf("Running nutrient dosing demo\r\n");
-      nutrientDose_Demo(&TDSSensor);
+      while (getState() != STATE_DONE) {
+        nutrientDoseUpdate();
+        nutrientDose_Demo(&TDSSensor);
+      }
+      setState(STATE_IDLE);
       break;
 
     case 37:
       printf("Running pH balancing demo\r\n");
-      PHDose(&PHSensor);
+      while(PHSensor->pHVal < PH_LOW_LIMIT || PHSensor->pHVal > PH_HIGH_LIMIT){
+    	  PHDoseUpdate();
+          PHDose(&PHSensor);
+      }
       break;
 
     case 38:
@@ -1067,12 +1072,12 @@ static void MX_GPIO_Init(void) {
   HAL_GPIO_WritePin(GPIOF, WPDS18B20_Pin | EDS18B20_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(
-      GPIOE, heater_Pin | cooler_Pin | pHDown_Pin | pHUp_Pin | FloraMicro_Pin,
-      GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, heater_Pin | cooler_Pin | pHDown_Pin | pHUp_Pin,
+                    GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, FloraMicro_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, FloraBloom_Pin | FloraGrow_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, FloraBloom_Pin | FloraGrow_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(waterLevelSensorPower_GPIO_Port, waterLevelSensorPower_Pin,

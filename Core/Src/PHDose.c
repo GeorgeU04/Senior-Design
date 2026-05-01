@@ -23,10 +23,8 @@ void PHDose_init(struct pH *PHSensor) {
   upPump = pump_init("upPump", GPIOB, GPIO_PIN_1);
   downPump = pump_init("downPump", GPIOB, GPIO_PIN_6);
 
-  *PHSensor = pH_init("pH");
-
-  doser_init(&upDoser, &upPump, 1.5f, upStepMl, 5000);
-  doser_init(&downDoser, &downPump, 1.5f, downStepMl, 5000);
+  doser_init(&upDoser, &upPump, 1.5f, upStepMl, 15000);
+  doser_init(&downDoser, &downPump, 1.5f, downStepMl, 15000);
 
   printf("Tank: %.2f gal | Up step: %.2f mL | Down step: %.2f mL\r\n",
          TANK_GALLONS, upStepMl, downStepMl);
@@ -53,7 +51,6 @@ void PHDose(struct pH *PHSensor) {
     firstCycle = 0;
 
     readpH(PHSensor);
-
     printf("pH: %.2f  Busy(U/D): %d/%d\r\n", PHSensor->pHVal, busyUp, busyDown);
 
     // Only dose if both pumps are idle

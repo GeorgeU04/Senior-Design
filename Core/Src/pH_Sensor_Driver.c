@@ -21,14 +21,15 @@
 struct pH pH_init(char *name) {
   struct pH sensor;
 
-  float V4, V7;
+  float V4 = 1.95;
+  float V7 = 1.44;// hard code V4 and V7 values. FORMAT: (V4 - V7)
 
   strncpy(sensor.name, name, sizeof(sensor.name));
   sensor.name[sizeof(sensor.name) - 1] = '\0';
   sensor.voltage = 0.0f;
   sensor.pHVal = 0.0f;
   sensor.slope = (4.0f - 7.0f) /
-                 (1.95 - 1.44); // hard code V4 and V7 values. FORMAT: (V4 - V7)
+                 (V4 - V7); // hard code V4 and V7 values. FORMAT: (V4 - V7)
   sensor.offset = 7.0f - (sensor.slope * (1.44)); // FORMAT: (sensor.slope* V7)
   return sensor;
 }
