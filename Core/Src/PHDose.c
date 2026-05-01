@@ -1,5 +1,6 @@
 // PHDose.c
 #include "PHDose.h"
+#include "stm32h7xx_hal_gpio.h"
 #include <stdio.h>
 
 struct Pump upPump = {0};
@@ -20,8 +21,8 @@ void PHDose_init(struct pH *PHSensor) {
   wasBusyDown = 0;
   firstCycle = 1;
 
-  upPump = pump_init("upPump", GPIOB, GPIO_PIN_1);
-  downPump = pump_init("downPump", GPIOB, GPIO_PIN_6);
+  upPump = pump_init("upPump", GPIOE, GPIO_PIN_12);
+  downPump = pump_init("downPump", GPIOE, GPIO_PIN_10);
 
   doser_init(&upDoser, &upPump, 1.5f, upStepMl, 15000);
   doser_init(&downDoser, &downPump, 1.5f, downStepMl, 15000);

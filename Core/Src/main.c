@@ -32,6 +32,7 @@
 #include "fans.h"
 #include "homeScreen.h"
 #include "lights.h"
+#include "pH_Sensor_Driver.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -457,9 +458,10 @@ int main(void) {
 
     case 37:
       printf("Running pH balancing demo\r\n");
-      while(PHSensor->pHVal < PH_LOW_LIMIT || PHSensor->pHVal > PH_HIGH_LIMIT){
-    	  PHDoseUpdate();
-          PHDose(&PHSensor);
+      readpH(&PHSensor);
+      while (PHSensor.pHVal < PH_LOW_LIMIT || PHSensor.pHVal > PH_HIGH_LIMIT) {
+        PHDoseUpdate();
+        PHDose(&PHSensor);
       }
       break;
 
