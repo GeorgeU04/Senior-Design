@@ -38,7 +38,7 @@ void initScreen(void) {
                                          my_lcd_send_cmd, my_lcd_send_color);
   lv_display_set_default(disp);
 
-  lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_90);
+  lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_270);
 
   uint32_t buf_size =
       lv_display_get_horizontal_resolution(disp) * BUFFER_LINES *
