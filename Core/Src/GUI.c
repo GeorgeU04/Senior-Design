@@ -1,4 +1,5 @@
 #include "GUI.h"
+#include "guiTheme.h"
 #include "homeScreen.h"
 #include "lv_port_disp.h"
 #include "main.h"
@@ -11,6 +12,7 @@
 #include "src/display/lv_display.h"
 #include "src/misc/lv_event.h"
 #include "src/widgets/button/lv_button.h"
+#include "src/widgets/image/lv_image.h"
 #include "src/widgets/label/lv_label.h"
 #include "touchscreen.h"
 #include <stdint.h>
@@ -19,10 +21,73 @@ static lv_obj_t *homeScreen;
 static lv_obj_t *settingsScreen;
 static lv_obj_t *plantSelectScreen;
 
+typedef struct {
+  lv_obj_t *settings;
+  lv_obj_t *home;
+  lv_obj_t *plant;
+} NavButtons;
+
+static NavButtons homeNav;
+static NavButtons settingsNav;
+static NavButtons plantNav;
+
+/* Simple 16x16 plant/sprout icon (A8 alpha) */
+static const uint8_t PLANT_ICON_MAP[256] = {
+    /* row 0  */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* row 1  */ 0, 0, 0, 0, 0, 0, 40, 90, 40, 0, 0, 0, 0, 0, 0, 0,
+    /* row 2  */ 0, 0, 0, 0, 0, 50, 160, 220, 160, 50, 0, 0, 0, 0, 0, 0,
+    /* row 3  */ 0, 0, 0, 0, 40, 170, 255, 255, 255, 170, 40, 0, 0, 0, 0, 0,
+    /* row 4  */ 0, 0, 0, 30, 140, 240, 200, 120, 200, 240, 140, 30, 0, 0, 0, 0,
+    /* row 5  */ 0, 0, 20, 120, 230, 180, 80, 40, 80, 180, 230, 120, 20, 0, 0, 0,
+    /* row 6  */ 0, 0, 80, 200, 160, 60, 0, 40, 0, 60, 160, 200, 80, 0, 0, 0,
+    /* row 7  */ 0, 40, 180, 150, 50, 0, 0, 50, 0, 0, 50, 150, 180, 40, 0, 0,
+    /* row 8  */ 0, 20, 100, 60, 0, 0, 0, 60, 0, 0, 0, 60, 100, 20, 0, 0,
+    /* row 9  */ 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* row 10 */ 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* row 11 */ 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* row 12 */ 0, 0, 0, 0, 0, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* row 13 */ 0, 0, 0, 0, 0, 30, 80, 160, 80, 30, 0, 0, 0, 0, 0, 0,
+    /* row 14 */ 0, 0, 0, 0, 40, 140, 210, 255, 210, 140, 40, 0, 0, 0, 0, 0,
+    /* row 15 */ 0, 0, 0, 0, 0, 50, 120, 180, 120, 50, 0, 0, 0, 0, 0, 0,
+};
+
+static const lv_image_dsc_t PLANT_ICON = {
+    .header.magic = LV_IMAGE_HEADER_MAGIC,
+    .header.cf = LV_COLOR_FORMAT_A8,
+    .header.flags = 0,
+    .header.w = 16,
+    .header.h = 16,
+    .header.stride = 16,
+    .data_size = sizeof(PLANT_ICON_MAP),
+    .data = PLANT_ICON_MAP,
+};
+
+static NavButtons *navForScreen(lv_obj_t *screen) {
+  if (screen == homeScreen)
+    return &homeNav;
+  if (screen == settingsScreen)
+    return &settingsNav;
+  if (screen == plantSelectScreen)
+    return &plantNav;
+  return NULL;
+}
+
+static void updateNavHighlight(lv_obj_t *activeScreen) {
+  NavButtons *nav = navForScreen(activeScreen);
+  if (!nav)
+    return;
+
+  gui_style_nav_button(nav->home, activeScreen == homeScreen);
+  gui_style_nav_button(nav->settings, activeScreen == settingsScreen);
+  gui_style_nav_button(nav->plant, activeScreen == plantSelectScreen);
+}
+
 static void buttonEvent(lv_event_t *e) {
   lv_obj_t *dest = (lv_obj_t *)lv_event_get_user_data(e);
-  if (dest)
+  if (dest) {
+    updateNavHighlight(dest);
     lv_screen_load(dest);
+  }
 }
 
 void initScreen(void) {
@@ -55,55 +120,57 @@ void initScreen(void) {
   initTouchScreen();
 }
 
-static void styleScreen(lv_obj_t *screen) {
-  lv_obj_set_style_bg_color(screen, lv_color_hex(0x0B1B2B), 0);
-  lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, 0);
-  lv_obj_set_style_pad_all(screen, 12, 0);
+static void styleScreen(lv_obj_t *screen) { gui_style_screen(screen); }
+
+static lv_obj_t *createNavButton(lv_obj_t *parent, const char *symbol,
+                                 lv_obj_t *dest) {
+  lv_obj_t *btn = lv_button_create(parent);
+  lv_obj_set_size(btn, 44, 36);
+  gui_style_nav_button(btn, false);
+  lv_obj_add_event_cb(btn, buttonEvent, LV_EVENT_CLICKED, dest);
+  lv_obj_set_ext_click_area(btn, 12);
+
+  lv_obj_t *label = lv_label_create(btn);
+  lv_label_set_text(label, symbol);
+  lv_obj_center(label);
+
+  return btn;
 }
 
-static void drawNavbar(lv_obj_t *screen) {
-  int32_t buttonWidth = 40;
-  int32_t buttonHeight = 40;
-  int32_t buttonY = 80;
+static lv_obj_t *createPlantNavButton(lv_obj_t *parent, lv_obj_t *dest) {
+  lv_obj_t *btn = lv_button_create(parent);
+  lv_obj_set_size(btn, 44, 36);
+  gui_style_nav_button(btn, false);
+  lv_obj_add_event_cb(btn, buttonEvent, LV_EVENT_CLICKED, dest);
+  lv_obj_set_ext_click_area(btn, 12);
 
-  /* Settings button (left) */
-  lv_obj_t *settingsButton = lv_button_create(screen);
-  lv_obj_align(settingsButton, LV_ALIGN_CENTER, -100, buttonY);
-  lv_obj_set_size(settingsButton, buttonWidth, buttonHeight);
-  lv_obj_add_event_cb(settingsButton, buttonEvent, LV_EVENT_CLICKED,
-                      settingsScreen);
-  // lv_obj_set_style_bg_opa(settingsButton, LV_OPA_TRANSP, 0);
-  // lv_obj_set_style_shadow_width(settingsButton, 0, 0);
-  lv_obj_t *settingsLabel = lv_label_create(settingsButton);
-  lv_label_set_text(settingsLabel, LV_SYMBOL_SETTINGS);
-  lv_obj_center(settingsLabel);
-  lv_obj_set_ext_click_area(settingsButton, 20);
+  lv_obj_t *icon = lv_image_create(btn);
+  lv_image_set_src(icon, &PLANT_ICON);
+  lv_obj_set_style_image_recolor_opa(icon, LV_OPA_COVER, 0);
+  lv_obj_set_style_image_recolor(icon, gui_color(GUI_COLOR_TEXT_MUTED), 0);
+  lv_obj_center(icon);
 
-  /* Home button (center) */
-  lv_obj_t *homeButton = lv_button_create(screen);
-  lv_obj_align(homeButton, LV_ALIGN_CENTER, 0, buttonY);
-  lv_obj_set_size(homeButton, buttonWidth, buttonHeight);
-  lv_obj_add_event_cb(homeButton, buttonEvent, LV_EVENT_CLICKED, homeScreen);
-  // lv_obj_set_style_bg_opa(homeButton, LV_OPA_TRANSP, 0);
-  // lv_obj_set_style_shadow_width(homeButton, 0, 0);
-  lv_obj_set_ext_click_area(homeButton, 20);
-  lv_obj_t *homeLabel = lv_label_create(homeButton);
-  lv_label_set_text(homeLabel, LV_SYMBOL_HOME);
-  lv_obj_center(homeLabel);
-  lv_obj_set_ext_click_area(homeButton, 20);
+  return btn;
+}
 
-  /* Plant button (right) */
-  lv_obj_t *plantButton = lv_button_create(screen);
-  lv_obj_align(plantButton, LV_ALIGN_CENTER, 100, buttonY);
-  lv_obj_set_size(plantButton, buttonWidth, buttonHeight);
-  lv_obj_add_event_cb(plantButton, buttonEvent, LV_EVENT_CLICKED,
-                      plantSelectScreen);
-  lv_obj_set_ext_click_area(plantButton, 20);
-  // lv_obj_set_style_bg_opa(plantButton, LV_OPA_TRANSP, 0);
-  // lv_obj_set_style_shadow_width(plantButton, 0, 0);
-  lv_obj_t *plantLabel = lv_label_create(plantButton);
-  lv_label_set_text(plantLabel, "P");
-  lv_obj_center(plantLabel);
+static void drawNavbar(lv_obj_t *screen, NavButtons *nav) {
+  lv_obj_t *navbar = lv_obj_create(screen);
+  lv_obj_set_size(navbar, LV_PCT(100), 44);
+  /* Keep navbar inside the padded content area so the screen never overflows */
+  lv_obj_align(navbar, LV_ALIGN_BOTTOM_MID, 0, 0);
+  gui_style_navbar(navbar);
+
+  lv_obj_set_flex_flow(navbar, LV_FLEX_FLOW_ROW);
+  lv_obj_set_flex_align(navbar, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER,
+                        LV_FLEX_ALIGN_CENTER);
+
+  nav->settings = createNavButton(navbar, LV_SYMBOL_SETTINGS, settingsScreen);
+  nav->home = createNavButton(navbar, LV_SYMBOL_HOME, homeScreen);
+  nav->plant = createPlantNavButton(navbar, plantSelectScreen);
+
+  gui_style_nav_button(nav->settings, screen == settingsScreen);
+  gui_style_nav_button(nav->home, screen == homeScreen);
+  gui_style_nav_button(nav->plant, screen == plantSelectScreen);
 }
 
 static void createScreens(void) {
@@ -116,18 +183,19 @@ static void createScreens(void) {
 }
 
 static void drawScreens(void) {
-  drawNavbar(homeScreen);
+  drawNavbar(homeScreen, &homeNav);
   drawHomeScreen(homeScreen);
 
-  drawNavbar(settingsScreen);
+  drawNavbar(settingsScreen, &settingsNav);
   drawSettingsScreen(settingsScreen);
 
-  drawNavbar(plantSelectScreen);
+  drawNavbar(plantSelectScreen, &plantNav);
   drawPlantSelectionScreen(plantSelectScreen);
 }
 
 void uiInitScreens(void) {
   createScreens();
   drawScreens();
+  updateNavHighlight(homeScreen);
   lv_screen_load(homeScreen);
 }

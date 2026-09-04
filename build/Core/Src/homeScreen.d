@@ -112,7 +112,8 @@ build/Core/Src/homeScreen.o: Core/Src/homeScreen.c Core/Inc/homeScreen.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_area.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
- Drivers/lvgl/src/core/lv_group.h Core/Inc/plantProfiles.h \
+ Drivers/lvgl/src/core/lv_group.h Core/Inc/guiTheme.h \
+ Drivers/lvgl/src/misc/lv_color.h Core/Inc/plantProfiles.h \
  Drivers/lvgl/src/core/lv_obj_pos.h \
  Drivers/lvgl/src/core/lv_obj_style_gen.h Drivers/lvgl/src/font/lv_font.h \
  Drivers/lvgl/src/misc/lv_area.h \
@@ -243,6 +244,8 @@ Drivers/lvgl/src/core/../indev/../misc/lv_area.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
+Core/Inc/guiTheme.h:
+Drivers/lvgl/src/misc/lv_color.h:
 Core/Inc/plantProfiles.h:
 Drivers/lvgl/src/core/lv_obj_pos.h:
 Drivers/lvgl/src/core/lv_obj_style_gen.h:

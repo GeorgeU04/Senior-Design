@@ -1,6 +1,7 @@
 #include "settingsScreen.h"
 #include "DS18B20.h"
 #include "TDS_Sensor_Driver.h"
+#include "guiTheme.h"
 #include "main.h"
 #include "pH_Sensor_Driver.h"
 #include "src/misc/lv_area.h"
@@ -16,28 +17,6 @@ uint8_t useFahrenheit = false;
 lv_obj_t *temperatureUnitsLabel = NULL;
 
 uint16_t systemStatus = 0;
-
-/* 0000_0000_0000_0000 */
-/* 0 is nominal
- * 1 is error
- * MSB->LSB
- * 0 -> not used
- * 0 -> not used
- * 0 -> not used
- * 0 -> not used
- * 0 -> not used
- * 0 -> not used
- * 0 -> not used
- * 0 -> fan3 status
- * 0 -> fan2 status
- * 0 -> fan1 status
- * 0 -> fan0 status
- * 0 -> water level sensor status
- * 0 -> TDS sensor status
- * 0 -> pH sensor status
- * 0 -> enclosure temp sensor status
- * 0 -> water temp sensor status
- */
 
 static void setErrorText(char *text, size_t size) {
   text[0] = '\0';
@@ -68,20 +47,20 @@ static void setErrorText(char *text, size_t size) {
 
 static void drawPopUp() {
   lv_obj_t *popUp = lv_msgbox_create(NULL);
-  lv_msgbox_add_title(popUp, "System Diagnostic Results");
+  lv_msgbox_add_title(popUp, "System Diagnostics");
   char errorMsg[256];
   setErrorText(errorMsg, sizeof(errorMsg));
   lv_msgbox_add_text(popUp, errorMsg);
   lv_msgbox_add_close_button(popUp);
-  lv_obj_set_width(popUp, 300);
+  lv_obj_set_width(popUp, 280);
+  lv_obj_set_style_radius(popUp, 10, 0);
+  lv_obj_set_style_bg_color(popUp, gui_color(GUI_COLOR_SURFACE), 0);
+  lv_obj_set_style_border_color(popUp, gui_color(GUI_COLOR_BORDER), 0);
+  lv_obj_set_style_border_width(popUp, 1, 0);
   systemStatus = 0;
 }
 
-// only the temp sensors are checked for errors right now, others will be added
-// later
 void getSystemStatus() {
-
-  /* Check temp sensors */
   float waterTemps[2] = {0};
   float enclosureTemps[2] = {0};
   float ECSVals[3] = {0};
@@ -104,8 +83,6 @@ void getSystemStatus() {
         ++waterTempInValid;
     }
   }
-  // the sensor returns 0 upon disconnect, if the actual value is 0 degrees C we
-  // have bigger issues
   if (waterTempInValid == 2 ||
       (waterTemps[0] == 0.0f && waterTemps[1] == 0.0f)) {
     systemStatus |= 1 << WATER_TEMP;
@@ -137,35 +114,54 @@ static void event_handler(lv_event_t *e) {
   lv_event_code_t code = lv_event_get_code(e);
   lv_obj_t *obj = lv_event_get_target_obj(e);
   useFahrenheit = lv_obj_has_state(obj, LV_STATE_CHECKED);
-  (void)obj;
   if (code == LV_EVENT_VALUE_CHANGED) {
     lv_label_set_text(temperatureUnitsLabel, useFahrenheit
-                                                 ? "Temp Units: Fahrenheit"
-                                                 : "Temp Units: Celsius");
+                                                 ? "Fahrenheit"
+                                                 : "Celsius");
   } else if (code == LV_EVENT_CLICKED) {
     getSystemStatus();
   }
 }
 
 void drawSettingsScreen(lv_obj_t *settingsScreen) {
-  int32_t y = 5;
-  int32_t padding = 20;
-  temperatureUnitsLabel = lv_label_create(settingsScreen);
-  lv_label_set_text(temperatureUnitsLabel, "Temp Units: Celsius");
-  lv_obj_set_style_text_color(temperatureUnitsLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(temperatureUnitsLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  lv_obj_t *title = lv_label_create(settingsScreen);
+  lv_label_set_text(title, "Settings");
+  gui_style_section_title(title);
+  lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 0);
 
-  lv_obj_t *tempUnitsSwitch = lv_switch_create(settingsScreen);
-  lv_obj_align(tempUnitsSwitch, LV_ALIGN_TOP_RIGHT, 0, y);
+  lv_obj_t *settingsCard = gui_create_card(settingsScreen, 300, 56);
+  lv_obj_align(settingsCard, LV_ALIGN_TOP_MID, 0, 24);
+  lv_obj_set_flex_flow(settingsCard, LV_FLEX_FLOW_ROW);
+  lv_obj_set_flex_align(settingsCard, LV_FLEX_ALIGN_SPACE_BETWEEN,
+                        LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+  lv_obj_set_style_pad_column(settingsCard, 8, 0);
 
+  lv_obj_t *tempRowLabel = lv_label_create(settingsCard);
+  lv_label_set_text(tempRowLabel, "Temperature Units");
+  gui_style_body_text(tempRowLabel);
+
+  temperatureUnitsLabel = lv_label_create(settingsCard);
+  lv_label_set_text(temperatureUnitsLabel, "Celsius");
+  gui_style_muted_text(temperatureUnitsLabel);
+  lv_obj_set_style_min_width(temperatureUnitsLabel, 72, 0);
+  lv_obj_set_style_text_align(temperatureUnitsLabel, LV_TEXT_ALIGN_RIGHT, 0);
+
+  lv_obj_t *tempUnitsSwitch = lv_switch_create(settingsCard);
+  lv_obj_set_style_bg_color(tempUnitsSwitch, gui_color(GUI_COLOR_SURFACE_ALT),
+                            LV_PART_MAIN);
+  lv_obj_set_style_bg_color(tempUnitsSwitch, gui_color(GUI_COLOR_ACCENT_DIM),
+                            LV_PART_INDICATOR | LV_STATE_CHECKED);
   lv_obj_add_event_cb(tempUnitsSwitch, event_handler, LV_EVENT_VALUE_CHANGED,
                       NULL);
-  y += padding;
 
   lv_obj_t *systemCheckButton = lv_button_create(settingsScreen);
+  gui_style_primary_button(systemCheckButton);
+  lv_obj_align(systemCheckButton, LV_ALIGN_BOTTOM_MID, 0, -52);
+
   lv_obj_t *systemCheckLabel = lv_label_create(systemCheckButton);
-  lv_label_set_text(systemCheckLabel, "Perform System Check");
-  lv_obj_set_style_text_color(systemCheckLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(systemCheckButton, LV_ALIGN_BOTTOM_MID, 0, -60);
+  lv_label_set_text(systemCheckLabel, LV_SYMBOL_REFRESH "  Run Diagnostics");
+  gui_style_body_text(systemCheckLabel);
+  lv_obj_set_style_text_color(systemCheckLabel, gui_color(GUI_COLOR_TEXT), 0);
+  lv_obj_center(systemCheckLabel);
   lv_obj_add_event_cb(systemCheckButton, event_handler, LV_EVENT_CLICKED, NULL);
 }

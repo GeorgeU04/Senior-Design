@@ -1,5 +1,5 @@
-build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/homeScreen.h \
- Core/Inc/plantProfiles.h Drivers/lvgl/src/core/lv_obj.h \
+build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/guiTheme.h \
+ Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../lv_conf_kconfig.h \
  Drivers/lvgl/src/core/../../../lv_conf.h \
@@ -112,7 +112,8 @@ build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/homeScreen.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_area.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
- Drivers/lvgl/src/core/lv_group.h Core/Inc/lv_port_disp.h \
+ Drivers/lvgl/src/core/lv_group.h Drivers/lvgl/src/misc/lv_color.h \
+ Core/Inc/homeScreen.h Core/Inc/plantProfiles.h Core/Inc/lv_port_disp.h \
  Drivers/lvgl/lvgl.h Drivers/lvgl/lv_version.h Drivers/lvgl/src/lv_init.h \
  Drivers/lvgl/src/lv_conf_internal.h Drivers/lvgl/src/misc/lv_types.h \
  Drivers/lvgl/src/stdlib/lv_mem.h Drivers/lvgl/src/stdlib/lv_string.h \
@@ -471,12 +472,12 @@ build/Core/Src/GUI.o: Core/Src/GUI.c Core/Inc/GUI.h Core/Inc/homeScreen.h \
  Drivers/lvgl/src/core/lv_obj_pos.h Drivers/lvgl/src/core/lv_obj_style.h \
  Drivers/lvgl/src/display/lv_display.h Drivers/lvgl/src/misc/lv_event.h \
  Drivers/lvgl/src/widgets/button/lv_button.h \
+ Drivers/lvgl/src/widgets/image/lv_image.h \
  Drivers/lvgl/src/widgets/label/lv_label.h Core/Inc/touchscreen.h \
  Drivers/lvgl/src/indev/lv_indev.h \
  Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h
 Core/Inc/GUI.h:
-Core/Inc/homeScreen.h:
-Core/Inc/plantProfiles.h:
+Core/Inc/guiTheme.h:
 Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../lv_conf_kconfig.h:
@@ -592,6 +593,9 @@ Drivers/lvgl/src/core/../indev/../misc/lv_area.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
+Drivers/lvgl/src/misc/lv_color.h:
+Core/Inc/homeScreen.h:
+Core/Inc/plantProfiles.h:
 Core/Inc/lv_port_disp.h:
 Drivers/lvgl/lvgl.h:
 Drivers/lvgl/lv_version.h:
@@ -982,6 +986,7 @@ Drivers/lvgl/src/core/lv_obj_style.h:
 Drivers/lvgl/src/display/lv_display.h:
 Drivers/lvgl/src/misc/lv_event.h:
 Drivers/lvgl/src/widgets/button/lv_button.h:
+Drivers/lvgl/src/widgets/image/lv_image.h:
 Drivers/lvgl/src/widgets/label/lv_label.h:
 Core/Inc/touchscreen.h:
 Drivers/lvgl/src/indev/lv_indev.h:

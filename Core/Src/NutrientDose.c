@@ -26,6 +26,19 @@ static float bloomDose;
 
 SystemState getState(void) { return state; }
 void setState(SystemState s) { state = s; }
+
+void nutrientDose_loadFeed(const FeedProfile *feed, float gallons) {
+  if (!feed)
+    return;
+  GALLONS = gallons;
+  microDosePerGallon = feed->floraMicro_ml_per_gal;
+  growDosePerGallon = feed->floraGrow_ml_per_gal;
+  bloomDosePerGallon = feed->floraBloom_ml_per_gal;
+  microDose = GALLONS * microDosePerGallon;
+  growDose = GALLONS * growDosePerGallon;
+  bloomDose = GALLONS * bloomDosePerGallon;
+}
+
 void nutrientDose_init(struct TDS *TDSsensor) {
   GALLONS = 0.5f;
 

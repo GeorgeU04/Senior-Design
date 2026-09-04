@@ -35,13 +35,20 @@ void Lights_Init(void) {
   Lights_Off();
 }
 
-// Read blue/red/nir percentages from a plant profile and apply them.
+/* Apply early-growth stage lights (selection / fallback). */
 void Lights_ApplyProfile(const struct plantProfile *profile) {
   if (profile == NULL)
     return;
-  Lights_SetBlue(profile->blueLightPercentage);
-  Lights_SetRed(profile->redLightPercentage);
-  Lights_SetNIR(profile->nirLightPercentage);
+
+  uint8_t blue = 0, red = 0, nir = 0;
+  enum growthStage stage = plant_getStage(profile, 1);
+  if (!plant_getStageLights(profile, stage, &blue, &red, &nir))
+    return;
+
+  Lights_SetWhite(profile->whiteLightPercentage);
+  Lights_SetBlue(blue);
+  Lights_SetRed(red);
+  Lights_SetNIR(nir);
 }
 
 // Lights_SetBlue

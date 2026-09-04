@@ -1,15 +1,18 @@
-/* Nutrient Feed Profile
-*	
-*/
+#ifndef FEEDPROFILE_H
+#define FEEDPROFILE_H
 
-typedef struct{
-	float floraMicro_ml_per_gal;
-	float floraGrow_ml_per_gal;
-	float floraBloom_ml_per_gal;
-	float targetEC;
-	float ECRange;
-	float targetPH;
-    float phRange;
-}FeedProfile;
+typedef struct {
+  float floraMicro_ml_per_gal;
+  float floraGrow_ml_per_gal;
+  float floraBloom_ml_per_gal;
+  float targetEC;
+  float ECRange;
+  float targetPH;
+  float phRange;
+} FeedProfile;
 
- //Format: FeedProfile newProfile = {micro(mL/gal),grow(mL/gal),bloom(mL/gal),EC,ECRangeOfError, pH, pHRangeOfError}
+/* Indexed by enum growthStage */
+extern const FeedProfile lightFeedProfile[];
+extern const FeedProfile mediumFeedProfile[];
+
+#endif /* FEEDPROFILE_H */

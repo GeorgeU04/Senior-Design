@@ -1,4 +1,5 @@
 #include "homeScreen.h"
+#include "guiTheme.h"
 #include "plantProfiles.h"
 #include "src/core/lv_obj_pos.h"
 #include "src/core/lv_obj_style_gen.h"
@@ -24,127 +25,118 @@ lv_obj_t *growingDaysLabel = NULL;
 
 uint32_t growthDays = 0;
 
+static lv_obj_t *createReadingRow(lv_obj_t *parent, const char *text) {
+  lv_obj_t *label = lv_label_create(parent);
+  lv_label_set_text(label, text);
+  gui_style_body_text(label);
+  /* Keep text inside the card; ellipsize if still too long */
+  lv_obj_set_width(label, lv_pct(100));
+  lv_label_set_long_mode(label, LV_LABEL_LONG_MODE_DOTS);
+  return label;
+}
+
 void drawHomeScreen(lv_obj_t *homeScreen) {
-  lv_obj_set_style_text_font(homeScreen, &lv_font_montserrat_14, 0);
-  /* Sensor Readings */
-  int32_t y = 5;
-  int32_t padding = 20;
+  /* Fit within 240px height with navbar — no overflow / no scroll */
+  lv_obj_t *sensorCard = gui_create_card(homeScreen, 152, 160);
+  lv_obj_align(sensorCard, LV_ALIGN_TOP_LEFT, 0, 0);
 
-  lv_obj_t *sensorLabel = lv_label_create(homeScreen);
-  lv_obj_set_style_text_font(sensorLabel, &lv_font_montserrat_16, 0);
-  lv_label_set_text(sensorLabel, "Sensor Readings");
-  lv_obj_set_style_text_color(sensorLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(sensorLabel, LV_ALIGN_TOP_LEFT, 0, y);
-  y += padding;
+  lv_obj_t *sensorTitle = lv_label_create(sensorCard);
+  lv_label_set_text(sensorTitle, "Sensors");
+  gui_style_section_title(sensorTitle);
+  lv_obj_align(sensorTitle, LV_ALIGN_TOP_LEFT, 0, 0);
 
-  waterTempLabel = lv_label_create(homeScreen);
-  lv_label_set_text(waterTempLabel, "Water: __._ C");
-  lv_obj_set_style_text_color(waterTempLabel, lv_color_hex(0xFFFFFF), 0);
+  int32_t y = 22;
+  const int32_t rowGap = 20;
+
+  waterTempLabel = createReadingRow(sensorCard, "Water: __._ C");
   lv_obj_align(waterTempLabel, LV_ALIGN_TOP_LEFT, 0, y);
-  y += padding;
+  y += rowGap;
 
-  enclosureTempLabel = lv_label_create(homeScreen);
-  lv_label_set_text(enclosureTempLabel, "Encl: __._ C");
-  lv_obj_set_style_text_color(enclosureTempLabel, lv_color_hex(0xFFFFFF), 0);
+  enclosureTempLabel = createReadingRow(sensorCard, "Encl: __._ C");
   lv_obj_align(enclosureTempLabel, LV_ALIGN_TOP_LEFT, 0, y);
-  y += padding;
+  y += rowGap;
 
-  waterLevelLabel = lv_label_create(homeScreen);
-  lv_label_set_text(waterLevelLabel, "Water Lvl: ____");
-  lv_obj_set_style_text_color(waterLevelLabel, lv_color_hex(0xFFFFFF), 0);
+  waterLevelLabel = createReadingRow(sensorCard, "Level: ____");
   lv_obj_align(waterLevelLabel, LV_ALIGN_TOP_LEFT, 0, y);
-  y += padding;
+  y += rowGap;
 
-  pHLabel = lv_label_create(homeScreen);
-  lv_label_set_text(pHLabel, "pH: __");
-  lv_obj_set_style_text_color(pHLabel, lv_color_hex(0xFFFFFF), 0);
+  pHLabel = createReadingRow(sensorCard, "pH: __");
   lv_obj_align(pHLabel, LV_ALIGN_TOP_LEFT, 0, y);
-  y += padding;
+  y += rowGap;
 
-  TDSLabel = lv_label_create(homeScreen);
-  lv_label_set_text(TDSLabel, "ECS: __._ mS/cm");
-  lv_obj_set_style_text_color(TDSLabel, lv_color_hex(0xFFFFFF), 0);
+  TDSLabel = createReadingRow(sensorCard, "ECS: __._ mS/cm");
   lv_obj_align(TDSLabel, LV_ALIGN_TOP_LEFT, 0, y);
 
-  /* Plant Profile Information */
-  y = 0;
-  lv_obj_t *plantProfileLabel = lv_label_create(homeScreen);
-  lv_obj_set_style_text_font(plantProfileLabel, &lv_font_montserrat_16, 0);
-  lv_label_set_text(plantProfileLabel, "Plant Profile");
-  lv_obj_set_style_text_color(plantProfileLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantProfileLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  /* Plant profile card (right) — slightly wider for stage/name strings */
+  lv_obj_t *plantCard = gui_create_card(homeScreen, 152, 160);
+  lv_obj_align(plantCard, LV_ALIGN_TOP_RIGHT, 0, 0);
 
-  y += padding;
-  plantNameLabel = lv_label_create(homeScreen);
-  lv_label_set_text(plantNameLabel, "Plant: --");
-  lv_obj_set_style_text_color(plantNameLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantNameLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  lv_obj_t *plantTitle = lv_label_create(plantCard);
+  lv_label_set_text(plantTitle, "Plant");
+  gui_style_section_title(plantTitle);
+  lv_obj_align(plantTitle, LV_ALIGN_TOP_LEFT, 0, 0);
 
-  y += padding;
-  plantStageLabel = lv_label_create(homeScreen);
-  lv_label_set_text(plantStageLabel, "Stage: --");
-  lv_obj_set_style_text_color(plantStageLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantStageLabel, LV_ALIGN_TOP_RIGHT, 0, y);
-  y += padding;
+  y = 22;
 
-  plantLightOnLabel = lv_label_create(homeScreen);
-  lv_label_set_text(plantLightOnLabel, "Light On: ---- min");
-  lv_obj_set_style_text_color(plantLightOnLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantLightOnLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  plantNameLabel = createReadingRow(plantCard, "Plant: --");
+  lv_obj_align(plantNameLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  y += rowGap;
 
-  y += padding;
-  plantRGBLabel = lv_label_create(homeScreen);
-  lv_label_set_text(plantRGBLabel, "W/R/B: --/--/-- %");
-  lv_obj_set_style_text_color(plantRGBLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantRGBLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  plantStageLabel = createReadingRow(plantCard, "Stage: --");
+  lv_obj_align(plantStageLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  y += rowGap;
 
-  y += padding;
-  plantDurationLabel = lv_label_create(homeScreen);
-  lv_label_set_text(plantDurationLabel, "Duration: --- days");
-  lv_obj_set_style_text_color(plantDurationLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(plantDurationLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  plantLightOnLabel = createReadingRow(plantCard, "Light: ---- min");
+  lv_obj_align(plantLightOnLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  y += rowGap;
 
-  y += padding;
-  growingDaysLabel = lv_label_create(homeScreen);
-  lv_label_set_text(growingDaysLabel, "Day: ---");
-  lv_obj_set_style_text_color(growingDaysLabel, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(growingDaysLabel, LV_ALIGN_TOP_RIGHT, 0, y);
+  plantRGBLabel = createReadingRow(plantCard, "WRBN: --/--/--/--");
+  lv_obj_align(plantRGBLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  y += rowGap;
+
+  plantDurationLabel = createReadingRow(plantCard, "Grow: --- days");
+  lv_obj_align(plantDurationLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  y += rowGap;
+
+  growingDaysLabel = createReadingRow(plantCard, "Day: ---");
+  lv_obj_align(growingDaysLabel, LV_ALIGN_TOP_LEFT, 0, y);
+  lv_obj_set_style_text_color(growingDaysLabel, gui_color(GUI_COLOR_ACCENT), 0);
 }
 
 void updatePlantProfileLabels(const struct plantProfile *p) {
   if (!p)
     return;
 
-  lv_label_set_text_fmt(plantNameLabel, "Plant: %s", p->name);
-  lv_label_set_text_fmt(plantStageLabel, "Stage: %s", getStageName(p->stage));
-
-  lv_label_set_text_fmt(plantLightOnLabel, "Light On: %u min",
-                        p->lightOnMinutes);
-  lv_label_set_text_fmt(plantRGBLabel, "W/R/B/NIR: %u/%u/%u/%u %%",
-                          p->whiteLightPercentage, p->redLightPercentage,
-                          p->blueLightPercentage, p->nirLightPercentage);
-
-  lv_label_set_text_fmt(plantDurationLabel, "Duration: %lu days",
-                        (unsigned long)p->growthDurationDays);
   growthDays = 1;
+  enum growthStage stage = plant_getStage(p, growthDays);
+  uint8_t blue = 0, red = 0, nir = 0;
+  plant_getStageLights(p, stage, &blue, &red, &nir);
+
+  lv_label_set_text_fmt(plantNameLabel, "%s", p->name);
+  lv_label_set_text_fmt(plantStageLabel, "Stage: %s", getStageName(stage));
+
+  lv_label_set_text_fmt(plantLightOnLabel, "Light: %u min", p->lightOnMinutes);
+  lv_label_set_text_fmt(plantRGBLabel, "WRBN %u/%u/%u/%u",
+                        p->whiteLightPercentage, red, blue, nir);
+
+  lv_label_set_text_fmt(plantDurationLabel, "Grow: %lu d",
+                        (unsigned long)p->growthDurationDays);
   lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                         (unsigned long)growthDays);
 
   Lights_ApplyProfile(p);
 }
 
-// Unused for now. Currently updating the text for each individual sensor.
-// May use this when all sensors are finished
 void updateSensorLabels(float waterTemp, float enclosureTemp,
                         uint8_t waterLevelPct, float pH, float TDS) {
   if (!waterTempLabel || !enclosureTempLabel || !waterLevelLabel || !pHLabel ||
       !TDSLabel) {
-    return; // labels not created yet
+    return;
   }
 
   lv_label_set_text_fmt(waterTempLabel, "Water: %.1f C", waterTemp);
   lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f C", enclosureTemp);
-  lv_label_set_text_fmt(waterLevelLabel, "Water Lvl: %u%%", waterLevelPct);
+  lv_label_set_text_fmt(waterLevelLabel, "Level: %u%%", waterLevelPct);
   lv_label_set_text_fmt(pHLabel, "pH: %.2f", pH);
   lv_label_set_text_fmt(TDSLabel, "TDS: %.0f ppm", TDS);
 }

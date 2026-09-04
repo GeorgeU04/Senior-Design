@@ -30,9 +30,12 @@
 #include "TDS_Sensor_Driver.h"
 #include "climateControl.h"
 #include "fans.h"
+#include "growControl.h"
 #include "homeScreen.h"
 #include "lights.h"
 #include "pH_Sensor_Driver.h"
+#include "plantProfiles.h"
+#include "plantSelectionScreen.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -87,6 +90,7 @@ struct DS18B20 enclosureTempSensor = {0};
 struct DS18B20_Async asyncWaterSensor = {0};
 struct DS18B20_Async asyncEnclosureSensor = {0};
 struct fan fan0 = {0};
+struct fan fan1 = {0};
 struct maintainableDevices devices = {0};
 struct TDS TDSSensor = {0};
 struct pH PHSensor = {0};
@@ -190,13 +194,15 @@ int main(void) {
   /* USER CODE BEGIN 2 */
 
   // update screen 5 times a second to avoid flickering value updates
-  const uint16_t screenRefresh = 200;
+  const uint32_t screenRefresh = 200;
 
   float waterTemp = 0;
   float enclosureTemp = 0;
   uint32_t waterLevel = 0;
   uint8_t time[3];
   uint8_t currentDay = 0;
+  uint8_t waterTempValid = 0;
+  uint8_t enclosureTempValid = 0;
 
   createDS18B20Sensor(&waterTempSensor, WPDS18B20_GPIO_Port, WPDS18B20_Pin);
   createDS18B20Sensor(&enclosureTempSensor, EDS18B20_GPIO_Port, EDS18B20_Pin);
@@ -205,6 +211,7 @@ int main(void) {
   createDS18B20Async(&asyncEnclosureSensor, enclosureTempSensor, 750);
 
   createFan(&fan0, &htim1, TIM_CHANNEL_4);
+  createFan(&fan1, &htim3, TIM_CHANNEL_1);
 
   createWaterLevelSensor(&waterLevelSensor, waterLevelSensorPower_GPIO_Port,
                          waterLevelSensorPower_Pin, &hadc3);
@@ -219,11 +226,18 @@ int main(void) {
   nutrientDose_init(&TDSSensor);
 
   devices.fan0 = &fan0;
+  devices.fan1 = &fan1;
   devices.waterTempSensor = &asyncWaterSensor;
   devices.enclosureTempSensor = &asyncEnclosureSensor;
+  runFan(&fan1, OFF);
+  stopFan(&fan1);
   runFan(&fan0, OFF);
   stopFan(&fan0);
+
   Lights_Init();
+  Lights_SetWhite(100);
+
+  growControl_init(&fan0, &fan1, &cooler, &heater, &TDSSensor, &PHSensor);
 
   /* USER CODE END 2 */
 
@@ -251,7 +265,8 @@ int main(void) {
   /* USER CODE BEGIN WHILE */
 
 #if USING_SCREEN
-  uint16_t currentTick = 0;
+  uint32_t currentTick = 0;
+  uint32_t lastScreenRefresh = 0;
   initScreen();
   uiInitScreens();
 #endif
@@ -370,11 +385,13 @@ int main(void) {
     case 20:
       printf("Fans On\r\n");
       runFan(&fan0, HIGH);
+      runFan(&fan1, HIGH);
       break;
 
     case 21:
       printf("Fans Off\r\n");
       stopFan(&fan0);
+      stopFan(&fan1);
       break;
 
     case 22:
@@ -492,10 +509,21 @@ int main(void) {
       currentDay = clock.day;
       lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                             (unsigned long)++growthDays);
+      /* Refresh stage/light labels when the day rolls */
+      if (currentPlantProfile) {
+        enum growthStage st = plant_getStage(currentPlantProfile, growthDays);
+        uint8_t blue = 0, red = 0, nir = 0;
+        plant_getStageLights(currentPlantProfile, st, &blue, &red, &nir);
+        lv_label_set_text_fmt(plantStageLabel, "Stage: %s", getStageName(st));
+        lv_label_set_text_fmt(plantRGBLabel, "WRBN %u/%u/%u/%u",
+                              currentPlantProfile->whiteLightPercentage, red,
+                              blue, nir);
+      }
     }
 
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp) &&
         asyncWaterSensor.validReading) {
+      waterTempValid = 1;
       if (useFahrenheit) {
         lv_label_set_text_fmt(waterTempLabel, "Water: %.1f F",
                               waterTemp * 9 / 5.0f + 32);
@@ -505,6 +533,7 @@ int main(void) {
     }
     if (asyncTemperatureReading(&asyncEnclosureSensor, &enclosureTemp) &&
         asyncEnclosureSensor.validReading) {
+      enclosureTempValid = 1;
       if (useFahrenheit) {
         lv_label_set_text_fmt(enclosureTempLabel, "Encl: %.1f F",
                               enclosureTemp * 9 / 5.0f + 32);
@@ -513,7 +542,8 @@ int main(void) {
                               enclosureTemp);
       }
     }
-    if (currentTick >= screenRefresh) {
+    if (currentTick - lastScreenRefresh >= screenRefresh) {
+      lastScreenRefresh = currentTick;
       readTDS(&TDSSensor);
       lv_label_set_text_fmt(TDSLabel, "ECS: %.1f mS/cm", TDSSensor.ECVal);
 
@@ -528,7 +558,20 @@ int main(void) {
       }
     }
 
-    // checkPump(&pump);
+    GrowSensorSample sample = {
+        .waterTempC = waterTemp,
+        .enclosureTempC = enclosureTemp,
+        .waterTempValid = waterTempValid,
+        .enclosureTempValid = enclosureTempValid,
+        .pH = PHSensor.pHVal,
+        .EC = TDSSensor.ECVal,
+        .waterLevelRaw = waterLevel,
+        .hour = clock.hours,
+        .minute = clock.minutes,
+        .growthDay = growthDays,
+    };
+    growControl_update(&sample);
+
     lv_timer_handler();
     HAL_Delay(2);
 #endif /* ifdef USING_SCREEN */
@@ -984,6 +1027,9 @@ static void MX_TIM3_Init(void) {
   if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK) {
     Error_Handler();
   }
+  if (HAL_TIM_OC_Init(&htim3) != HAL_OK) {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK) {
     Error_Handler();
   }
@@ -992,10 +1038,14 @@ static void MX_TIM3_Init(void) {
   if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK) {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.OCMode = TIM_OCMODE_TIMING;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_OC_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK) {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK) {
     Error_Handler();
   }
@@ -1074,12 +1124,12 @@ static void MX_GPIO_Init(void) {
   HAL_GPIO_WritePin(GPIOF, WPDS18B20_Pin | EDS18B20_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, heater_Pin | cooler_Pin | pHDown_Pin | pHUp_Pin,
-                    GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOE, FloraMicro_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(
+      GPIOE, heater_Pin | cooler_Pin | pHDown_Pin | pHUp_Pin | FloraMicro_Pin,
+      GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, FloraBloom_Pin | FloraGrow_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, FloraBloom_Pin | FloraGrow_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(waterLevelSensorPower_GPIO_Port, waterLevelSensorPower_Pin,

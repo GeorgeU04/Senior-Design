@@ -537,15 +537,14 @@ int fputc(int ch, FILE *f)
                     COM_POLL_TIMEOUT);
   return ch;
 }
-
 int __io_getchar(void) {
   uint8_t ch;
   HAL_UART_Receive(&hcom_uart[COM_ActiveLogPort], &ch, 1, HAL_MAX_DELAY);
   HAL_UART_Transmit(&hcom_uart[COM_ActiveLogPort], &ch, 1, COM_POLL_TIMEOUT);
   return ch;
 }
-#endif
-#endif
+#endif /* USE_COM_LOG */
+#endif /* USE_BSP_COM_FEATURE */
 
 /**
  * @}

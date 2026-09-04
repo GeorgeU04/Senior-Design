@@ -2,8 +2,48 @@ build/Core/Src/plantSelectionScreen.o: Core/Src/plantSelectionScreen.c \
  Core/Inc/plantSelectionScreen.h Drivers/lvgl/src/misc/lv_types.h \
  Drivers/lvgl/src/misc/../lv_conf_internal.h \
  Drivers/lvgl/src/misc/../lv_conf_kconfig.h \
- Drivers/lvgl/src/misc/../../../lv_conf.h Core/Inc/homeScreen.h \
- Core/Inc/plantProfiles.h Drivers/lvgl/src/core/lv_obj.h \
+ Drivers/lvgl/src/misc/../../../lv_conf.h Core/Inc/growControl.h \
+ Core/Inc/FeedProfile.h Core/Inc/TDS_Sensor_Driver.h Core/Inc/main.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ Core/Inc/stm32h7xx_hal_conf.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h \
+ Drivers/CMSIS/Include/core_cm7.h Drivers/CMSIS/Include/cmsis_version.h \
+ Drivers/CMSIS/Include/cmsis_compiler.h Drivers/CMSIS/Include/cmsis_gcc.h \
+ Drivers/CMSIS/Include/mpu_armv7.h Drivers/CMSIS/Include/cachel1_armv7.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_mdma.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_exti.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_adc.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_adc.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_adc_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hsem.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
+ Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h \
+ Core/Inc/stm32h7xx_nucleo_conf.h \
+ Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
+ Core/Inc/climateControl.h \
+ Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h Core/Inc/fans.h \
+ Core/Inc/pH_Sensor_Driver.h Core/Inc/plantProfiles.h Core/Inc/guiTheme.h \
+ Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/lv_types.h \
  Drivers/lvgl/src/core/../misc/lv_style.h \
@@ -114,14 +154,14 @@ build/Core/Src/plantSelectionScreen.o: Core/Src/plantSelectionScreen.c \
  Drivers/lvgl/src/core/../indev/../misc/lv_area.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
- Drivers/lvgl/src/core/lv_group.h Drivers/lvgl/lvgl.h \
- Drivers/lvgl/lv_version.h Drivers/lvgl/src/lv_init.h \
- Drivers/lvgl/src/lv_conf_internal.h Drivers/lvgl/src/misc/lv_types.h \
- Drivers/lvgl/src/stdlib/lv_mem.h Drivers/lvgl/src/stdlib/lv_string.h \
- Drivers/lvgl/src/stdlib/lv_sprintf.h Drivers/lvgl/src/misc/lv_log.h \
- Drivers/lvgl/src/misc/lv_timer.h Drivers/lvgl/src/misc/lv_math.h \
- Drivers/lvgl/src/misc/lv_array.h Drivers/lvgl/src/misc/lv_async.h \
- Drivers/lvgl/src/misc/lv_types.h \
+ Drivers/lvgl/src/core/lv_group.h Drivers/lvgl/src/misc/lv_color.h \
+ Core/Inc/homeScreen.h Drivers/lvgl/lvgl.h Drivers/lvgl/lv_version.h \
+ Drivers/lvgl/src/lv_init.h Drivers/lvgl/src/lv_conf_internal.h \
+ Drivers/lvgl/src/misc/lv_types.h Drivers/lvgl/src/stdlib/lv_mem.h \
+ Drivers/lvgl/src/stdlib/lv_string.h Drivers/lvgl/src/stdlib/lv_sprintf.h \
+ Drivers/lvgl/src/misc/lv_log.h Drivers/lvgl/src/misc/lv_timer.h \
+ Drivers/lvgl/src/misc/lv_math.h Drivers/lvgl/src/misc/lv_array.h \
+ Drivers/lvgl/src/misc/lv_async.h Drivers/lvgl/src/misc/lv_types.h \
  Drivers/lvgl/src/misc/lv_anim_timeline.h Drivers/lvgl/src/misc/lv_anim.h \
  Drivers/lvgl/src/misc/lv_profiler_builtin.h \
  Drivers/lvgl/src/misc/lv_rb.h Drivers/lvgl/src/misc/lv_assert.h \
@@ -436,8 +476,55 @@ Drivers/lvgl/src/misc/lv_types.h:
 Drivers/lvgl/src/misc/../lv_conf_internal.h:
 Drivers/lvgl/src/misc/../lv_conf_kconfig.h:
 Drivers/lvgl/src/misc/../../../lv_conf.h:
-Core/Inc/homeScreen.h:
+Core/Inc/growControl.h:
+Core/Inc/FeedProfile.h:
+Core/Inc/TDS_Sensor_Driver.h:
+Core/Inc/main.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
+Core/Inc/stm32h7xx_hal_conf.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
+Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
+Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
+Drivers/CMSIS/Include/core_cm7.h:
+Drivers/CMSIS/Include/cmsis_version.h:
+Drivers/CMSIS/Include/cmsis_compiler.h:
+Drivers/CMSIS/Include/cmsis_gcc.h:
+Drivers/CMSIS/Include/mpu_armv7.h:
+Drivers/CMSIS/Include/cachel1_armv7.h:
+Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_mdma.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_exti.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_adc.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_adc.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_adc_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hsem.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
+Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.h:
+Core/Inc/stm32h7xx_nucleo_conf.h:
+Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h:
+Core/Inc/climateControl.h:
+Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
+Core/Inc/fans.h:
+Core/Inc/pH_Sensor_Driver.h:
 Core/Inc/plantProfiles.h:
+Core/Inc/guiTheme.h:
 Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/../lv_conf_internal.h:
 Drivers/lvgl/src/core/../misc/lv_types.h:
@@ -551,6 +638,8 @@ Drivers/lvgl/src/core/../indev/../misc/lv_area.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_timer.h:
 Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
+Drivers/lvgl/src/misc/lv_color.h:
+Core/Inc/homeScreen.h:
 Drivers/lvgl/lvgl.h:
 Drivers/lvgl/lv_version.h:
 Drivers/lvgl/src/lv_init.h:
