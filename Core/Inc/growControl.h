@@ -30,8 +30,7 @@ typedef struct {
 } GrowSensorSample;
 
 void growControl_init(struct fan *enclosureFan, struct fan *auxFan,
-                      struct cooler *cooler, struct heater *heater,
-                      struct TDS *tds, struct pH *ph);
+                      struct cooler *cooler, struct TDS *tds, struct pH *ph);
 
 /* Select/clear the active plant. Pass NULL to idle. */
 void growControl_setPlant(const struct plantProfile *profile);

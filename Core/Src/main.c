@@ -96,7 +96,6 @@ struct TDS TDSSensor = {0};
 struct pH PHSensor = {0};
 struct Pump pump = {0};
 struct waterLevelSensor waterLevelSensor = {0};
-struct heater heater = {0};
 struct cooler cooler = {0};
 /* USER CODE END PV */
 
@@ -217,7 +216,6 @@ int main(void) {
                          waterLevelSensorPower_Pin, &hadc3);
 
   createCooler(&cooler, cooler_GPIO_Port, cooler_Pin);
-  createHeater(&heater, heater_GPIO_Port, heater_Pin);
 
   /////////////////TDS, PH, PUMPS//////////////////////
   TDSSensor = TDS_init("TDS");
@@ -237,7 +235,7 @@ int main(void) {
   Lights_Init();
   Lights_SetWhite(100);
 
-  growControl_init(&fan0, &fan1, &cooler, &heater, &TDSSensor, &PHSensor);
+  growControl_init(&fan0, &fan1, &cooler, &TDSSensor, &PHSensor);
 
   /* USER CODE END 2 */
 
@@ -293,13 +291,11 @@ int main(void) {
     printf("12 - Read enclosure temperature\r\n");
     printf("13 - Read water temperature\r\n");
 
-    printf("\r\n-- Fans / Cooling / Heating / Pumps --\r\n");
+    printf("\r\n-- Fans / Cooling / Pumps --\r\n");
     printf("20 - Turn on fans\r\n");
     printf("21 - Turn off fans\r\n");
     printf("22 - Turn on cooler\r\n");
     printf("23 - Turn off cooler\r\n");
-    printf("24 - Turn on heater\r\n");
-    printf("25 - Turn off heater\r\n");
     printf("26 - Turn on pH up pump\r\n");
     printf("27 - Turn off pH up pump\r\n");
     printf("28 - Turn on pH down pump\r\n");
@@ -402,16 +398,6 @@ int main(void) {
     case 23:
       printf("Cooler Off\r\n");
       turnOffCooler(&cooler);
-      break;
-
-    case 24:
-      printf("Heater On\r\n");
-      turnOnHeater(&heater);
-      break;
-
-    case 25:
-      printf("Heater Off\r\n");
-      turnOffHeater(&heater);
       break;
 
     case 26:
@@ -521,6 +507,7 @@ int main(void) {
       }
     }
 
+    /* Water/enclosure temp: polled every loop (~2 ms + LVGL); DS18B20 async ~750 ms */
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp) &&
         asyncWaterSensor.validReading) {
       waterTempValid = 1;
@@ -542,6 +529,7 @@ int main(void) {
                               enclosureTemp);
       }
     }
+    /* EC / pH / water level: every screenRefresh (200 ms) */
     if (currentTick - lastScreenRefresh >= screenRefresh) {
       lastScreenRefresh = currentTick;
       readTDS(&TDSSensor);
@@ -570,6 +558,7 @@ int main(void) {
         .minute = clock.minutes,
         .growthDay = growthDays,
     };
+    /* growControl: lights/climate every 1 s, chemistry every 5 s (dosers each call) */
     growControl_update(&sample);
 
     lv_timer_handler();

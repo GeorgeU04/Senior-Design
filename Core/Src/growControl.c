@@ -22,7 +22,6 @@ static uint8_t lightsOn = 0;
 static struct fan *fanPrimary = NULL;
 static struct fan *fanSecondary = NULL;
 static struct cooler *reservoirCooler = NULL;
-static struct heater *airHeater = NULL;
 static struct TDS *tdsSensor = NULL;
 static struct pH *phSensor = NULL;
 
@@ -40,8 +39,6 @@ static void safeActuators(void) {
     stopFan(fanSecondary);
   if (reservoirCooler)
     turnOffCooler(reservoirCooler);
-  if (airHeater)
-    turnOffHeater(airHeater);
 }
 
 static void applyLightsForSample(const GrowSensorSample *sample) {
@@ -75,10 +72,10 @@ static void applyLightsForSample(const GrowSensorSample *sample) {
 }
 
 static void regulateClimate(const GrowSensorSample *sample) {
-  if (!activePlant)
+  if (!activePlant || !sample)
     return;
 
-  /* Enclosure air: fans when hot, heater when cold */
+  /* Enclosure air: fans when hot, idle/low when cool */
   if (sample->enclosureTempValid) {
     float target = activePlant->enclosureTemp;
     float t = sample->enclosureTempC;
@@ -88,30 +85,22 @@ static void regulateClimate(const GrowSensorSample *sample) {
         runFan(fanPrimary, HIGH);
       if (fanSecondary)
         runFan(fanSecondary, MED);
-      if (airHeater)
-        turnOffHeater(airHeater);
     } else if (t > target + GROW_ENCL_HYST_C) {
       if (fanPrimary)
         runFan(fanPrimary, MED);
       if (fanSecondary)
         runFan(fanSecondary, LOW);
-      if (airHeater)
-        turnOffHeater(airHeater);
     } else if (t < target - GROW_ENCL_HYST_C) {
       if (fanPrimary)
         runFan(fanPrimary, OFF);
       if (fanSecondary)
         runFan(fanSecondary, OFF);
-      if (airHeater)
-        turnOnHeater(airHeater);
     } else {
-      /* In band — gentle airflow, heater off */
+      /* In band — gentle airflow */
       if (fanPrimary)
         runFan(fanPrimary, LOW);
       if (fanSecondary)
         stopFan(fanSecondary);
-      if (airHeater)
-        turnOffHeater(airHeater);
     }
   }
 
@@ -177,12 +166,10 @@ static void regulateChemistry(const GrowSensorSample *sample) {
 }
 
 void growControl_init(struct fan *enclosureFan, struct fan *auxFan,
-                      struct cooler *cooler, struct heater *heater,
-                      struct TDS *tds, struct pH *ph) {
+                      struct cooler *cooler, struct TDS *tds, struct pH *ph) {
   fanPrimary = enclosureFan;
   fanSecondary = auxFan;
   reservoirCooler = cooler;
-  airHeater = heater;
   tdsSensor = tds;
   phSensor = ph;
   state = GROW_STATE_IDLE;
