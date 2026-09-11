@@ -218,24 +218,13 @@ void growControl_update(const GrowSensorSample *sample) {
 
   activeStage = plant_getStage(activePlant, sample->growthDay);
 
-  /* Water / sensor fault handling */
-  uint8_t sensorsOk =
-      sample->waterTempValid || sample->enclosureTempValid; /* at least one */
-  if (!sensorsOk &&
-      (now - lastClimateMs > 30000U)) { /* prolonged missing temps */
-    /* Don't latch fault immediately at boot before first reading */
-  }
-
   if (sample->waterLevelRaw < GROW_WATER_LOW_RAW) {
     if (state != GROW_STATE_REFILL) {
       state = GROW_STATE_REFILL;
-      /* Pause nutrient dosing while waiting for refill */
-      if (getState() != STATE_IDLE && getState() != STATE_DONE)
-        ; /* let in-progress dose finish via updates */
+      /* Pause nutrient dosing while waiting for refill; let in-progress
+       * dose finish via nutrientDoseUpdate polling. */
       nutrientDoseRequested = 0;
     }
-  } else if (state == GROW_STATE_REFILL || state == GROW_STATE_FAULT) {
-    state = GROW_STATE_RUNNING;
   } else {
     state = GROW_STATE_RUNNING;
   }

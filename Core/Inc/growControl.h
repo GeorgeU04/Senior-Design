@@ -10,10 +10,9 @@
 #include <stdint.h>
 
 typedef enum {
-  GROW_STATE_IDLE = 0,     /* no plant selected */
-  GROW_STATE_RUNNING,      /* normal closed-loop control */
-  GROW_STATE_REFILL,       /* water low — pause chemistry */
-  GROW_STATE_FAULT         /* invalid sensors — safe actuators */
+  GROW_STATE_IDLE = 0, /* no plant selected */
+  GROW_STATE_RUNNING,  /* normal closed-loop control */
+  GROW_STATE_REFILL    /* water low — pause chemistry */
 } GrowControlState;
 
 typedef struct {

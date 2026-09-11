@@ -422,32 +422,32 @@ int main(void) {
 
     case 30:
       printf("FloraBloom Pump On\r\n");
-      GPIOB->BSRR = (GPIO_PIN_10 << 16);
+      GPIOB->BSRR = GPIO_PIN_10;
       break;
 
     case 31:
       printf("FloraBloom Pump Off\r\n");
-      GPIOB->BSRR = (GPIO_PIN_10);
+      GPIOB->BSRR = (GPIO_PIN_10 << 16);
       break;
 
     case 32:
       printf("FloraMicro Pump On\r\n");
-      GPIOE->BSRR = (GPIO_PIN_15 << 16);
+      GPIOE->BSRR = GPIO_PIN_15;
       break;
 
     case 33:
       printf("FloraMicro Pump Off\r\n");
-      GPIOE->BSRR = (GPIO_PIN_15);
+      GPIOE->BSRR = (GPIO_PIN_15 << 16);
       break;
 
     case 34:
       printf("FloraGrow Pump On\r\n");
-      GPIOB->BSRR = (GPIO_PIN_11 << 16);
+      GPIOB->BSRR = GPIO_PIN_11;
       break;
 
     case 35:
       printf("FloraGrow Pump Off\r\n");
-      GPIOB->BSRR = (GPIO_PIN_11);
+      GPIOB->BSRR = (GPIO_PIN_11 << 16);
       break;
 
     case 36:
@@ -1125,7 +1125,7 @@ static void MX_GPIO_Init(void) {
                     GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, RSX_Pin | CDX_Pin | CSX_Pin | WRX_Pin,
+  HAL_GPIO_WritePin(GPIOG, RSX_Pin | CDX_Pin | CSX_Pin | WRX_Pin,
                     GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1169,7 +1169,7 @@ static void MX_GPIO_Init(void) {
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /*Configure GPIO pins : D0_Pin D1_Pin D2_Pin D3_Pin
                            D4_Pin D5_Pin D6_Pin D7_Pin */

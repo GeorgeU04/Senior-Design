@@ -62,15 +62,9 @@ void nutrientDose_init(struct TDS *TDSsensor) {
   bloomPump =
       pump_init("FloraBloom", FloraBloom_GPIO_Port, FloraBloom_Pin); //	D4
 
-  // Necessary because nutrient pumps will use an INVERTED setup. (SET == off,
-  // RESET == on)
-  //  If not initialized early, it the pumps will continuously run on their own
-  // NEW NOTE (04/30/2026) set high in  GPIO section of main
+  // Nutrient pumps use a non-inverted setup (SET == on, RESET == off).
+  // Idle-low is set in MX_GPIO_Init.
 
-  /*HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
-*/
   // edit final param (mix time) as needed
   doser_init(&grow, &growPump, 1.5, 0.5, 1000);
   doser_init(&micro, &microPump, 1.5, 0.5, 1000);
@@ -78,9 +72,9 @@ void nutrientDose_init(struct TDS *TDSsensor) {
 }
 
 void nutrientDoseUpdate() {
-  doser_update_inverted(&micro);
-  doser_update_inverted(&grow);
-  doser_update_inverted(&bloom);
+  doser_update_noninverted(&micro);
+  doser_update_noninverted(&grow);
+  doser_update_noninverted(&bloom);
 }
 
 // Place this in main loop
@@ -123,10 +117,10 @@ void nutrientDose(struct TDS *TDSSensor) {
       state = STATE_DONE;
       printf("Reservoir nutrient balancing complete.\r\n");
 
-      // make sure to set pins high when pumping is complete
-      HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
+      // Idle low for non-inverted pumps
+      HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_RESET);
     }
     break;
 
@@ -171,10 +165,10 @@ void nutrientDose_Demo(struct TDS *TDSsensor) {
       state = STATE_DONE;
       printf("Reservoir nutrient balancing complete.\r\n");
 
-      // make sure to set pins high when pumping is complete
-      HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_SET);
+      // Idle low for non-inverted pumps
+      HAL_GPIO_WritePin(microPump.GPIOx, microPump.GPIO_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(growPump.GPIOx, growPump.GPIO_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(bloomPump.GPIOx, bloomPump.GPIO_Pin, GPIO_PIN_RESET);
       // remove this and delay after demo
       for (int i = 0; i < 3; i++) {
         readTDS(TDSsensor);
