@@ -137,3 +137,5 @@ In `main.c`:
 ## Documentation
 
 - [GrowControl state machine](docs/growControl-state-machine.md) — traditional FSMs for top-level, climate, lights, and chemistry
+- [Device test plan timeline](docs/device-test-plan-timeline.md) — Oct–Dec testing schedule and team assignments
+- [Device test plan Gantt (HTML)](docs/device-test-plan-timeline.html) — spreadsheet-style colored timeline

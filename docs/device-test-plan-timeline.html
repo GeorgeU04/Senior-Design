@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Device Test Plan — Timeline</title>
+  <style>
+    :root {
+      --header: #1e3a5f;
+      --grid: #d0d7de;
+      --row-alt: #f6f8fa;
+      --text: #1f2328;
+      --muted: #656d76;
+      --lighting: #e67e22;
+      --nutrient: #5dade2;
+      --climate: #8e44ad;
+      --ui: #a04000;
+      --system: #1e8449;
+      --closeout: #2874a6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background: #e8eef3;
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--grid);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .title {
+      background: var(--header);
+      color: #fff;
+      padding: 14px 18px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .meta {
+      padding: 10px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--grid);
+      background: #fafbfc;
+    }
+
+    .scroll {
+      overflow-x: auto;
+    }
+
+    table.gantt {
+      border-collapse: collapse;
+      width: max-content;
+      min-width: 100%;
+      font-size: 12px;
+    }
+
+    table.gantt th,
+    table.gantt td {
+      border: 1px solid var(--grid);
+      vertical-align: middle;
+    }
+
+    table.gantt thead th {
+      background: #eef2f6;
+      font-weight: 600;
+      text-align: center;
+      padding: 6px 4px;
+      white-space: nowrap;
+    }
+
+    table.gantt thead .month {
+      background: #dbe4ee;
+      font-size: 12px;
+    }
+
+    .sticky-name,
+    .sticky-bucket {
+      position: sticky;
+      background: #fff;
+      z-index: 2;
+      text-align: left;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    .sticky-name { left: 0; min-width: 280px; max-width: 320px; }
+    .sticky-bucket { left: 280px; min-width: 160px; }
+
+    thead .sticky-name,
+    thead .sticky-bucket {
+      background: #eef2f6;
+      z-index: 3;
+    }
+
+    tr.bucket-row td {
+      font-weight: 700;
+      color: #fff;
+      padding: 7px 10px;
+    }
+
+    tr.task-row:nth-child(even of .task-row) td.sticky-name,
+    tr.task-row:nth-child(even of .task-row) td.sticky-bucket {
+      background: var(--row-alt);
+    }
+
+    tr.task-row td.cell {
+      width: 52px;
+      min-width: 52px;
+      height: 28px;
+      padding: 3px;
+      background: #fff;
+    }
+
+    tr.task-row:nth-child(even of .task-row) td.cell {
+      background: var(--row-alt);
+    }
+
+    .bar {
+      display: block;
+      height: 100%;
+      min-height: 20px;
+      border-radius: 2px;
+    }
+
+    .owner {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 11px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 12px 18px;
+      border-top: 1px solid var(--grid);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .note {
+      padding: 0 18px 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">Automated Hydroponic System — Device Test Plan Timeline</div>
+    <div class="meta">
+      CpE 191 / EEE 193B · Fall 2026 · Testing window Oct 5 – Dec 13 ·
+      Leads: Mariam (Lighting), Rainer (Nutrients), Julia (Climate), George (UI) · T6.0 shared
+    </div>
+
+    <div class="scroll">
+      <table class="gantt">
+        <thead>
+          <tr>
+            <th class="sticky-name" rowspan="2">Task Name</th>
+            <th class="sticky-bucket" rowspan="2">Bucket</th>
+            <th class="month" colspan="4">Oct 2026</th>
+            <th class="month" colspan="5">Nov 2026</th>
+            <th class="month" colspan="2">Dec 2026</th>
+          </tr>
+          <tr>
+            <th>10/5</th><th>10/12</th><th>10/19</th><th>10/26</th>
+            <th>11/2</th><th>11/9</th><th>11/16</th><th>11/23</th><th>11/30</th>
+            <th>12/7</th><th>12/13</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- LIGHTING -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--lighting)">Automated Lighting</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T1.1 Blue PWM endurance <span class="owner">· Mariam</span></td>
+            <td class="sticky-bucket">Automated Lighting</td>
+            <td class="cell"><span class="bar" style="background:var(--lighting)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T1.2 Full-spectrum / white endurance <span class="owner">· Mariam</span></td>
+            <td class="sticky-bucket">Automated Lighting</td>
+            <td class="cell"><span class="bar" style="background:var(--lighting)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T1.3 Red PWM endurance <span class="owner">· Mariam</span></td>
+            <td class="sticky-bucket">Automated Lighting</td>
+            <td class="cell"><span class="bar" style="background:var(--lighting)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T1.0 Stage-based lighting feature <span class="owner">· Mariam</span></td>
+            <td class="sticky-bucket">Automated Lighting</td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--lighting)"></span></td>
+            <td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+
+          <!-- NUTRIENT -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--nutrient)">Automated Nutrient Measuring and Dispensing</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T2.1 pH sensor accuracy <span class="owner">· Rainer</span></td>
+            <td class="sticky-bucket">Nutrient Measuring</td>
+            <td class="cell"><span class="bar" style="background:var(--nutrient)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T2.2 TDS / EC sensor accuracy <span class="owner">· Rainer</span></td>
+            <td class="sticky-bucket">Nutrient Measuring</td>
+            <td class="cell"><span class="bar" style="background:var(--nutrient)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T3.1 Peristaltic pump volume <span class="owner">· Rainer</span></td>
+            <td class="sticky-bucket">Nutrient Dispensing</td>
+            <td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--nutrient)"></span></td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T2.0 Automated nutrient monitoring <span class="owner">· Rainer</span></td>
+            <td class="sticky-bucket">Nutrient Measuring</td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--nutrient)"></span></td>
+            <td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T3.0 Automated nutrient dispensing <span class="owner">· Rainer</span></td>
+            <td class="sticky-bucket">Nutrient Dispensing</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--nutrient)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+
+          <!-- CLIMATE -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--climate)">Automated Temperature Control</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T4.2 Temperature sensor accuracy <span class="owner">· Julia</span></td>
+            <td class="sticky-bucket">Temperature Control</td>
+            <td class="cell"><span class="bar" style="background:var(--climate)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T4.1 Thermoelectric cooler actuation <span class="owner">· Julia</span></td>
+            <td class="sticky-bucket">Temperature Control</td>
+            <td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--climate)"></span></td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T4.0 Reservoir climate control <span class="owner">· Julia</span></td>
+            <td class="sticky-bucket">Temperature Control</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--climate)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+
+          <!-- UI -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--ui)">User Interface</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T5.0 Interactive plant / live data UI <span class="owner">· George</span></td>
+            <td class="sticky-bucket">User Interface</td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--ui)"></span></td>
+            <td class="cell"><span class="bar" style="background:var(--ui)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T5.1 Touchscreen / menu coverage <span class="owner">· George</span></td>
+            <td class="sticky-bucket">User Interface</td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--ui)"></span></td>
+            <td class="cell"><span class="bar" style="background:var(--ui)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+
+          <!-- SYSTEM TESTING -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--system)">System Testing</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">Integrated closed-loop dry run <span class="owner">· All</span></td>
+            <td class="sticky-bucket">System Testing</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--system)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">Reliability: low water / power cycle <span class="owner">· All</span></td>
+            <td class="sticky-bucket">System Testing</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--system)"></span></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">T6.0 Autonomous healthy growing <span class="owner">· All</span></td>
+            <td class="sticky-bucket">System Testing</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--system)"></span></td>
+            <td class="cell"><span class="bar" style="background:var(--system)"></span></td>
+            <td class="cell"><span class="bar" style="background:var(--system)"></span></td>
+            <td class="cell"></td><td class="cell"></td>
+          </tr>
+
+          <!-- CLOSE-OUT -->
+          <tr class="bucket-row">
+            <td colspan="13" style="background:var(--closeout)">Test Close-out</td>
+          </tr>
+          <tr class="task-row">
+            <td class="sticky-name">Results write-up / prototype status <span class="owner">· All</span></td>
+            <td class="sticky-bucket">Test Close-out</td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+            <td class="cell"><span class="bar" style="background:var(--closeout)"></span></td>
+            <td class="cell"><span class="bar" style="background:var(--closeout)"></span></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--lighting)"></i> Automated Lighting</span>
+      <span><i class="swatch" style="background:var(--nutrient)"></i> Nutrient Measuring / Dispensing</span>
+      <span><i class="swatch" style="background:var(--climate)"></i> Temperature Control</span>
+      <span><i class="swatch" style="background:var(--ui)"></i> User Interface</span>
+      <span><i class="swatch" style="background:var(--system)"></i> System Testing</span>
+      <span><i class="swatch" style="background:var(--closeout)"></i> Close-out</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -507,7 +507,8 @@ int main(void) {
       }
     }
 
-    /* Water/enclosure temp: polled every loop (~2 ms + LVGL); DS18B20 async ~750 ms */
+    /* Water/enclosure temp: polled every loop (~2 ms + LVGL); DS18B20 async
+     * ~750 ms */
     if (asyncTemperatureReading(&asyncWaterSensor, &waterTemp) &&
         asyncWaterSensor.validReading) {
       waterTempValid = 1;
@@ -558,7 +559,8 @@ int main(void) {
         .minute = clock.minutes,
         .growthDay = growthDays,
     };
-    /* growControl: lights/climate every 1 s, chemistry every 5 s (dosers each call) */
+    /* growControl: lights/climate every 1 s, chemistry every 5 s (dosers each
+     * call) */
     growControl_update(&sample);
 
     lv_timer_handler();
