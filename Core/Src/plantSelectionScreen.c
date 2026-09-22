@@ -3,9 +3,11 @@
 #include "guiTheme.h"
 #include "homeScreen.h"
 #include "lvgl.h"
+#include "plantPersist.h"
 #include "plantProfiles.h"
 #include "src/misc/lv_area.h"
 #include "src/misc/lv_event.h"
+#include <stddef.h>
 #include <stdint.h>
 
 const struct plantProfile *currentPlantProfile = NULL;
@@ -18,10 +20,33 @@ static const struct plantProfile *const plantProfiles[] = {
     &SPINACH_PROFILE, &KALE_PROFILE,       &CILANTRO_PROFILE,
     &PARSLEY_PROFILE, &GREEN_ONION_PROFILE};
 
-static void refreshPlantButtonStyles(void) {
-  const size_t count = sizeof(plantProfiles) / sizeof(plantProfiles[0]);
-  for (size_t i = 0; i < count; ++i) {
-    gui_style_plant_button(plantButtons[i], plantProfiles[i] == currentPlantProfile);
+#define PLANT_PROFILE_COUNT                                                        \
+  (sizeof(plantProfiles) / sizeof(plantProfiles[0]))
+
+uint32_t plantSelection_indexOf(const struct plantProfile *p) {
+  if (!p)
+    return PLANT_PERSIST_NONE;
+  for (size_t i = 0; i < PLANT_PROFILE_COUNT; ++i) {
+    if (plantProfiles[i] == p)
+      return (uint32_t)i;
+  }
+  return PLANT_PERSIST_NONE;
+}
+
+const struct plantProfile *plantSelection_profileAt(uint32_t index) {
+  if (index >= PLANT_PROFILE_COUNT)
+    return NULL;
+  return plantProfiles[index];
+}
+
+void plantSelection_refreshStyles(void) {
+  if (!plantSelector)
+    return;
+  for (size_t i = 0; i < PLANT_PROFILE_COUNT; ++i) {
+    if (plantButtons[i]) {
+      gui_style_plant_button(plantButtons[i],
+                             plantProfiles[i] == currentPlantProfile);
+    }
   }
 }
 
@@ -31,9 +56,11 @@ static void event_handler(lv_event_t *e) {
       (const struct plantProfile *)lv_event_get_user_data(e);
   if (code == LV_EVENT_CLICKED) {
     currentPlantProfile = p;
+    growthDays = 1;
     updatePlantProfileLabels(currentPlantProfile);
-    growControl_setPlant(currentPlantProfile);
-    refreshPlantButtonStyles();
+    growControl_setPlant(currentPlantProfile, growthDays);
+    plantPersist_save(plantSelection_indexOf(p), growthDays);
+    plantSelection_refreshStyles();
   }
 }
 
@@ -62,8 +89,7 @@ void drawPlantSelectionScreen(lv_obj_t *plantSelectScreen) {
   const int32_t buttonWidth = 140;
   const int32_t buttonHeight = 30;
 
-  for (size_t i = 0; i < (sizeof(plantProfiles) / sizeof(plantProfiles[0]));
-       ++i) {
+  for (size_t i = 0; i < PLANT_PROFILE_COUNT; ++i) {
     const struct plantProfile *p = plantProfiles[i];
 
     lv_obj_t *button = lv_button_create(plantSelector);

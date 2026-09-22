@@ -36,6 +36,7 @@
 #include "pH_Sensor_Driver.h"
 #include "plantProfiles.h"
 #include "plantSelectionScreen.h"
+#include "plantPersist.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -267,6 +268,26 @@ int main(void) {
   uint32_t lastScreenRefresh = 0;
   initScreen();
   uiInitScreens();
+
+  /* Restore plant selection + growth day after power loss */
+  {
+    uint32_t savedIndex = PLANT_PERSIST_NONE;
+    uint32_t savedDays = 0;
+    if (plantPersist_load(&savedIndex, &savedDays)) {
+      const struct plantProfile *p = plantSelection_profileAt(savedIndex);
+      if (p) {
+        currentPlantProfile = p;
+        growthDays = (savedDays == 0) ? 1 : savedDays;
+        updatePlantProfileLabels(currentPlantProfile);
+        growControl_setPlant(currentPlantProfile, growthDays);
+        plantSelection_refreshStyles();
+      }
+    }
+  }
+  /* Seed day-of-week so the first loop does not falsely roll growthDays */
+  readTimeData(time);
+  parseTime(&clock, time);
+  currentDay = clock.day;
 #endif
   while (1) {
     /* USER CODE END WHILE */
@@ -495,8 +516,10 @@ int main(void) {
       currentDay = clock.day;
       lv_label_set_text_fmt(growingDaysLabel, "Day: %lu",
                             (unsigned long)++growthDays);
-      /* Refresh stage/light labels when the day rolls */
       if (currentPlantProfile) {
+        plantPersist_save(plantSelection_indexOf(currentPlantProfile),
+                          growthDays);
+        /* Refresh stage/light labels when the day rolls */
         enum growthStage st = plant_getStage(currentPlantProfile, growthDays);
         uint8_t blue = 0, red = 0, nir = 0;
         plant_getStageLights(currentPlantProfile, st, &blue, &red, &nir);

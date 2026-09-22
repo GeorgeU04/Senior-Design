@@ -31,8 +31,10 @@ typedef struct {
 void growControl_init(struct fan *enclosureFan, struct fan *auxFan,
                       struct cooler *cooler, struct TDS *tds, struct pH *ph);
 
-/* Select/clear the active plant. Pass NULL to idle. */
-void growControl_setPlant(const struct plantProfile *profile);
+/* Select/clear the active plant. Pass NULL to idle.
+ * growthDay is 1-based; used to set the initial stage/lights. */
+void growControl_setPlant(const struct plantProfile *profile,
+                          uint32_t growthDay);
 
 /* Call every main-loop iteration with latest sensor sample. */
 void growControl_update(const GrowSensorSample *sample);

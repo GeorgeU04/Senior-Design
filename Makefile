@@ -82,7 +82,8 @@ Core/Src/NutrientDose.c \
 Core/Src/climateControl.c \
 Core/Src/homeScreen.c \
 Core/Src/growControl.c \
-Core/Src/FeedProfile.c
+Core/Src/FeedProfile.c \
+Core/Src/plantPersist.c
 
 ASM_SOURCES =  \
 startup_stm32h753xx.s

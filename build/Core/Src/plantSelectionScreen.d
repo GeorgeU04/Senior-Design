@@ -1,5 +1,6 @@
 build/Core/Src/plantSelectionScreen.o: Core/Src/plantSelectionScreen.c \
- Core/Inc/plantSelectionScreen.h Drivers/lvgl/src/misc/lv_types.h \
+ Core/Inc/plantSelectionScreen.h Core/Inc/plantProfiles.h \
+ Drivers/lvgl/src/misc/lv_types.h \
  Drivers/lvgl/src/misc/../lv_conf_internal.h \
  Drivers/lvgl/src/misc/../lv_conf_kconfig.h \
  Drivers/lvgl/src/misc/../../../lv_conf.h Core/Inc/growControl.h \
@@ -42,7 +43,7 @@ build/Core/Src/plantSelectionScreen.o: Core/Src/plantSelectionScreen.c \
  Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo_errno.h \
  Core/Inc/climateControl.h \
  Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h Core/Inc/fans.h \
- Core/Inc/pH_Sensor_Driver.h Core/Inc/plantProfiles.h Core/Inc/guiTheme.h \
+ Core/Inc/pH_Sensor_Driver.h Core/Inc/guiTheme.h \
  Drivers/lvgl/src/core/lv_obj.h \
  Drivers/lvgl/src/core/../lv_conf_internal.h \
  Drivers/lvgl/src/core/../misc/lv_types.h \
@@ -469,9 +470,10 @@ build/Core/Src/plantSelectionScreen.o: Core/Src/plantSelectionScreen.c \
  Drivers/lvgl/src/lv_api_map_v8.h Drivers/lvgl/src/lv_api_map_v9_0.h \
  Drivers/lvgl/src/lv_api_map_v9_1.h Drivers/lvgl/src/lv_api_map_v9_2.h \
  Drivers/lvgl/src/lv_api_map_v9_3.h Drivers/lvgl/src/lv_api_map_v9_4.h \
- Core/Inc/plantProfiles.h Drivers/lvgl/src/misc/lv_area.h \
- Drivers/lvgl/src/misc/lv_event.h
+ Core/Inc/plantPersist.h Core/Inc/plantProfiles.h \
+ Drivers/lvgl/src/misc/lv_area.h Drivers/lvgl/src/misc/lv_event.h
 Core/Inc/plantSelectionScreen.h:
+Core/Inc/plantProfiles.h:
 Drivers/lvgl/src/misc/lv_types.h:
 Drivers/lvgl/src/misc/../lv_conf_internal.h:
 Drivers/lvgl/src/misc/../lv_conf_kconfig.h:
@@ -523,7 +525,6 @@ Core/Inc/climateControl.h:
 Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h753xx.h:
 Core/Inc/fans.h:
 Core/Inc/pH_Sensor_Driver.h:
-Core/Inc/plantProfiles.h:
 Core/Inc/guiTheme.h:
 Drivers/lvgl/src/core/lv_obj.h:
 Drivers/lvgl/src/core/../lv_conf_internal.h:
@@ -975,6 +976,7 @@ Drivers/lvgl/src/lv_api_map_v9_1.h:
 Drivers/lvgl/src/lv_api_map_v9_2.h:
 Drivers/lvgl/src/lv_api_map_v9_3.h:
 Drivers/lvgl/src/lv_api_map_v9_4.h:
+Core/Inc/plantPersist.h:
 Core/Inc/plantProfiles.h:
 Drivers/lvgl/src/misc/lv_area.h:
 Drivers/lvgl/src/misc/lv_event.h:

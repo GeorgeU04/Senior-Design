@@ -107,7 +107,9 @@ void updatePlantProfileLabels(const struct plantProfile *p) {
   if (!p)
     return;
 
-  growthDays = 1;
+  if (growthDays == 0)
+    growthDays = 1;
+
   enum growthStage stage = plant_getStage(p, growthDays);
   uint8_t blue = 0, red = 0, nir = 0;
   plant_getStageLights(p, stage, &blue, &red, &nir);

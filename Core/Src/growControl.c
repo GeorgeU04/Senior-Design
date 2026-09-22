@@ -181,7 +181,8 @@ void growControl_init(struct fan *enclosureFan, struct fan *auxFan,
   safeActuators();
 }
 
-void growControl_setPlant(const struct plantProfile *profile) {
+void growControl_setPlant(const struct plantProfile *profile,
+                          uint32_t growthDay) {
   activePlant = profile;
   nutrientDoseRequested = 0;
   setState(STATE_IDLE);
@@ -192,7 +193,10 @@ void growControl_setPlant(const struct plantProfile *profile) {
     return;
   }
 
-  activeStage = plant_getStage(profile, 1);
+  if (growthDay == 0)
+    growthDay = 1;
+
+  activeStage = plant_getStage(profile, growthDay);
   state = GROW_STATE_RUNNING;
 
   uint8_t blue = 0, red = 0, nir = 0;
