@@ -45,7 +45,8 @@ uint8_t plantPersist_load(uint32_t *plantIndex, uint32_t *growthDays) {
   const struct PlantPersistRecord *rec =
       (const struct PlantPersistRecord *)PLANT_PERSIST_ADDR;
 
-  if (rec->magic != PLANT_PERSIST_MAGIC || rec->version != PLANT_PERSIST_VERSION)
+  if (rec->magic != PLANT_PERSIST_MAGIC ||
+      rec->version != PLANT_PERSIST_VERSION)
     return 0;
   if (rec->crc != record_crc(rec))
     return 0;

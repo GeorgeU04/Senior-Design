@@ -157,10 +157,10 @@ build/Core/Src/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_timer.h \
  Drivers/lvgl/src/core/../indev/../misc/lv_event.h \
  Drivers/lvgl/src/core/lv_group.h Core/Inc/lights.h \
- Core/Inc/pH_Sensor_Driver.h Core/Inc/plantProfiles.h \
- Core/Inc/plantSelectionScreen.h Drivers/lvgl/src/misc/lv_types.h \
- Core/Inc/plantPersist.h Core/Inc/settingsScreen.h Core/Inc/DS18B20.h \
- Drivers/lvgl/src/misc/lv_timer.h \
+ Core/Inc/pH_Sensor_Driver.h Core/Inc/plantPersist.h \
+ Core/Inc/plantProfiles.h Core/Inc/plantSelectionScreen.h \
+ Drivers/lvgl/src/misc/lv_types.h Core/Inc/settingsScreen.h \
+ Core/Inc/DS18B20.h Drivers/lvgl/src/misc/lv_timer.h \
  Drivers/lvgl/src/widgets/label/lv_label.h \
  Drivers/lvgl/src/widgets/label/../../lv_conf_internal.h \
  Drivers/lvgl/src/widgets/label/../../misc/lv_types.h \
@@ -351,10 +351,10 @@ Drivers/lvgl/src/core/../indev/../misc/lv_event.h:
 Drivers/lvgl/src/core/lv_group.h:
 Core/Inc/lights.h:
 Core/Inc/pH_Sensor_Driver.h:
+Core/Inc/plantPersist.h:
 Core/Inc/plantProfiles.h:
 Core/Inc/plantSelectionScreen.h:
 Drivers/lvgl/src/misc/lv_types.h:
-Core/Inc/plantPersist.h:
 Core/Inc/settingsScreen.h:
 Core/Inc/DS18B20.h:
 Drivers/lvgl/src/misc/lv_timer.h:

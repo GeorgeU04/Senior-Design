@@ -34,9 +34,9 @@
 #include "homeScreen.h"
 #include "lights.h"
 #include "pH_Sensor_Driver.h"
+#include "plantPersist.h"
 #include "plantProfiles.h"
 #include "plantSelectionScreen.h"
-#include "plantPersist.h"
 #include "settingsScreen.h"
 #include "src/misc/lv_timer.h"
 #include "src/widgets/label/lv_label.h"
@@ -61,8 +61,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USING_SCREEN 1
-#define USING_DEBUG 0
+#define USING_SCREEN 0
+#define USING_DEBUG 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -268,6 +268,7 @@ int main(void) {
   uint32_t lastScreenRefresh = 0;
   initScreen();
   uiInitScreens();
+#endif
 
   /* Restore plant selection + growth day after power loss */
   {
@@ -278,12 +279,16 @@ int main(void) {
       if (p) {
         currentPlantProfile = p;
         growthDays = (savedDays == 0) ? 1 : savedDays;
+#if USING_SCREEN
         updatePlantProfileLabels(currentPlantProfile);
-        growControl_setPlant(currentPlantProfile, growthDays);
         plantSelection_refreshStyles();
+#endif
+        growControl_setPlant(currentPlantProfile, growthDays);
       }
     }
   }
+
+#if USING_SCREEN
   /* Seed day-of-week so the first loop does not falsely roll growthDays */
   readTimeData(time);
   parseTime(&clock, time);
@@ -311,6 +316,12 @@ int main(void) {
     printf("11 - Read water level\r\n");
     printf("12 - Read enclosure temperature\r\n");
     printf("13 - Read water temperature\r\n");
+
+    printf("\r\n-- Plant --\r\n");
+    printf("14 - Read active plant profile\r\n");
+    printf("15 - Read persisted plant from Flash\r\n");
+    printf("16 - List plant profiles\r\n");
+    printf("17 - Select plant by index (then saves to Flash)\r\n");
 
     printf("\r\n-- Fans / Cooling / Pumps --\r\n");
     printf("20 - Turn on fans\r\n");
@@ -398,6 +409,91 @@ int main(void) {
       readTemperature(waterTempSensor, &temp);
       printf("Water Temp: %f\r\n", temp * 9 / 5 + 32);
       break;
+
+    case 14: {
+      const struct plantProfile *p = currentPlantProfile;
+      if (!p)
+        p = growControl_getPlant();
+      if (!p) {
+        printf("No plant selected\r\n");
+        break;
+      }
+      enum growthStage st = plant_getStage(p, growthDays ? growthDays : 1);
+      uint8_t blue = 0, red = 0, nir = 0;
+      plant_getStageLights(p, st, &blue, &red, &nir);
+      printf("Plant: %s\r\n", p->name);
+      printf("Growth day: %lu / %lu\r\n", (unsigned long)growthDays,
+             (unsigned long)p->growthDurationDays);
+      printf("Stage: %s\r\n", getStageName(st));
+      printf("Photoperiod: %u min\r\n", p->lightOnMinutes);
+      printf("Targets: encl %.1f C, water %.1f C\r\n", p->enclosureTemp,
+             p->waterTemp);
+      printf("Lights WRBN: %u/%u/%u/%u\r\n", p->whiteLightPercentage, red, blue,
+             nir);
+      printf("GrowControl state: %d  lightsOn: %u\r\n",
+             (int)growControl_getState(), growControl_lightsAreOn());
+      break;
+    }
+
+    case 15: {
+      uint32_t savedIndex = PLANT_PERSIST_NONE;
+      uint32_t savedDays = 0;
+      if (!plantPersist_load(&savedIndex, &savedDays)) {
+        printf("No valid plant record in Flash\r\n");
+        break;
+      }
+      const struct plantProfile *p = plantSelection_profileAt(savedIndex);
+      printf("Flash plant index: %lu\r\n", (unsigned long)savedIndex);
+      printf("Flash growth days: %lu\r\n", (unsigned long)savedDays);
+      if (p) {
+        printf("Flash plant name: %s\r\n", p->name);
+        printf("Flash duration: %lu days\r\n",
+               (unsigned long)p->growthDurationDays);
+        enum growthStage st =
+            plant_getStage(p, savedDays ? savedDays : 1);
+        printf("Flash stage: %s\r\n", getStageName(st));
+      } else {
+        printf("Flash plant name: (invalid index)\r\n");
+      }
+      break;
+    }
+
+    case 16: {
+      printf("Available plants:\r\n");
+      for (uint32_t i = 0;; ++i) {
+        const struct plantProfile *p = plantSelection_profileAt(i);
+        if (!p)
+          break;
+        printf("  %lu: %s (%lu days, light %u min)\r\n", (unsigned long)i,
+               p->name, (unsigned long)p->growthDurationDays, p->lightOnMinutes);
+      }
+      break;
+    }
+
+    case 17: {
+      int idx = -1;
+      printf("Enter plant index: ");
+      setvbuf(stdin, NULL, _IONBF, 0);
+      scanf("%d", &idx);
+      puts("");
+      const struct plantProfile *p =
+          plantSelection_profileAt((uint32_t)idx);
+      if (!p || idx < 0) {
+        printf("Invalid plant index\r\n");
+        break;
+      }
+      currentPlantProfile = p;
+      growthDays = 1;
+      growControl_setPlant(currentPlantProfile, growthDays);
+      plantPersist_save((uint32_t)idx, growthDays);
+#if USING_SCREEN
+      updatePlantProfileLabels(currentPlantProfile);
+      plantSelection_refreshStyles();
+#endif
+      printf("Selected: %s (day %lu) — saved to Flash\r\n", p->name,
+             (unsigned long)growthDays);
+      break;
+    }
 
     case 20:
       printf("Fans On\r\n");
