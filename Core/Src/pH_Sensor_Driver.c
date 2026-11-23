@@ -21,8 +21,8 @@
 struct pH pH_init(char *name) {
   struct pH sensor;
 
-  float V4 = 1.95;
-  float V7 = 1.44;// hard code V4 and V7 values. FORMAT: (V4 - V7)
+  float V4 = 1.973;
+  float V7 = 1.444;// hard code V4 and V7 values. FORMAT: (V4 - V7)
 
   strncpy(sensor.name, name, sizeof(sensor.name));
   sensor.name[sizeof(sensor.name) - 1] = '\0';
